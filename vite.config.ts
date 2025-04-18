@@ -4,5 +4,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 
 export default defineConfig({
-	plugins: [tailwindcss(),sveltekit()]
+	plugins: [tailwindcss(),sveltekit()],
+	server: {
+		allowedHosts:['5173-09liweis-novelweb-3vt5cm0bby0.ws-us118.gitpod.io']
+	}
 });
