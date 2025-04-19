@@ -1,4 +1,3 @@
-// src/routes/login/+page.svelte
 <script lang="ts">
   import { supabase } from '$lib/supabaseClient';
   import { goto } from '$app/navigation';
@@ -21,7 +20,7 @@
       if (loginError) throw loginError;
       
       // Redirect to dashboard
-      goto('/dashboard');
+      goto('/');
     } catch (e: any) {
       error = e.message;
     } finally {
@@ -103,7 +102,7 @@
       </div>
       
       <div class="text-sm text-center">
-        <a href="/signup" class="font-medium text-indigo-600 hover:text-indigo-500">
+        <a href="/user/signup" class="font-medium text-indigo-600 hover:text-indigo-500">
           Don't have an account? Sign up
         </a>
       </div>

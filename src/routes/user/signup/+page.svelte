@@ -29,11 +29,11 @@
       // Create user profile in the profiles table
       if (data.user) {
         const { error: profileError } = await supabase
-          .from('profiles')
+          .from('user_profiles')
           .insert([
             {
               id: data.user.id,
-              username,
+              first_name: username,
               updated_at: new Date().toISOString()
             }
           ]);
@@ -129,7 +129,7 @@
       </div>
       
       <div class="text-sm text-center">
-        <a href="/login" class="font-medium text-indigo-600 hover:text-indigo-500">
+        <a href="/user/login" class="font-medium text-indigo-600 hover:text-indigo-500">
           Already have an account? Log in
         </a>
       </div>

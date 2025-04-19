@@ -1,32 +1,20 @@
-// src/lib/stores/authStore.ts
-import { writable } from 'svelte/store';
+import { writable, type Writable } from 'svelte/store';
 import { supabase } from '$lib/supabaseClient';
 import type { User } from '@supabase/supabase-js';
 
-export const user = writable<User | null>(null);
-export const isLoading = writable<boolean>(true);
+// Create a writable store for the user
+export const user: Writable<User | null> = writable(null);
 
-export async function initAuth() {
-  isLoading.set(true);
-  
-  // Check for active session
-  const { data } = await supabase.auth.getSession();
-  
-  if (data?.session) {
-    user.set(data.session.user);
+// Initialize the store with the current session user
+supabase.auth.getSession().then(({ data }) => {
+  user.set(data.session?.user || null);
+});
+
+// Subscribe to auth changes
+supabase.auth.onAuthStateChange((event, session) => {
+  if (session) {
+    user.set(session.user);
+  } else {
+    user.set(null);
   }
-  
-  // Setup auth listener
-  const { data: authListener } = supabase.auth.onAuthStateChange(
-    (event, session) => {
-      if (session) {
-        user.set(session.user);
-      } else {
-        user.set(null);
-      }
-      isLoading.set(false);
-    }
-  );
-  
-  return authListener;
-}
+});
