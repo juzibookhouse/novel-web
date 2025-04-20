@@ -17,7 +17,7 @@
     description: string;
     user_id: string;
     created_at: string;
-    category: string;
+    category?: string;
     chapters?: Chapter[];
   }
   
@@ -101,7 +101,7 @@
         .insert([{
           title: newNovel.title,
           description: newNovel.description,
-          category: newNovel.category,
+          // category: newNovel.category,
           user_id: $user.id
         }])
         .select();
@@ -211,7 +211,7 @@
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {#each novel.chapters as chapter}
                   <a
-                    href={`/author/novels/${novel.id}/chapters/${chapter.id}`}
+                    href={`/novel/${novel.id}/chapter/${chapter.id}`}
                     class="group p-3 rounded-lg border-2 border-red-100 hover:border-red-300 hover:bg-red-50 transition-all duration-200"
                   >
                     <h5 class="text-gray-900 group-hover:text-red-800 transition-colors duration-200">
@@ -253,7 +253,6 @@
             <select
               id="category"
               bind:value={newNovel.category}
-              required
               class="mt-1 block w-full rounded-md border-2 border-red-200 px-3 py-2 focus:border-red-500 focus:ring-red-500"
             >
               <option value="">请选择类别</option>
