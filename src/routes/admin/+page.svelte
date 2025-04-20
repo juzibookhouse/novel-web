@@ -53,10 +53,10 @@
 
   async function toggleApproval(userId: string, currentStatus: boolean) {
       try {
-          const { error: updateError } = await supabase.auth.admin.updateUserById(
-              userId,
-              { user_metadata: { is_approved: !currentStatus } }
-          );
+              const { error: updateError } = await supabase
+                .from('user_profiles')
+                .update({ is_approved: !currentStatus })
+                .eq('id', userId);
 
           if (updateError) throw updateError;
           await loadData();
