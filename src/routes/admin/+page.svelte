@@ -1,75 +1,76 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { supabase } from '$lib/supabaseClient';
-    
-    let activeTab: 'users' | 'authors' | 'novels' = 'users';
-    let users: any[] = [];
-    let authors: any[] = [];
-    let novels: any[] = [];
-    let loading = true;
-    let error: string | null = null;
-  
-    onMount(async () => {
+  import { onMount } from 'svelte';
+  import { supabase } from '$lib/supabaseClient';
+
+  let activeTab: 'users' | 'authors' | 'novels' = 'users';
+  let users: any[] = [];
+  let authors: any[] = [];
+  let novels: any[] = [];
+  let loading = true;
+  let error: string | null = null;
+
+  onMount(async () => {
       await loadData();
-    });
-  
-    async function loadData() {
+  });
+
+  async function loadData() {
       try {
-        loading = true;
-        error = null;
-  
-        // Load users
-        const { data: usersData, error: usersError } = await supabase
-          .from('admin_users')
-          .select('*')
-          .eq('role', 'user');
-        
-        if (usersError) throw usersError;
-        users = usersData;
-  
-        // Load authors
-        const { data: authorsData, error: authorsError } = await supabase
-          .from('admin_users')
-          .select('*')
-          .eq('role', 'author');
-        
-        if (authorsError) throw authorsError;
-        authors = authorsData;
-  
-        // Load novels
-        const { data: novelsData, error: novelsError } = await supabase
-          .from('novels')
-          .select('*');
-        
-        if (novelsError) throw novelsError;
-        novels = novelsData;
-  
+          loading = true;
+          error = null;
+
+          // Load users from user_profiles
+          const { data: usersData, error: usersError } = await supabase
+              .from('user_profiles')
+              .select('*')
+              .eq('role', 'reader');
+
+          if (usersError) throw usersError;
+          users = usersData;
+
+          // Load authors from user_profiles
+          const { data: authorsData, error: authorsError } = await supabase
+              .from('user_profiles')
+              .select('*')
+              .eq('role', 'author');
+
+          if (authorsError) throw authorsError;
+          authors = authorsData;
+
+          // Load novels
+          const { data: novelsData, error: novelsError } = await supabase
+              .from('novels')
+              .select('*');
+
+          if (novelsError) throw novelsError;
+          novels = novelsData;
+
       } catch (e: any) {
-        error = e.message;
+          error = e.message;
       } finally {
-        loading = false;
+          loading = false;
       }
-    }
-  
-    async function toggleApproval(userId: string, currentStatus: boolean) {
+  }
+
+  async function toggleApproval(userId: string, currentStatus: boolean) {
       try {
-        const { error: updateError } = await supabase.auth.admin.updateUserById(
-          userId,
-          { user_metadata: { is_approved: !currentStatus } }
-        );
-  
-        if (updateError) throw updateError;
-        await loadData();
+          const { error: updateError } = await supabase.auth.admin.updateUserById(
+              userId,
+              { user_metadata: { is_approved: !currentStatus } }
+          );
+
+          if (updateError) throw updateError;
+          await loadData();
       } catch (e: any) {
-        error = e.message;
+          error = e.message;
       }
-    }
-  </script>
-  
-  <svelte:head>
-    <title>管理后台 - 墨香书院</title>
-    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
-  </svelte:head>
+  }
+</script>
+
+<svelte:head>
+  <title>管理后台 - 墨香书院</title>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+</svelte:head>
+
   
   <div class="min-h-screen bg-red-50 py-8 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
     <div class="max-w-7xl mx-auto">
