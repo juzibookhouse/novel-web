@@ -7,4 +7,4 @@
   <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
 </svelte:head>
 
-<SignupForm role="user" />
+<SignupForm role="reader" />

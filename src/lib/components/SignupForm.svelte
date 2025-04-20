@@ -2,7 +2,7 @@
     import { supabase } from '$lib/supabaseClient';
     import { goto } from '$app/navigation';
   
-    export let role: 'user' | 'author' = 'user';
+    export let role = '';
   
     let email = '';
     let password = '';
@@ -29,12 +29,13 @@
         if (signupError) throw signupError;
 
         // Create user profile in the profiles table
+        if (data.user) console.log(data.user.id);
         if (data.user) {
           const { error: profileError } = await supabase
             .from('user_profiles')
             .insert([
               {
-                id: data.user.id,
+                user_id: data.user.id,
                 first_name: username,
                 role,
                 is_approved:false,

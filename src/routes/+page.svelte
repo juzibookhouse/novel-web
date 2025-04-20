@@ -1,139 +1,111 @@
-<!-- src/routes/+page.svelte -->
-<script>
-  import { fade } from 'svelte/transition';
-  
-  // 模拟数据
-  const featuredNovels = [
-    { id: 1, title: '九州·缥缈录', author: '江南', category: '玄幻', cover: '/images/cover1.jpg' },
-    { id: 2, title: '剑来', author: '烽火戏诸侯', category: '仙侠', cover: '/images/cover2.jpg' },
-    { id: 3, title: '庆余年', author: '猫腻', category: '权谋', cover: '/images/cover3.jpg' }
-  ];
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import { supabase } from '$lib/supabaseClient';
+
+  let featuredNovels: any[] = [];
+  let loading = true;
+
+  onMount(async () => {
+    const { data } = await supabase
+      .from('novels')
+      .select('*')
+      .limit(6)
+      .order('created_at', { ascending: false });
+    
+    featuredNovels = data || [];
+    loading = false;
+  });
 
   const categories = [
-    { name: '武侠', icon: '⚔️' },
-    { name: '仙侠', icon: '🌌' },
-    { name: '历史', icon: '📜' },
-    { name: '言情', icon: '💞' },
-    { name: '玄幻', icon: '🐉' }
+    { name: '武侠', icon: '⚔️', desc: '侠之大者，为国为民' },
+    { name: '仙侠', icon: '🌌', desc: '飞天遁地，逍遥自在' },
+    { name: '历史', icon: '📜', desc: '秦皇汉武，气吞万里' },
+    { name: '玄幻', icon: '🐉', desc: '神通广大，法力无边' }
   ];
 </script>
 
 <svelte:head>
-  <title>墨香书院 - 阅尽江湖事</title>
-  <!-- 引入书法字体 -->
-  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+  <title>墨香书院 - 汇聚华夏文学精粹</title>
 </svelte:head>
 
-<!-- 主容器使用传统红色背景 -->
-<div class="min-h-screen bg-red-50 bg-opacity-95">
-  <!-- 导航栏 -->
-  <nav class="bg-red-800 text-yellow-50 shadow-lg">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-      <h1 class="font-mashanzheng text-3xl hover:text-yellow-200 transition-colors">
-        <a href="/">墨香书院</a>
-      </h1>
-      
-      <div class="hidden md:flex space-x-6">
-        <a href="/library" class="hover:text-yellow-200 transition-colors">书库</a>
-        <a href="/rankings" class="hover:text-yellow-200 transition-colors">排行榜</a>
-        <a href="/authors" class="hover:text-yellow-200 transition-colors">作家专区</a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- 搜索栏 -->
-  <div class="container mx-auto px-4 py-8">
-    <div class="max-w-2xl mx-auto relative">
-      <input 
-        type="text" 
-        placeholder="搜索书名或作者..."
-        class="w-full px-6 py-3 rounded-full border-2 border-red-300 focus:outline-none focus:border-red-500 shadow-lg"
-      />
-      <button class="absolute right-3 top-2 bg-red-600 text-white px-6 py-2 rounded-full hover:bg-red-700 transition-colors">
-        寻书
-      </button>
-    </div>
-  </div>
-
-  <!-- 特色推荐 -->
-  <section class="container mx-auto px-4 py-12">
-    <h2 class="text-3xl font-mashanzheng text-red-800 mb-8 border-l-4 border-red-600 pl-4">
-      精品推荐
-    </h2>
-    
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      {#each featuredNovels as novel}
-        <article 
-          transition:fade
-          class="bg-white rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 group"
+<div class="bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
+  <!-- Hero Section -->
+  <section class="relative py-20 px-4 sm:px-6 lg:px-8 bg-red-800 text-white overflow-hidden">
+    <div class="absolute inset-0 bg-red-900/30"></div>
+    <div class="relative max-w-7xl mx-auto text-center">
+      <h1 class="font-['Ma_Shan_Zheng'] text-6xl mb-6">墨香书院</h1>
+      <p class="text-xl text-yellow-100 mb-8">汇聚华夏文学精粹，传承千年文化瑰宝</p>
+      <div class="flex justify-center space-x-4">
+        <a
+          href="/novels"
+          class="bg-yellow-100 text-red-800 px-8 py-3 rounded-full hover:bg-yellow-200 transition duration-200"
         >
-          <img 
-            src={novel.cover} 
-            alt={novel.title}
-            class="w-full h-48 object-cover transform group-hover:scale-105 transition-transform"
-          />
-          <div class="p-6">
-            <div class="flex items-center mb-2">
-              <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">{novel.category}</span>
-            </div>
-            <h3 class="text-xl font-semibold text-gray-800">{novel.title}</h3>
-            <p class="text-gray-600 mt-2">作者：{novel.author}</p>
-          </div>
-        </article>
-      {/each}
+          浏览书库
+        </a>
+        <a
+          href="/author/signup"
+          class="border-2 border-yellow-100 text-yellow-100 px-8 py-3 rounded-full hover:bg-red-700 transition duration-200"
+        >
+          成为作家
+        </a>
+      </div>
     </div>
   </section>
 
-  <!-- 分类导航 -->
-  <section class="bg-red-100 py-12">
-    <div class="container mx-auto px-4">
-      <h2 class="text-3xl font-mashanzheng text-red-800 mb-8 text-center">
-        书海分类
-      </h2>
-      
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+  <!-- Categories Section -->
+  <section class="py-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-red-800 text-center mb-12">精选分类</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {#each categories as category}
-          <a 
-            href="/category/{category.name}" 
-            class="bg-white p-6 rounded-lg text-center hover:bg-red-50 transition-colors"
+          <a
+            href={`/novels?category=${category.name}`}
+            class="group bg-white/80 backdrop-blur-sm rounded-lg p-6 text-center border-2 border-red-100 hover:border-red-300 transition duration-200"
           >
-            <span class="text-4xl mb-2 block">{category.icon}</span>
-            <span class="text-gray-800 font-medium">{category.name}</span>
+            <span class="text-4xl mb-4 block">{category.icon}</span>
+            <h3 class="text-xl font-medium text-gray-900 mb-2">{category.name}</h3>
+            <p class="text-gray-600">{category.desc}</p>
           </a>
         {/each}
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 页脚 -->
-  <footer class="bg-red-900 text-yellow-100 mt-12">
-    <div class="container mx-auto px-4 py-8">
-      <div class="text-center border-t border-red-700 pt-4">
-        <p>© 2023 墨香书院 - 保留所有权利</p>
-        <div class="mt-2 space-x-4">
-          <a href="/about" class="hover:text-yellow-200">关于我们</a>
-          <a href="/contact" class="hover:text-yellow-200">联系我们</a>
-        </div>
+    <!-- Featured Novels Section -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-red-50/50">
+      <div class="max-w-7xl mx-auto">
+        <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-red-800 text-center mb-12">精品推荐</h2>
+        {#if loading}
+          <div class="flex justify-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-4 border-red-800 border-t-transparent"></div>
+          </div>
+        {:else}
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {#each featuredNovels as novel}
+              <a
+                href={`/novel/${novel.id}`}
+                class="group bg-white/80 backdrop-blur-sm rounded-lg overflow-hidden border-2 border-red-100 hover:border-red-300 transition duration-200"
+              >
+                <div class="aspect-w-3 aspect-h-2">
+                  <img
+                    src={novel.cover_url || 'https://via.placeholder.com/400x300?text=封面未上传'}
+                    alt={novel.title}
+                    class="object-cover w-full h-48 group-hover:scale-105 transition duration-200"
+                  />
+                </div>
+                <div class="p-6">
+                  <h3 class="text-xl font-medium text-gray-900 mb-2">{novel.title}</h3>
+                  <p class="text-gray-600 line-clamp-2">{novel.description}</p>
+                  <div class="mt-4 flex items-center justify-between">
+                    <span class="text-sm text-gray-500">{novel.author}</span>
+                    <span class="text-sm bg-red-100 text-red-800 px-2 py-1 rounded-full">
+                      {novel.category}
+                    </span>
+                  </div>
+                </div>
+              </a>
+            {/each}
+          </div>
+        {/if}
       </div>
-    </div>
-  </footer>
+    </section>
 </div>
-
-<style global>
-  /* 自定义字体样式 */
-  .font-mashanzheng {
-    font-family: 'Ma Shan Zheng', cursive;
-  }
-
-  /* 添加传统纹样背景 */
-  body {
-    background-image: url('/images/pattern.png');
-    background-size: 300px;
-  }
-
-  /* 输入框传统样式 */
-  input::placeholder {
-    color: #9CA3AF;
-    font-style: italic;
-  }
-</style>

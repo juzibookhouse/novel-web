@@ -1,13 +1,23 @@
 <script lang="ts">
   import "../app.css";
-  import { onMount } from 'svelte';
-  import { user } from '$lib/stores/authStore';
-  
-  onMount(async () => {
-    
-  });
+  import Header from "$lib/components/Header.svelte";
+  import Footer from "$lib/components/Footer.svelte";
 </script>
-{$user?.email} {$user?.id}
-<div class="min-h-screen bg-gray-50">
-  <slot />
+
+<svelte:head>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+</svelte:head>
+
+<div class="flex flex-col min-h-screen bg-red-50">
+  <Header />
+  <main class="flex-grow">
+    <slot />
+  </main>
+  <Footer />
 </div>
+
+<style>
+  :global(body) {
+    background-color: #FEF2F2;
+  }
+</style>
