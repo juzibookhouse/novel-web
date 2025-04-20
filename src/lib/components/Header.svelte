@@ -39,6 +39,9 @@
                 <a href="/contact" class="hover:text-yellow-200 transition-colors">联系我们</a>
 
                 {#if $user}
+                    {#if userRole === 'admin'}
+                        <a href="/admin" class="hover:text-yellow-200 transition-colors">管理员面板</a>
+                    {/if}
                     {#if userRole === 'author'}
                         <a href="/author/dashboard" class="hover:text-yellow-200 transition-colors">作家专区</a>
                     {:else}
