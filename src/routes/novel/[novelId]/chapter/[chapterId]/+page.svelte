@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { supabase } from '$lib/supabaseClient';
   import { user } from '$lib/stores/authStore';
   import MembershipPlans from '$lib/components/MembershipPlans.svelte';
@@ -9,6 +9,10 @@
 
   let showMembershipModal = false;
   let isApproved = false;
+  let fontSize = 16;
+  let isInBookshelf = false;
+  let readingStartTime: number | null = null;
+  let readingTimer: NodeJS.Timeout;
 
   onMount(async () => {
     if ($user) {
@@ -22,9 +26,82 @@
 
       if (!isApproved) {
         showMembershipModal = true;
+      } else {
+        // Check if novel is in bookshelf
+        const { data: bookshelf } = await supabase
+          .from('bookshelves')
+          .select()
+          .eq('user_id', $user.id)
+          .eq('novel_id', novelId)
+          .single();
+        
+        isInBookshelf = !!bookshelf;
+
+        // Start reading timer
+        readingStartTime = Date.now();
+        startReadingTimer();
       }
     }
+
+    // Load saved font size from localStorage
+    const savedFontSize = localStorage.getItem('reading-font-size');
+    if (savedFontSize) {
+      fontSize = parseInt(savedFontSize);
+    }
   });
+
+  onDestroy(() => {
+    if (readingTimer) {
+      clearInterval(readingTimer);
+      saveReadingTime();
+    }
+  });
+
+  function startReadingTimer() {
+    readingTimer = setInterval(saveReadingTime, 30000); // Save every 30 seconds
+  }
+
+  async function saveReadingTime() {
+    if (!$user || !readingStartTime || !isApproved) return;
+
+    const readingTime = Math.floor((Date.now() - readingStartTime) / 1000);
+    readingStartTime = Date.now();
+
+    await supabase
+      .from('reading_records')
+      .insert({
+        user_id: $user.id,
+        novel_id: novelId,
+        chapter_id: chapter.id,
+        reading_time: readingTime
+      });
+  }
+
+  function changeFontSize(delta: number) {
+    fontSize = Math.max(12, Math.min(24, fontSize + delta));
+    localStorage.setItem('reading-font-size', fontSize.toString());
+  }
+
+  async function toggleBookshelf() {
+    if (!$user) return;
+
+    if (isInBookshelf) {
+      await supabase
+        .from('bookshelves')
+        .delete()
+        .eq('user_id', $user.id)
+        .eq('novel_id', novelId);
+    } else {
+      await supabase
+        .from('bookshelves')
+        .insert({
+          user_id: $user.id,
+          novel_id: novelId
+        });
+    }
+
+    isInBookshelf = !isInBookshelf;
+  }
 </script>
 
 <svelte:head>
@@ -51,7 +128,34 @@
         ← 返回目录
       </a>
       <h1 class="font-['Ma_Shan_Zheng'] text-2xl text-red-800">{chapter.novels.title}</h1>
+      
+      {#if $user && isApproved}
+        <button
+          on:click={toggleBookshelf}
+          class="text-red-700 hover:text-red-800 transition-colors duration-200"
+        >
+          {isInBookshelf ? '移出书架' : '加入书架'}
+        </button>
+      {/if}
     </div>
+
+    <!-- Reading Controls -->
+    {#if $user && isApproved}
+      <div class="p-4 border-b-2 border-red-100 flex justify-center space-x-4">
+        <button
+          on:click={() => changeFontSize(-2)}
+          class="px-3 py-1 bg-red-100 text-red-800 rounded-full hover:bg-red-200 transition-colors"
+        >
+          A-
+        </button>
+        <button
+          on:click={() => changeFontSize(2)}
+          class="px-3 py-1 bg-red-100 text-red-800 rounded-full hover:bg-red-200 transition-colors"
+        >
+          A+
+        </button>
+      </div>
+    {/if}
 
     <!-- Chapter Content -->
     <div class="p-8">
@@ -78,7 +182,10 @@
         </div>
       {:else}
         <div class="prose prose-lg max-w-none">
-          <p class="text-gray-800 leading-relaxed whitespace-pre-wrap">
+          <p 
+            class="text-gray-800 leading-relaxed whitespace-pre-wrap"
+            style="font-size: {fontSize}px"
+          >
             {chapter.content || '本章节暂无内容'}
           </p>
         </div>
