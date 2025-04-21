@@ -15,6 +15,7 @@
     id: string;
     title: string;
     description: string;
+    status: string;
     user_id: string;
     created_at: string;
     category?: string;
@@ -23,9 +24,10 @@
   }
   
   interface NewNovel {
+    id?:string;
     title: string;
     description: string;
-    category: string;
+    category?: string;
     cover_file?: File;
   }
   
@@ -123,7 +125,7 @@
     return publicUrl;
   }
   
-  async function createNovel() {
+  async function upsertNovel() {
     try {
       if (!$user?.id) throw new Error('请先登录');
       
@@ -132,7 +134,20 @@
         cover_url = await uploadCover(newNovel.cover_file);
       }
 
-      const { data, error: createError } = await supabase
+      let upsertResponse
+      if (newNovel.id) {
+        upsertResponse = await supabase
+        .from('novels')
+        .update([{
+          title: newNovel.title,
+          description: newNovel.description,
+          // category: newNovel.category,
+          cover_url,
+        }])
+        .eq('id', newNovel.id)
+        .select();
+      } else {
+      upsertResponse = await supabase
         .from('novels')
         .insert([{
           title: newNovel.title,
@@ -142,6 +157,8 @@
           user_id: $user.id
         }])
         .select();
+      }
+      const createError = upsertResponse.error;
       
       if (createError) throw createError;
       
@@ -151,6 +168,12 @@
     } catch (e: any) {
       error = e.message;
     }
+  }
+
+  const startEditNovel = (novel:Novel) => {
+    selectedNovel = novel;
+    newNovel = novel;
+    showNovelForm = true;
   }
   
   async function createChapter() {
@@ -234,6 +257,12 @@
                 />
               </div>
               <div class="flex-grow">
+                <button
+                  on:click={() => startEditNovel(novel)}
+                  class="bg-yellow-100 cursor-pointer hover:bg-yellow-200 text-yellow-800 px-4 py-2 rounded-full text-sm transition duration-200"
+                >
+                  编辑
+                </button>
                 <h3 class="text-2xl font-medium text-gray-900 mb-2">{novel.title}</h3>
                 <div class="flex items-center gap-4 text-sm text-gray-600 mb-4">
                   <span>类别：{novel.category || '未分类'}</span>
@@ -281,7 +310,7 @@
       <div class="px-6 py-4 border-b-2 border-red-100">
         <h3 class="text-xl font-medium text-gray-900">创作新作品</h3>
       </div>
-      <form on:submit|preventDefault={createNovel} class="px-6 py-4">
+      <form on:submit|preventDefault={upsertNovel} class="px-6 py-4">
         <div class="space-y-4">
           <div>
             <label for="title" class="block text-sm font-medium text-gray-700">作品名称</label>
@@ -345,7 +374,7 @@
             type="submit"
             class="px-4 py-2 bg-red-800 text-white rounded-md hover:bg-red-700"
           >
-            创建
+            {newNovel.id ? '更新' : '创建'}
           </button>
         </div>
       </form>
