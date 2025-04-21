@@ -49,7 +49,7 @@
                     {/if}
                     <button 
                         on:click={handleLogout}
-                        class="bg-red-700 hover:bg-red-600 px-4 py-2 rounded-full transition-colors"
+                        class="bg-red-700 hover:bg-red-600 px-4 py-2 rounded-full transition-colors cursor-pointer"
                     >
                         退出
                     </button>

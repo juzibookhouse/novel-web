@@ -24,17 +24,21 @@
       // Check if user is approved
       const { data: profile, error: profileError } = await supabase
         .from('user_profiles')
-        .select('is_approved')
+        .select('*')
         .eq('user_id', data.user.id)
         .single();
 
       if (profileError) throw profileError;
 
-      if (!profile.is_approved) {
-        showMembership = true;
+      if (profile.role == 'author') {
+        goto('/author/dashboard');
       } else {
-        // Redirect to dashboard
-        goto('/');
+        if (!profile.is_approved) {
+          showMembership = true;
+        } else {
+          // Redirect to dashboard
+          goto('/');
+        }
       }
     } catch (e: any) {
       error = e.message;

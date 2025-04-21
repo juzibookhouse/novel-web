@@ -18,6 +18,7 @@
     user_id: string;
     created_at: string;
     category?: string;
+    cover_url?: string;
     chapters?: Chapter[];
   }
   
@@ -25,6 +26,7 @@
     title: string;
     description: string;
     category: string;
+    cover_file?: File;
   }
   
   interface NewChapter {
@@ -36,6 +38,7 @@
   let novels: Novel[] = [];
   let loading: boolean = true;
   let error: string | null = null;
+  let uploadProgress: number = 0;
   
   let showNovelForm: boolean = false;
   let showChapterForm: boolean = false;
@@ -74,6 +77,7 @@
           description,
           user_id,
           created_at,
+          cover_url,
           chapters (
             id,
             title,
@@ -91,17 +95,50 @@
       loading = false;
     }
   }
+
+  async function handleCoverUpload(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      newNovel.cover_file = input.files[0];
+    }
+  }
+
+  async function uploadCover(file: File): Promise<string> {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+    const filePath = `novel-covers/${fileName}`;
+
+    const { error: uploadError, data } = await supabase.storage
+      .from('covers')
+      .upload(filePath, file, {
+        upsert: true
+      });
+
+    if (uploadError) throw uploadError;
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('covers')
+      .getPublicUrl(filePath);
+
+    return publicUrl;
+  }
   
   async function createNovel() {
     try {
       if (!$user?.id) throw new Error('请先登录');
       
+      let cover_url = null;
+      if (newNovel.cover_file) {
+        cover_url = await uploadCover(newNovel.cover_file);
+      }
+
       const { data, error: createError } = await supabase
         .from('novels')
         .insert([{
           title: newNovel.title,
           description: newNovel.description,
           // category: newNovel.category,
+          cover_url,
           user_id: $user.id
         }])
         .select();
@@ -188,21 +225,30 @@
       {#each novels as novel}
         <div class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-red-100 shadow-lg overflow-hidden">
           <div class="p-6">
-            <div class="flex items-start justify-between">
-              <div>
+            <div class="flex items-start gap-6">
+              <div class="w-32 h-44 flex-shrink-0">
+                <img
+                  src={novel.cover_url || 'https://via.placeholder.com/300x400?text=封面未上传'}
+                  alt={novel.title}
+                  class="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+              <div class="flex-grow">
                 <h3 class="text-2xl font-medium text-gray-900 mb-2">{novel.title}</h3>
                 <div class="flex items-center gap-4 text-sm text-gray-600 mb-4">
                   <span>类别：{novel.category || '未分类'}</span>
                   <span>章节：{novel.chapters?.length || 0}</span>
                 </div>
                 <p class="text-gray-700">{novel.description}</p>
+                <div class="mt-4">
+                  <button
+                    on:click={() => startAddChapter(novel)}
+                    class="bg-red-100 hover:bg-red-200 text-red-800 px-4 py-2 rounded-full text-sm transition duration-200"
+                  >
+                    添加新章节
+                  </button>
+                </div>
               </div>
-              <button
-                on:click={() => startAddChapter(novel)}
-                class="bg-red-100 hover:bg-red-200 text-red-800 px-4 py-2 rounded-full text-sm transition duration-200"
-              >
-                添加新章节
-              </button>
             </div>
           </div>
           {#if novel.chapters && novel.chapters.length > 0}
@@ -260,6 +306,21 @@
                 <option value={category}>{category}</option>
               {/each}
             </select>
+          </div>
+          <div>
+            <label for="cover" class="block text-sm font-medium text-gray-700">封面图片</label>
+            <input
+              type="file"
+              id="cover"
+              accept="image/*"
+              on:change={handleCoverUpload}
+              class="mt-1 block w-full text-sm text-gray-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-full file:border-0
+                file:text-sm file:font-semibold
+                file:bg-red-50 file:text-red-700
+                hover:file:bg-red-100"
+            />
           </div>
           <div>
             <label for="description" class="block text-sm font-medium text-gray-700">作品简介</label>
