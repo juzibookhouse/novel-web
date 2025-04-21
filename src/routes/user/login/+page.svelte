@@ -50,6 +50,7 @@
 </script>
 
 <svelte:head>
+  <title>登录 - 墨香书院</title>
   <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
 </svelte:head>
 
