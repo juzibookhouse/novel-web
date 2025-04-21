@@ -1,11 +1,13 @@
 <script lang="ts">
   import { supabase } from '$lib/supabaseClient';
   import { goto } from '$app/navigation';
+  import MembershipPlans from '$lib/components/MembershipPlans.svelte';
 
   let email = '';
   let password = '';
   let loading = false;
   let error: string | null = null;
+  let showMembership = false;
 
   async function handleLogin() {
     try {
@@ -18,20 +20,42 @@
       });
 
       if (loginError) throw loginError;
-      
-      // Redirect to dashboard
-      goto('/');
+
+      // Check if user is approved
+      const { data: profile, error: profileError } = await supabase
+        .from('user_profiles')
+        .select('is_approved')
+        .eq('user_id', data.user.id)
+        .single();
+
+      if (profileError) throw profileError;
+
+      if (!profile.is_approved) {
+        showMembership = true;
+      } else {
+        // Redirect to dashboard
+        goto('/');
+      }
     } catch (e: any) {
       error = e.message;
     } finally {
       loading = false;
     }
   }
+
+  function handleMembershipClose() {
+    showMembership = false;
+    goto('/');
+  }
 </script>
 
 <svelte:head>
   <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
 </svelte:head>
+
+{#if showMembership}
+  <MembershipPlans onClose={handleMembershipClose} />
+{/if}
 
 <div class="min-h-screen bg-red-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
   <div class="w-full max-w-md space-y-8">
