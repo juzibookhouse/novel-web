@@ -186,12 +186,12 @@
         </div>
       {:else}
         <div class="prose prose-lg max-w-none">
-          <p 
-            class="text-gray-800 leading-relaxed whitespace-pre-wrap"
+          <div 
+            class="text-gray-800 leading-relaxed"
             style="font-size: {fontSize}px"
           >
-            {chapter.content || '本章节暂无内容'}
-          </p>
+            {@html chapter.content || '本章节暂无内容'}
+          </div>
         </div>
       {/if}
     </div>
