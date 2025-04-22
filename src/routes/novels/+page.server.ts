@@ -30,17 +30,14 @@ export async function load({ url }: { url: URL }) {
     .order('created_at', { ascending: false });
 
   const { data: categories } = await supabase
-    .from('novels')
-    .select('category')
-    .not('category', 'is', null);
-
-  const uniqueCategories = [...new Set(categories?.map(item => item.category))];
+    .from('categories')
+    .select('*');
 
   return {
     novels: novels || [],
     totalPages: Math.ceil((count || 0) / pageSize),
     currentPage: page,
-    categories: uniqueCategories || [],
+    categories: categories || [],
     search,
     selectedCategory: category,
     selectedStatus: status

@@ -90,7 +90,7 @@
             >
               <option value="">全部类别</option>
               {#each data.categories as category}
-                <option value={category}>{category}</option>
+                <option value={category.name}>{category.name}</option>
               {/each}
             </select>
             <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500">
