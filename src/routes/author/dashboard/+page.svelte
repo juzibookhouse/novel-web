@@ -3,6 +3,11 @@
   import { supabase } from '$lib/supabaseClient';
   import { user } from '$lib/stores/authStore';
   
+  interface Category {
+    id: string;
+    name: string;
+  }
+
   interface Chapter {
     id: string;
     title: string;
@@ -18,16 +23,18 @@
     status: string;
     user_id: string;
     created_at: string;
-    category?: string;
+    categories?: Category[];
     cover_url?: string;
     chapters?: Chapter[];
   }
   
   interface NewNovel {
-    id?:string;
+    id?: string;
     title: string;
     description: string;
-    category?: string;
+    categories: string[];
+    status: string;
+    cover_url?: string;
     cover_file?: File;
   }
   
@@ -38,6 +45,7 @@
   }
   
   let novels: Novel[] = [];
+  let categories: Category[] = [];
   let loading: boolean = true;
   let error: string | null = null;
   let uploadProgress: number = 0;
@@ -48,7 +56,8 @@
   let newNovel: NewNovel = {
     title: '',
     description: '',
-    category: ''
+    categories: [],
+    status: 'ongoing'
   };
   let newChapter: NewChapter = {
     title: '',
@@ -56,20 +65,39 @@
     novel_id: null
   };
 
-  const categories = [
-    '武侠', '仙侠', '历史', '言情', '玄幻', '科幻', '奇幻', '都市'
+  let newCategoryName: string = '';
+
+  const statusOptions = [
+    { value: 'ongoing', label: '连载中' },
+    { value: 'finished', label: '已完结' }
   ];
   
   onMount(async () => {
     setTimeout(async()=>{
-      await fetchNovels();
+      await Promise.all([
+        fetchNovels(),
+        fetchCategories()
+      ]);
     },1);
   });
+
+  async function fetchCategories() {
+    const { data, error: fetchError } = await supabase
+      .from('categories')
+      .select('*')
+      .order('name');
+    
+    if (fetchError) {
+      console.error('Error fetching categories:', fetchError);
+      return;
+    }
+    
+    categories = data || [];
+  }
   
   async function fetchNovels() {
     try {
       loading = true;
-      console.log($user);
       if (!$user?.id) return;
       const { data, error: fetchError } = await supabase
         .from('novels')
@@ -77,6 +105,7 @@
           id,
           title,
           description,
+          status,
           user_id,
           created_at,
           cover_url,
@@ -84,13 +113,23 @@
             id,
             title,
             created_at
+          ),
+          novel_categories (
+            categories (
+              id,
+              name
+            )
           )
         `)
         .eq('user_id', $user?.id)
         .order('created_at', { ascending: false });
       
       if (fetchError) throw fetchError;
-      novels = data as Novel[];
+      
+      novels = (data || []).map(novel => ({
+        ...novel,
+        categories: novel.novel_categories?.map(nc => nc.categories)
+      }));
     } catch (e: any) {
       error = e.message;
     } finally {
@@ -124,55 +163,103 @@
 
     return publicUrl;
   }
+
+  async function addNewCategory() {
+    if (!newCategoryName.trim()) return;
+
+    const { data, error: categoryError } = await supabase
+      .from('categories')
+      .insert([{ name: newCategoryName.trim() }])
+      .select()
+      .single();
+
+    if (categoryError) {
+      console.error('Error adding category:', categoryError);
+      return;
+    }
+
+    categories = [...categories, data];
+    newCategoryName = '';
+    await fetchCategories();
+  }
   
   async function upsertNovel() {
     try {
       if (!$user?.id) throw new Error('请先登录');
       
-      let cover_url = null;
+      let cover_url = newNovel.cover_url;
       if (newNovel.cover_file) {
         cover_url = await uploadCover(newNovel.cover_file);
       }
 
-      let upsertResponse
-      if (newNovel.id) {
-        upsertResponse = await supabase
-        .from('novels')
-        .update([{
-          title: newNovel.title,
-          description: newNovel.description,
-          // category: newNovel.category,
-          cover_url,
-        }])
-        .eq('id', newNovel.id)
-        .select();
+      let novelId = newNovel.id;
+      if (!novelId) {
+        // Insert new novel
+        const { data: novel, error: novelError } = await supabase
+          .from('novels')
+          .insert([{
+            title: newNovel.title,
+            description: newNovel.description,
+            status: newNovel.status,
+            cover_url,
+            user_id: $user.id
+          }])
+          .select()
+          .single();
+
+        if (novelError) throw novelError;
+        novelId = novel.id;
       } else {
-      upsertResponse = await supabase
-        .from('novels')
-        .insert([{
-          title: newNovel.title,
-          description: newNovel.description,
-          // category: newNovel.category,
-          cover_url,
-          user_id: $user.id
-        }])
-        .select();
+        // Update existing novel
+        const { error: updateError } = await supabase
+          .from('novels')
+          .update({
+            title: newNovel.title,
+            description: newNovel.description,
+            status: newNovel.status,
+            cover_url,
+          })
+          .eq('id', novelId);
+
+        if (updateError) throw updateError;
       }
-      const createError = upsertResponse.error;
-      
-      if (createError) throw createError;
+
+      // Delete existing categories
+      if (novelId) {
+        await supabase
+          .from('novel_categories')
+          .delete()
+          .eq('novel_id', novelId);
+      }
+
+      // Insert new categories
+      if (newNovel.categories.length > 0) {
+        const categoryLinks = newNovel.categories.map(categoryId => ({
+          novel_id: novelId,
+          category_id: categoryId
+        }));
+
+        const { error: categoryError } = await supabase
+          .from('novel_categories')
+          .insert(categoryLinks);
+
+        if (categoryError) throw categoryError;
+      }
       
       await fetchNovels();
       showNovelForm = false;
-      newNovel = { title: '', description: '', category: '' };
+      newNovel = { title: '', description: '', categories: [], status: 'ongoing' };
     } catch (e: any) {
       error = e.message;
     }
   }
 
-  const startEditNovel = (novel:Novel) => {
+  const startEditNovel = (novel: Novel) => {
     selectedNovel = novel;
-    newNovel = novel;
+    newNovel = {
+      ...novel,
+      categories: novel.categories?.map(c => c.id) || []
+    };
     showNovelForm = true;
   }
   
@@ -265,7 +352,16 @@
                 </button>
                 <h3 class="text-2xl font-medium text-gray-900 mb-2">{novel.title}</h3>
                 <div class="flex items-center gap-4 text-sm text-gray-600 mb-4">
-                  <span>类别：{novel.category || '未分类'}</span>
+                  <div class="flex flex-wrap gap-2">
+                    {#each novel.categories || [] as category}
+                      <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full">
+                        {category.name}
+                      </span>
+                    {/each}
+                  </div>
+                  <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                    {novel.status === 'ongoing' ? '连载中' : '已完结'}
+                  </span>
                   <span>章节：{novel.chapters?.length || 0}</span>
                 </div>
                 <p class="text-gray-700">{novel.description}</p>
@@ -324,26 +420,79 @@
             />
           </div>
           <div>
-            <label for="category" class="block text-sm font-medium text-gray-700">类别</label>
+            <label class="block text-sm font-medium text-gray-700">类别</label>
+            <div class="mt-2 space-y-2">
+              {#each categories as category}
+                <label class="inline-flex items-center mr-4">
+                  <input
+                    type="checkbox"
+                    value={category.id}
+                    checked={newNovel.categories.includes(category.id)}
+                    on:change={(e) => {
+                      if (e && e.target.checked) {
+                        newNovel.categories = [...newNovel.categories, category.id];
+                      } else {
+                        newNovel.categories = newNovel.categories.filter(id => id !== category.id);
+                      }
+                    }}
+                    class="form-checkbox h-4 w-4 text-red-600 border-red-300 rounded"
+                  />
+                  <span class="ml-2">{category.name}</span>
+                </label>
+              {/each}
+            </div>
+            <div class="mt-2 flex gap-2">
+              <input
+                type="text"
+                bind:value={newCategoryName}
+                placeholder="添加新类别"
+                class="flex-1 rounded-md border-2 border-red-200 px-3 py-2 focus:border-red-500 focus:ring-red-500"
+              />
+              <button
+                type="button"
+                on:click={addNewCategory}
+                class="px-4 py-2 bg-red-100 text-red-800 rounded-md hover:bg-red-200"
+              >
+                添加
+              </button>
+            </div>
+          </div>
+          <div>
+            <label for="status" class="block text-sm font-medium text-gray-700">连载状态</label>
             <select
-              id="category"
-              bind:value={newNovel.category}
+              id="status"
+              bind:value={newNovel.status}
               class="mt-1 block w-full rounded-md border-2 border-red-200 px-3 py-2 focus:border-red-500 focus:ring-red-500"
             >
-              <option value="">请选择类别</option>
-              {#each categories as category}
-                <option value={category}>{category}</option>
+              {#each statusOptions as option}
+                <option value={option.value}>{option.label}</option>
               {/each}
             </select>
           </div>
           <div>
             <label for="cover" class="block text-sm font-medium text-gray-700">封面图片</label>
+            {#if newNovel.cover_url}
+              <div class="mt-2 relative w-32">
+                <img
+                  src={newNovel.cover_url}
+                  alt="当前封面"
+                  class="w-full h-44 object-cover rounded-lg"
+                />
+                <button
+                  type="button"
+                  class="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700"
+                  on:click={() => newNovel.cover_url = undefined}
+                >
+                  ✕
+                </button>
+              </div>
+            {/if}
             <input
               type="file"
               id="cover"
               accept="image/*"
               on:change={handleCoverUpload}
-              class="mt-1 block w-full text-sm text-gray-500
+              class="mt-2 block w-full text-sm text-gray-500
                 file:mr-4 file:py-2 file:px-4
                 file:rounded-full file:border-0
                 file:text-sm file:font-semibold
