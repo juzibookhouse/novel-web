@@ -69,7 +69,7 @@
 
     await supabase
       .from('reading_records')
-      .insert({
+      .upsert({
         user_id: $user.id,
         novel_id: novelId,
         chapter_id: chapter.id,
@@ -132,7 +132,7 @@
       {#if $user && isApproved}
         <button
           on:click={toggleBookshelf}
-          class="text-red-700 hover:text-red-800 transition-colors duration-200"
+          class="text-red-700 cursor-pointer hover:text-red-800 transition-colors duration-200"
         >
           {isInBookshelf ? '移出书架' : '加入书架'}
         </button>

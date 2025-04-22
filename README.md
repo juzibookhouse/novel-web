@@ -24,5 +24,5 @@ You can preview the production build with `npm run preview`.
 
 ## Todos
 - [ ] reader subscription
-- [ ] novel creat time and words
+- [x] novel creat time and words
 - [ ] update novel docx to let admin approved
