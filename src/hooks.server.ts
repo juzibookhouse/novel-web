@@ -11,14 +11,14 @@ export const handle: Handle = async ({ event, resolve }) => {
   event.locals.user = session?.user || null;
   
   // Protected routes
-  const protectedRoutes = ['/dashboard'];
+  const protectedRoutes = ['/admin','/author/dashboard', '/user/dashboard'];
   const isProtectedRoute = protectedRoutes.some(route => 
     event.url.pathname.startsWith(route)
   );
   
   // Redirect if not authenticated
   if (isProtectedRoute && !event.locals.user) {
-    throw redirect(303, '/login');
+    throw redirect(303, '/user/login');
   }
   
   return await resolve(event);
