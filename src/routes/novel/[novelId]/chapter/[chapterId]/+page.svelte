@@ -159,7 +159,8 @@
 
     <!-- Chapter Content -->
     <div class="p-8">
-      <h2 class="text-3xl text-gray-900 mb-8 text-center">{chapter.title}</h2>
+      <h2 class="text-3xl text-gray-900 mb-4 text-center">{chapter.title}</h2>
+      <p class="text-gray-600 text-center mb-8">字数: {chapter.content?.length || 0}</p>
       {#if !$user}
         <div class="text-center py-8">
           <p class="text-gray-800 mb-4">请登录后继续阅读</p>
