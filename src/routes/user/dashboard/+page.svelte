@@ -37,8 +37,7 @@
                         cover_url
                     )
                 `)
-                .eq('user_id', $user.id)
-                .eq('status', 'reading');
+                .eq('user_id', $user.id);
             
             if (shelf) {
                 shelfNovels = shelf.map(item => item.novels);
@@ -55,8 +54,7 @@
                         cover_url
                     )
                 `)
-                .eq('user_id', $user.id)
-                .eq('status', 'finished');
+                .eq('user_id', $user.id);
             
             if (read) {
                 readNovels = read.map(item => item.novels);
