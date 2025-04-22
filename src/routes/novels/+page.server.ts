@@ -11,14 +11,22 @@ export async function load({ url }: { url: URL }) {
 
   let query = supabase
     .from('novels')
-    .select('*', { count: 'exact' });
+    .select(`
+      *,
+      novel_categories!inner (
+        categories!inner (
+          id,
+          name
+        )
+      )
+    `, { count: 'exact' });
 
   if (search) {
     query = query.ilike('title', `%${search}%`);
   }
 
   if (category) {
-    query = query.eq('category', category);
+    query = query.eq('novel_categories.categories.name', category);
   }
 
   if (status) {
@@ -31,10 +39,17 @@ export async function load({ url }: { url: URL }) {
 
   const { data: categories } = await supabase
     .from('categories')
-    .select('*');
+    .select('*')
+    .order('name');
+
+  // Clean up the novels data to remove the nested structure
+  const cleanedNovels = novels?.map(novel => ({
+    ...novel,
+    categories: novel.novel_categories.map((nc: any) => nc.categories)
+  })) || [];
 
   return {
-    novels: novels || [],
+    novels: cleanedNovels,
     totalPages: Math.ceil((count || 0) / pageSize),
     currentPage: page,
     categories: categories || [],
