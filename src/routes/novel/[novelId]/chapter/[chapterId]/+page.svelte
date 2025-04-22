@@ -160,7 +160,10 @@
     <!-- Chapter Content -->
     <div class="p-8">
       <h2 class="text-3xl text-gray-900 mb-4 text-center">{chapter.title}</h2>
-      <p class="text-gray-600 text-center mb-8">字数: {chapter.content?.length || 0}</p>
+      <div class="text-gray-600 text-center mb-8">
+        <p>字数: {chapter.content?.length || 0}</p>
+        <p>更新时间: {new Date(chapter.updated_at || chapter.created_at).toLocaleString('zh-CN')}</p>
+      </div>
       {#if !$user}
         <div class="text-center py-8">
           <p class="text-gray-800 mb-4">请登录后继续阅读</p>
