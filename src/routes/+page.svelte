@@ -88,7 +88,7 @@
   <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white/80">
     <div class="max-w-7xl mx-auto">
       <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-red-800 text-center mb-12">平台特色</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="grid grid-cols-4 gap-8">
         {#each features as feature}
           <div class="text-center p-6 rounded-lg border-2 border-red-100 hover:border-red-300 transition-all duration-200">
             <div class="text-4xl mb-4">{feature.icon}</div>
@@ -104,7 +104,7 @@
   <section class="py-16 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto">
       <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-red-800 text-center mb-12">精选分类</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="grid grid-cols-4 gap-8">
         {#each categories as category}
           <a
             href={`/novels?category=${category.name}`}

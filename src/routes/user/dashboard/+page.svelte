@@ -156,7 +156,7 @@
                 </div>
             </div>
         {:else if activeTab === 'shelf'}
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-3 lg:grid-cols-4 gap-6">
                 {#each shelfNovels as novel}
                     <a href="/novel/{novel.id}" class="block">
                         <div class="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-shadow">
@@ -171,7 +171,7 @@
                 {/each}
             </div>
         {:else if activeTab === 'read'}
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-3 lg:grid-cols-4 gap-6">
                 {#each readNovels as novel}
                     <a href="/novel/{novel.id}" class="block">
                         <div class="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-shadow">

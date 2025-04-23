@@ -34,7 +34,7 @@
                 <a href="/">墨香书院</a>
             </h1>
 
-            <div class="hidden md:flex space-x-6 items-center">
+            <div class="flex space-x-6 items-center">
                 <a href="/novels" class="hover:text-yellow-200 transition-colors">书库</a>
                 <a href="/contact" class="hover:text-yellow-200 transition-colors">联系我们</a>
 

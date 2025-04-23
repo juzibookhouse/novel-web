@@ -14,14 +14,14 @@
         <!-- Novel Header -->
         <div class="p-8 border-b-2 border-red-100">
           <div class="flex flex-col md:flex-row gap-8">
-            <div class="w-full md:w-1/3">
+            <div class="w-1/3">
               <img
                 src={novel.cover_url || 'https://via.placeholder.com/300x400?text=封面未上传'}
                 alt={novel.title}
                 class="w-full h-auto rounded-lg shadow-lg"
               />
             </div>
-            <div class="w-full md:w-2/3">
+            <div class="w-2/3">
               <h1 class="font-['Ma_Shan_Zheng'] text-4xl text-red-800 mb-4">{novel.title}</h1>
               <div class="space-y-4">
                 <div class="flex items-center">
@@ -48,7 +48,7 @@
         <!-- Chapter List -->
         <div class="p-8">
           <h2 class="font-['Ma_Shan_Zheng'] text-2xl text-red-800 mb-6">目录</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="grid grid-cols-2 gap-4">
             {#each novel.chapters as chapter}
               <a
                 href={`/novel/${novel.id}/chapter/${chapter.id}`}

@@ -9,9 +9,3 @@ body {
 :root {
   overflow-x: hidden;
 }
-
-@media (max-width: 1023px) {
-  body {
-    display: none;
-  }
-}
