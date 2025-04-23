@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { WEBSITE_NAME } from '$lib/constants';
   import { supabase } from '$lib/supabaseClient';
   import { goto } from '$app/navigation';
   import MembershipPlans from '$lib/components/MembershipPlans.svelte';
