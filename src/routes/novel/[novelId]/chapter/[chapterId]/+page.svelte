@@ -227,5 +227,33 @@
 <style>
 :global(body) {
   background-color: #FEF2F2;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.prose {
+  pointer-events: none;
+}
+
+.prose :global(*) {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 </style>
+
+<svelte:window 
+  on:keydown={(e) => {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'C')) {
+      e.preventDefault();
+    }
+  }}
+  on:contextmenu={(e) => e.preventDefault()}
+/>
