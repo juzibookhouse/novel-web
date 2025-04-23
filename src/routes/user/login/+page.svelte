@@ -56,7 +56,6 @@
 
 <svelte:head>
   <title>登录 - {WEBSITE_NAME}</title>
-  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
 </svelte:head>
 
 {#if showMembership}

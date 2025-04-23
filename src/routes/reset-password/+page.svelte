@@ -32,10 +32,6 @@
 
 <svelte:head>
   <title>重置密码 - {WEBSITE_NAME}</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap"
-    rel="stylesheet"
-  />
 </svelte:head>
 
 <div

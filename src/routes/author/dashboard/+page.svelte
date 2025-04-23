@@ -297,7 +297,6 @@
 
 <svelte:head>
 <title>作家专区 - {WEBSITE_NAME}</title>
-<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
 </svelte:head>
 
 <div class="min-h-screen bg-red-50 py-8 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
