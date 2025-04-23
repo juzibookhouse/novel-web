@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+
+body {
+  min-width: 1024px;
+  overflow-x: auto;
+}
+
+:root {
+  overflow-x: hidden;
+}
+
+@media (max-width: 1023px) {
+  body {
+    display: none;
+  }
+}

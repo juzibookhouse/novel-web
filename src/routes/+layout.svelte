@@ -6,6 +6,7 @@
 
 <svelte:head>
   <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=1024">
 </svelte:head>
 
 <div class="flex flex-col min-h-screen bg-red-50">
