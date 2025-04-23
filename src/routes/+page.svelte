@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { WEBSITE_NAME } from '$lib/constants';
   export let data;
   const { ongoingNovels, finishedNovels } = data;
 
@@ -70,7 +71,7 @@
 </script>
 
 <svelte:head>
-  <title>墨香书院 - 汇聚华夏文学精粹</title>
+  <title>{WEBSITE_NAME} - 汇聚华夏文学精粹</title>
 </svelte:head>
 
 <div class="bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">

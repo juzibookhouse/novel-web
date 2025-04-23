@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { WEBSITE_NAME } from '$lib/constants';
   import { goto } from '$app/navigation';
   
   export let data;
@@ -51,7 +52,7 @@
 </script>
 
 <svelte:head>
-  <title>墨香书院 - 书库</title>
+  <title>{WEBSITE_NAME} - 书库</title>
   <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
 </svelte:head>
 

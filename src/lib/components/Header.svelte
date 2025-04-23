@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { WEBSITE_NAME } from '$lib/constants';
     import { user } from '$lib/stores/authStore';
     import { supabase } from '$lib/supabaseClient';
     import { goto } from '$app/navigation';
@@ -31,7 +32,7 @@
     <div class="container mx-auto px-4 py-3">
         <div class="flex items-center justify-between">
             <h1 class="font-['Ma_Shan_Zheng'] text-3xl hover:text-yellow-200 transition-colors">
-                <a href="/">墨香书院</a>
+                <a href="/">{WEBSITE_NAME}</a>
             </h1>
 
             <div class="flex space-x-6 items-center">
