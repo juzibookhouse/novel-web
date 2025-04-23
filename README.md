@@ -27,4 +27,5 @@ You can preview the production build with `npm run preview`.
 - [x] novel creat time and words
 - [ ] update novel docx to let admin approved
 - [x] prevent user copy
-- [ ] disable mobile version
+- [x] disable mobile version
+- [ ] show reading total time
