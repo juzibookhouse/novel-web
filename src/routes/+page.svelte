@@ -3,10 +3,10 @@
   const { ongoingNovels, finishedNovels } = data;
 
   const categories = [
-    { name: '武侠', icon: '⚔️', desc: '侠之大者，为国为民' },
-    { name: '仙侠', icon: '🌌', desc: '飞天遁地，逍遥自在' },
-    { name: '历史', icon: '📜', desc: '秦皇汉武，气吞万里' },
-    { name: '玄幻', icon: '🐉', desc: '神通广大，法力无边' }
+    { name: '武侠', icon: '⚔️', desc: '侠之大者，为国为民', color: 'bg-blue-50' },
+    { name: '仙侠', icon: '🌌', desc: '飞天遁地，逍遥自在', color: 'bg-purple-50' },
+    { name: '历史', icon: '📜', desc: '秦皇汉武，气吞万里', color: 'bg-yellow-50' },
+    { name: '玄幻', icon: '🐉', desc: '神通广大，法力无边', color: 'bg-green-50' }
   ];
 
   const features = [
@@ -38,6 +38,35 @@
     { number: '100万+', label: '活跃读者' },
     { number: '1亿+', label: '月阅读时长' }
   ];
+
+  const promotions = [
+    {
+      title: '新人福利',
+      description: '注册即送7天VIP会员',
+      image: 'https://images.pexels.com/photos/1029141/pexels-photo-1029141.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      link: '/user/signup'
+    },
+    {
+      title: '作家专区',
+      description: '高额稿酬等你来拿',
+      image: 'https://images.pexels.com/photos/3059747/pexels-photo-3059747.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      link: '/author/signup'
+    },
+    {
+      title: '限时活动',
+      description: '年度会员5折优惠',
+      image: 'https://images.pexels.com/photos/5834/nature-grass-leaf-green.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      link: '/user/signup'
+    }
+  ];
+
+  const rankings = {
+    daily: ongoingNovels.slice(0, 5),
+    weekly: finishedNovels.slice(0, 5),
+    monthly: [...ongoingNovels, ...finishedNovels].slice(0, 5)
+  };
+
+  let activeRanking: 'daily' | 'weekly' | 'monthly' = 'daily';
 </script>
 
 <svelte:head>
@@ -84,6 +113,74 @@
     </div>
   </section>
 
+  <!-- Promotions Section -->
+  <section class="py-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {#each promotions as promo}
+          <a
+            href={promo.link}
+            class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            <img
+              src={promo.image}
+              alt={promo.title}
+              class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
+              <h3 class="text-2xl font-bold text-white mb-2">{promo.title}</h3>
+              <p class="text-white/80">{promo.description}</p>
+            </div>
+          </a>
+        {/each}
+      </div>
+    </div>
+  </section>
+
+  <!-- Rankings Section -->
+  <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white/80">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-red-800 text-center mb-12">热门榜单</h2>
+      <div class="flex justify-center space-x-4 mb-8">
+        {#each [
+          { id: 'daily', label: '日榜' },
+          { id: 'weekly', label: '周榜' },
+          { id: 'monthly', label: '月榜' }
+        ] as tab}
+          <button
+            class="px-6 py-2 rounded-full {activeRanking === tab.id ? 'bg-red-800 text-white' : 'bg-red-50 text-red-800'} hover:bg-red-700 hover:text-white transition-colors"
+            on:click={() => activeRanking = tab.id as any}
+          >
+            {tab.label}
+          </button>
+        {/each}
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+        {#each rankings[activeRanking] as novel, i}
+          <a
+            href={`/novel/${novel.id}`}
+            class="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
+          >
+            <div class="relative">
+              <img
+                src={novel.cover_url || 'https://via.placeholder.com/300x400?text=封面未上传'}
+                alt={novel.title}
+                class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div class="absolute top-2 left-2 w-8 h-8 rounded-full bg-red-800 text-white flex items-center justify-center text-lg font-bold">
+                {i + 1}
+              </div>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-medium text-gray-900 mb-1 line-clamp-1">{novel.title}</h3>
+              <p class="text-sm text-gray-500 line-clamp-2">{novel.description}</p>
+            </div>
+          </a>
+        {/each}
+      </div>
+    </div>
+  </section>
+
   <!-- Features Section -->
   <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white/80">
     <div class="max-w-7xl mx-auto">
@@ -108,10 +205,10 @@
         {#each categories as category}
           <a
             href={`/novels?category=${category.name}`}
-            class="group bg-white/80 backdrop-blur-sm rounded-lg p-6 text-center border-2 border-red-100 hover:border-red-300 transition duration-200"
+            class="group {category.color} rounded-lg p-8 text-center hover:shadow-xl transition-all duration-300"
           >
-            <span class="text-4xl mb-4 block">{category.icon}</span>
-            <h3 class="text-xl font-medium text-gray-900 mb-2">{category.name}</h3>
+            <span class="text-5xl mb-6 block transform group-hover:scale-110 transition-transform duration-300">{category.icon}</span>
+            <h3 class="text-2xl font-medium text-gray-900 mb-2">{category.name}</h3>
             <p class="text-gray-600">{category.desc}</p>
           </a>
         {/each}
