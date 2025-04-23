@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { supabase } from '$lib/supabaseClient';
   import { user } from '$lib/stores/authStore';
+  import { WEBSITE_NAME } from '$lib/constants';
   
   interface Category {
     id: string;
@@ -295,7 +296,7 @@
 </script>
 
 <svelte:head>
-<title>作家专区 - 墨香书院</title>
+<title>作家专区 - {WEBSITE_NAME}</title>
 <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
 </svelte:head>
 

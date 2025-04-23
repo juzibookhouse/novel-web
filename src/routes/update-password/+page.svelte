@@ -1,5 +1,6 @@
 <script lang="ts">
   import { supabase } from '$lib/supabaseClient';
+  import { WEBSITE_NAME } from '$lib/constants';
   import { goto } from '$app/navigation';
   
   let password = '';
@@ -34,7 +35,7 @@
 </script>
 
 <svelte:head>
-  <title>更新密码 - 墨香书院</title>
+  <title>更新密码 - {WEBSITE_NAME}</title>
   <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
 </svelte:head>
 
@@ -42,7 +43,7 @@
   <div class="w-full max-w-md space-y-8">
     <div class="text-center">
       <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-red-800 mb-2">
-        墨香书院
+        {WEBSITE_NAME}
       </h2>
       <p class="text-lg text-red-700">设置新密码</p>
     </div>

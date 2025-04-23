@@ -81,7 +81,7 @@
     <div class="relative max-w-7xl mx-auto">
       <div class="lg:grid lg:grid-cols-12 lg:gap-8">
         <div class="sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left">
-          <h1 class="font-['Ma_Shan_Zheng'] text-6xl mb-6">墨香书院</h1>
+          <h1 class="font-['Ma_Shan_Zheng'] text-6xl mb-6">{WEBSITE_NAME}</h1>
           <p class="text-xl text-yellow-100 mb-8">汇聚华夏文学精粹，传承千年文化瑰宝</p>
           <div class="flex flex-col sm:flex-row justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
             <a
@@ -288,16 +288,16 @@
     <div class="max-w-7xl mx-auto">
       <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
         <div>
-          <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-red-800 mb-6">关于墨香书院</h2>
+          <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-red-800 mb-6">关于{WEBSITE_NAME}</h2>
           <div class="prose prose-lg">
             <p class="text-gray-600 mb-4">
-              墨香书院成立于2025年，是一个专注于中文网络文学创作与阅读的综合性平台。我们致力于为读者提供优质的阅读体验，为作者打造理想的创作平台。
+              {WEBSITE_NAME}成立于2025年，是一个专注于中文网络文学创作与阅读的综合性平台。我们致力于为读者提供优质的阅读体验，为作者打造理想的创作平台。
             </p>
             <p class="text-gray-600 mb-4">
               在这里，您可以找到各类精品小说，从武侠仙侠到都市言情，应有尽有。我们重视原创内容，尊重知识产权，为作者提供合理的收益分成。
             </p>
             <p class="text-gray-600">
-              加入墨香书院，与我们一起传承中华文化，共创网络文学的美好未来。
+              加入{WEBSITE_NAME}，与我们一起传承中华文化，共创网络文学的美好未来。
             </p>
           </div>
         </div>

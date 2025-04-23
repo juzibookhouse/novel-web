@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { WEBSITE_NAME } from '$lib/constants';
     import { supabase } from '$lib/supabaseClient';
     import { goto } from '$app/navigation';
   
@@ -44,7 +45,7 @@
     <div class="w-full max-w-md space-y-8">
         <div class="text-center">
             <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-red-800 mb-2">
-                墨香书院
+                {WEBSITE_NAME}
             </h2>
             <p class="text-lg text-red-700">
                 {role === 'author' ? '作家注册' : '读者注册'}

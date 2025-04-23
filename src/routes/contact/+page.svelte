@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { WEBSITE_NAME } from '$lib/constants';
     import { enhance } from '$app/forms';
     import type { ActionData } from './$types';
     
@@ -8,7 +9,7 @@
   </script>
   
   <svelte:head>
-    <title>联系我们 - 墨香书院</title>
+    <title>联系我们 - {WEBSITE_NAME}</title>
   </svelte:head>
   
   <div class="py-12 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
