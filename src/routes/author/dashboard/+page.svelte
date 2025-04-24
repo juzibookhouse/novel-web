@@ -74,12 +74,10 @@
   ];
   
   onMount(async () => {
-    setTimeout(async()=>{
-      await Promise.all([
-        fetchNovels(),
-        fetchCategories()
-      ]);
-    },1);
+    supabase.auth.onAuthStateChange((event, session) => {
+      fetchNovels(),
+      fetchCategories()
+    });
   });
 
   async function fetchCategories() {
