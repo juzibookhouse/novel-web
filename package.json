@@ -21,9 +21,11 @@
 		"vite": "^6.2.5"
 	},
 	"dependencies": {
+		"@stripe/stripe-js": "^2.4.0",
 		"@supabase/auth-helpers-sveltekit": "^0.13.0",
 		"@supabase/supabase-js": "^2.49.4",
 		"@tailwindcss/vite": "^4.1.4",
+		"stripe": "^18.0.0",
 		"tailwindcss": "^4.1.4"
 	}
 }
