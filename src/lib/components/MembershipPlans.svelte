@@ -15,15 +15,13 @@
   let processing = false;
   let stripe: any;
   let elements: any;
-  let card: any;
   let selectedPlan: any = null;
+  let paymentError: string | null = null;
 
   const stripePromise = loadStripe(PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
   onMount(async () => {
     stripe = await stripePromise;
-    elements = stripe.elements();
-    card = elements.create('card');
     loadPlans();
   });
 
@@ -43,7 +41,46 @@
     }
   }
 
-  async function subscribeToPlan(plan: any) {
+  async function initializePaymentElement() {
+    if (!stripe || !selectedPlan) return;
+
+    // Create payment intent
+    const response = await fetch('/api/create-payment-intent', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ planId: selectedPlan.id }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to create payment intent');
+    }
+
+    const { clientSecret } = await response.json();
+
+    // Initialize Elements
+    elements = stripe.elements({
+      clientSecret,
+      appearance: {
+        theme: 'stripe',
+        variables: {
+          colorPrimary: '#991b1b',
+          colorBackground: '#ffffff',
+          colorText: '#1f2937',
+          colorDanger: '#ef4444',
+          fontFamily: 'system-ui, sans-serif',
+          borderRadius: '8px',
+        },
+      },
+    });
+
+    // Create and mount the Payment Element
+    const paymentElement = elements.create('payment');
+    paymentElement.mount('#payment-element');
+  }
+
+  async function handlePayment() {
     try {
       if (!$user) {
         goto('/user/login');
@@ -51,50 +88,26 @@
       }
 
       processing = true;
-      error = null;
-      selectedPlan = plan;
+      paymentError = null;
 
-      // Mount card element if not already mounted
-      if (!card) {
-        card = elements.create('card');
-      }
-      card.mount('#card-element');
-
-      // Create payment intent
-      const response = await fetch('/api/create-payment-intent', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ planId: plan.id }),
+      const { error: stripeError } = await stripe.confirmPayment({
+        elements,
+        redirect: 'if_required'
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to create payment intent');
+      if (stripeError) {
+        paymentError = stripeError.message;
+        return;
       }
-
-      const { clientSecret } = await response.json();
-
-      // Confirm payment
-      const { error: stripeError } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card,
-          billing_details: {
-            email: $user.email,
-          },
-        },
-      });
-
-      if (stripeError) throw stripeError;
 
       // Update user membership
       const { error: subscribeError } = await supabase
         .from('user_memberships')
         .insert([{
           user_id: $user.id,
-          plan_id: plan.id,
+          plan_id: selectedPlan.id,
           status: 'active',
-          end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from now
+          end_date: new Date(Date.now() + selectedPlan.duration * 24 * 60 * 60 * 1000)
         }]);
 
       if (subscribeError) throw subscribeError;
@@ -107,83 +120,102 @@
 
       if (updateError) throw updateError;
 
-      if (redirectUrl) {
-        goto(redirectUrl);
-      } else {
-        onClose();
-      }
+      onClose();
     } catch (e: any) {
-      error = e.message;
+      paymentError = e.message;
     } finally {
       processing = false;
-      selectedPlan = null;
     }
   }
 
-  onMount(() => {
-    loadPlans();
-  });
+  async function selectPlan(plan: any) {
+    selectedPlan = plan;
+    await initializePaymentElement();
+  }
 </script>
 
 <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-<div class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-  <div class="p-6 border-b border-red-100">
-    <div class="flex justify-between items-center">
-      <h2 class="text-2xl font-semibold text-gray-900">选择会员计划</h2>
-      <button
-        on:click={onClose}
-        class="text-gray-400 hover:text-gray-500"
-      >
-        ✕
-      </button>
-    </div>
-  </div>
-
-  {#if error}
-    <div class="p-4 bg-red-50 border-b border-red-100">
-      <p class="text-sm text-red-800">{error}</p>
-    </div>
-  {/if}
-
-  <div class="p-6">
-    {#if loading}
-      <div class="flex justify-center py-12">
-        <div class="animate-spin rounded-full h-12 w-12 border-4 border-red-800 border-t-transparent"></div>
+  <div class="bg-white rounded-lg max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+    <div class="p-6 border-b border-red-100">
+      <div class="flex justify-between items-center">
+        <h2 class="text-2xl font-semibold text-gray-900">选择会员计划</h2>
+        <button
+          on:click={onClose}
+          class="text-gray-400 hover:text-gray-500"
+        >
+          ✕
+        </button>
       </div>
-    {:else}
-      <div class="grid md:grid-cols-2 gap-6">
-        {#each plans as plan}
-          <div class="border-2 border-red-100 rounded-lg p-6 hover:border-red-300 transition-colors">
-            <h3 class="text-xl font-semibold text-gray-900 mb-2">{plan.name}</h3>
-            <div class="text-3xl font-bold text-red-800 mb-4">
-              ¥{plan.price}<span class="text-base font-normal text-gray-600">/月</span>
-            </div>
-            <p class="text-gray-600 mb-4">{plan.description}</p>
-            <ul class="space-y-2 mb-6">
-              {#each plan.features as feature}
-                <li class="flex items-center text-gray-700">
-                  <span class="text-green-500 mr-2">✓</span>
-                  {feature}
-                </li>
-              {/each}
-            </ul>
-            <button
-              on:click={() => subscribeToPlan(plan)}
-              disabled={processing}
-              class="w-full bg-red-800 text-white py-2 rounded-md hover:bg-red-700 disabled:bg-red-300 transition-colors"
-            >
-              {processing && selectedPlan?.id === plan.id ? '处理中...' : '立即订阅'}
-            </button>
-            
-            <div class="mt-4 {selectedPlan?.id === plan.id ? 'block' : 'hidden'}">
-              <div id="card-element" class="p-3 border rounded-md"></div>
-            </div>
-          </div>
-        {/each}
+    </div>
+
+    {#if error}
+      <div class="p-4 bg-red-50 border-b border-red-100">
+        <p class="text-sm text-red-800">{error}</p>
       </div>
     {/if}
+
+    <div class="p-6">
+      {#if loading}
+        <div class="flex justify-center py-12">
+          <div class="animate-spin rounded-full h-12 w-12 border-4 border-red-800 border-t-transparent"></div>
+        </div>
+      {:else}
+        <div class="grid md:grid-cols-2 gap-6">
+          <!-- Plans List -->
+          <div class="space-y-6">
+            {#each plans as plan}
+              <div 
+                class="border-2 {selectedPlan?.id === plan.id ? 'border-red-500' : 'border-red-100'} 
+                       rounded-lg p-6 hover:border-red-300 transition-colors cursor-pointer"
+                on:click={() => selectPlan(plan)}
+              >
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">{plan.name}</h3>
+                <div class="text-3xl font-bold text-red-800 mb-4">
+                  ¥{plan.price}<span class="text-base font-normal text-gray-600">/月</span>
+                </div>
+                <p class="text-gray-600 mb-4">{plan.description}</p>
+                <ul class="space-y-2 mb-6">
+                  {#each plan.features as feature}
+                    <li class="flex items-center text-gray-700">
+                      <span class="text-green-500 mr-2">✓</span>
+                      {feature}
+                    </li>
+                  {/each}
+                </ul>
+              </div>
+            {/each}
+          </div>
+
+          <!-- Payment Form -->
+          {#if selectedPlan}
+            <div class="border-2 border-red-100 rounded-lg p-6">
+              <h3 class="text-xl font-semibold text-gray-900 mb-4">支付信息</h3>
+              <div class="mb-6">
+                <p class="text-gray-600">您选择了 <span class="font-semibold">{selectedPlan.name}</span></p>
+                <p class="text-2xl font-bold text-red-800 mt-2">¥{selectedPlan.price}/月</p>
+              </div>
+
+              {#if paymentError}
+                <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <p class="text-sm text-red-800">{paymentError}</p>
+                </div>
+              {/if}
+
+              <div id="payment-element" class="mb-6"></div>
+
+              <button
+                on:click={handlePayment}
+                disabled={processing}
+                class="w-full bg-red-800 text-white py-3 px-4 rounded-lg hover:bg-red-700 disabled:bg-red-300 transition-colors"
+              >
+                {processing ? '处理中...' : '确认支付'}
+              </button>
+            </div>
+          {/if}
+        </div>
+      {/if}
+    </div>
   </div>
-</div>
 </div>
 
 <style>
@@ -195,8 +227,8 @@
 }
 
 :global(.StripeElement--focus) {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 1px #4f46e5;
+  border-color: #991b1b;
+  box-shadow: 0 0 0 1px #991b1b;
 }
 
 :global(.StripeElement--invalid) {

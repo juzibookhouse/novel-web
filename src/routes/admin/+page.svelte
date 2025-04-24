@@ -11,7 +11,7 @@
   let error: string | null = null;
 
   onMount(async () => {
-      await loadData();
+    await loadData();
   });
 
   async function loadData() {
