@@ -25,7 +25,6 @@ You can preview the production build with `npm run preview`.
 ## Todos
 - [ ] reader subscription
 - [x] novel creat time and words
-- [ ] update novel docx to let admin approved
 - [x] prevent user copy
 - [x] disable mobile version
 - [ ] show reading total time
