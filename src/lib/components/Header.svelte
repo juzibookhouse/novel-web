@@ -6,9 +6,9 @@
   import { onMount } from "svelte";
 
   onMount(() => {
-    if (!$user) {
-      return goto('/user/login');
-    }
+    // if (!$user) {
+    //   return goto('/user/login');
+    // }
   });
 
   async function handleLogout() {
