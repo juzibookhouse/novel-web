@@ -3,6 +3,7 @@
   import { supabase } from '$lib/supabaseClient';
   import { goto } from '$app/navigation';
   import MembershipPlans from '$lib/components/MembershipPlans.svelte';
+  import { user } from '$lib/stores/authStore';
 
   let email = '';
   let password = '';
@@ -22,19 +23,10 @@
 
       if (loginError) throw loginError;
 
-      // Check if user is approved
-      const { data: profile, error: profileError } = await supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('user_id', data.user.id)
-        .single();
-
-      if (profileError) throw profileError;
-
-      if (profile.role == 'author') {
+      if ($user?.profile?.role == 'author') {
         goto('/author/dashboard');
       } else {
-        if (!profile.is_approved) {
+        if (!$user.profile.is_approved) {
           showMembership = true;
         } else {
           // Redirect to dashboard

@@ -35,12 +35,12 @@
         >
 
         {#if $user}
-          {#if $user.role === "admin"}
+          {#if $user.profile.role === "admin"}
             <a href="/admin" class="hover:text-yellow-200 transition-colors"
               >管理员面板</a
             >
           {/if}
-          {#if $user.role === "author"}
+          {#if $user.profile.role === "author"}
             <a
               href="/author/dashboard"
               class="hover:text-yellow-200 transition-colors">作家专区</a

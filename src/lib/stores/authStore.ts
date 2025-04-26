@@ -1,6 +1,6 @@
-import { writable, type Writable } from 'svelte/store';
-import { supabase } from '$lib/supabaseClient';
-import type { User } from '@supabase/supabase-js';
+import { writable, type Writable } from "svelte/store";
+import { supabase } from "$lib/supabaseClient";
+import type { User } from "@supabase/supabase-js";
 
 interface UserProfile {
   id: string;
@@ -25,45 +25,38 @@ export const setUser = async (newUser: User | null) => {
     return;
   }
 
-  try {
-    // Fetch user profile data
-    const { data: profile, error } = await supabase
-      .from('user_profiles')
-      .select('*')
-      .eq('user_id', newUser.id)
-      .single();
+  const { data: profile, error } = await supabase
+    .from("user_profiles")
+    .select("*")
+    .eq("user_id", newUser.id)
+    .single();
 
-    if (error) {
-      throw error;
-    }
-
-    // Combine user and profile data
-    const userData: UserData = {
-      ...newUser,
-      profile
-    };
-
-    user.set(userData);
-  } catch (error) {
-    console.error('Error fetching user profile:', error);
-    user.set(newUser);
+  if (error) {
+    throw error;
   }
+
+  // Combine user and profile data
+  const userData: UserData = {
+    ...newUser,
+    profile,
+  };
+  user.set(userData);
 };
 
 // Initialize the store with the current session user
-supabase.auth.getSession().then(async({ data }) => {
+supabase.auth.getSession().then(async ({ data }) => {
   if (data.session?.user) {
-    await setUser(data.session.user);
+    setUser(data.session.user);
   } else {
-    await setUser(null);
+    setUser(null);
   }
 });
-  
+
 // Subscribe to auth changes
 supabase.auth.onAuthStateChange(async (event, session) => {
   if (session) {
-    await setUser(session.user);
+    setUser(session.user);
   } else {
-    await setUser(null);
+    setUser(null);
   }
 });
