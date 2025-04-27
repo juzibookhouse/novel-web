@@ -20,19 +20,26 @@
       const { data, error: signupError } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          data: {
-            first_name: firstName,
-            last_name: lastName,
-            role
-          }
-        }
       });
-  
+
       if (signupError) throw signupError;
+      const userId = data?.user?.id;
+
+      if (userId) {
+        const {data:userProfile, error:userProfileError} = await supabase
+        .from('user_profiles')
+        .insert({
+          first_name: firstName,
+          last_name: lastName,
+          role,
+          user_id: userId
+        });
+
+        if (userProfileError) throw userProfileError
+      }
 
       // Redirect to email confirmation page if signup is successful
-      if (data.user) {
+      if (userId) {
         goto('/email-confirmation');
       }
     } catch (e: any) {
