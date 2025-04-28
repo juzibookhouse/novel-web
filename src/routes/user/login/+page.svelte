@@ -4,6 +4,13 @@
   import { goto } from '$app/navigation';
   import MembershipPlans from '$lib/components/MembershipPlans.svelte';
   import { user } from '$lib/stores/authStore';
+  import { onMount } from "svelte";
+
+  onMount(() => {
+    if ($user) {
+      return goto('/');
+    }
+  })
 
   let email = '';
   let password = '';

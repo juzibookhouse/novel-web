@@ -3,13 +3,6 @@
   import { user } from "$lib/stores/authStore";
   import { supabase } from "$lib/supabaseClient";
   import { goto } from "$app/navigation";
-  import { onMount } from "svelte";
-
-  onMount(() => {
-    // if (!$user) {
-    //   return goto('/user/login');
-    // }
-  });
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -35,12 +28,12 @@
         >
 
         {#if $user}
-          {#if $user.profile.role === "admin"}
+          {#if $user?.profile?.role === "admin"}
             <a href="/admin" class="hover:text-yellow-200 transition-colors"
               >管理员面板</a
             >
           {/if}
-          {#if $user.profile.role === "author"}
+          {#if $user?.profile?.role === "author"}
             <a
               href="/author/dashboard"
               class="hover:text-yellow-200 transition-colors">作家专区</a

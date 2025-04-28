@@ -12,8 +12,15 @@ interface UserProfile {
   created_at: string;
 }
 
+interface UserMembership {
+  plan_id: string;
+  start_date: string;
+  end_date: string;
+}
+
 interface UserData extends User {
   profile?: UserProfile;
+  membership?: UserMembership;
 }
 
 // Create a writable store for the user
@@ -35,10 +42,27 @@ export const setUser = async (newUser: User | null) => {
     throw error;
   }
 
+  // Fetch active membership
+  const now = new Date().toISOString();
+  const { data: membership, error: membershipError } = await supabase
+    .from("user_memberships")
+    .select("plan_id, start_date, end_date")
+    .eq("user_id", newUser.id)
+    .gte("end_date", now)
+    .lte("start_date", now)
+    .limit(1)
+    .single();
+
+  if (membershipError && membershipError.code !== "PGRST116") {
+    // Ignore "no rows returned" error
+    throw membershipError;
+  }
+
   // Combine user and profile data
   const userData: UserData = {
     ...newUser,
     profile,
+    membership: membership || undefined,
   };
   user.set(userData);
 };
@@ -53,9 +77,13 @@ supabase.auth.getSession().then(async ({ data }) => {
 });
 
 // Subscribe to auth changes
+const PATHS_TO_REDIRECT = ["/user/login", "/user/signup","author/signup"];
 supabase.auth.onAuthStateChange(async (event, session) => {
   if (session) {
     setUser(session.user);
+    if (PATHS_TO_REDIRECT.includes(window.location.pathname)) {
+      window.location.href = "/";
+    }
   } else {
     setUser(null);
   }
