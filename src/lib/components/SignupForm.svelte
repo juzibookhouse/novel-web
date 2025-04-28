@@ -53,7 +53,7 @@
 <div class="min-h-screen bg-red-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
   <div class="w-full max-w-md space-y-8">
     <div class="text-center">
-      <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-red-800 mb-2">
+      <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-primary mb-2">
         {WEBSITE_NAME}
       </h2>
       <p class="text-lg text-red-700">
@@ -65,7 +65,7 @@
       <div class="rounded-md bg-red-50 border-2 border-red-200 p-4">
         <div class="flex">
           <div class="ml-3">
-            <h3 class="text-sm font-medium text-red-800">{error}</h3>
+            <h3 class="text-sm font-medium text-primary">{error}</h3>
           </div>
         </div>
       </div>
@@ -123,7 +123,7 @@
             required
             bind:value={password}
             minlength="6"
-            class="mt-1 block w-full rounded-md border-red-200 border-2 py-2 px-3 text-gray-900 placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500 sm:text-sm transition duration-200"
+            class="mt-1 block w-full rounded-md border-2 py-2 px-3"
             placeholder="请输入密码（至少6位）"
           />
         </div>

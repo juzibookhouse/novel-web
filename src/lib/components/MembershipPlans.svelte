@@ -172,7 +172,7 @@
 
     {#if error}
       <div class="p-4 bg-red-50 border-b border-red-100">
-        <p class="text-sm text-red-800">{error}</p>
+        <p class="text-sm text-primary">{error}</p>
       </div>
     {/if}
 
@@ -192,7 +192,7 @@
                 on:click={() => selectPlan(plan)}
               >
                 <h3 class="text-xl font-semibold text-gray-900 mb-2">{plan.name}</h3>
-                <div class="text-3xl font-bold text-red-800 mb-4">
+                <div class="text-3xl font-bold text-primary mb-4">
                   ¥{plan.price}<span class="text-base font-normal text-gray-600">/月</span>
                 </div>
                 <p class="text-gray-600 mb-4">{plan.description}</p>
@@ -214,12 +214,12 @@
               <h3 class="text-xl font-semibold text-gray-900 mb-4">支付信息</h3>
               <div class="mb-6">
                 <p class="text-gray-600">您选择了 <span class="font-semibold">{selectedPlan.name}</span></p>
-                <p class="text-2xl font-bold text-red-800 mt-2">¥{selectedPlan.price}/月</p>
+                <p class="text-2xl font-bold text-primary mt-2">¥{selectedPlan.price}/月</p>
               </div>
 
               {#if paymentError}
                 <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-                  <p class="text-sm text-red-800">{paymentError}</p>
+                  <p class="text-sm text-primary">{paymentError}</p>
                 </div>
               {/if}
 

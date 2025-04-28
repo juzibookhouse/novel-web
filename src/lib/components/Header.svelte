@@ -18,12 +18,13 @@
 <nav class="text-[#C86600] shadow-lg sticky top-0 z-50">
   <div class="container mx-auto px-4 py-3">
     <div class="flex items-center justify-between">
-      <h1
-        class="font-['Ma_Shan_Zheng'] text-3xl hover:underline flex items-center gap-2"
+      <a
+        href="/"
+        class="font-['Ma_Shan_Zheng'] text-3xl flex items-center gap-2"
       >
         <img src="/logo.jpg" alt={WEBSITE_NAME} class="w-10 h-10 rounded-full object-cover" />
-        <a href="/">{WEBSITE_NAME}</a>
-      </h1>
+        <span>{WEBSITE_NAME}</span>
+      </a>
 
       <div class="flex space-x-6 items-center">
         <a href="/novels" class="hover:underline"

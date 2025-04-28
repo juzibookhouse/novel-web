@@ -15,7 +15,7 @@
   <div class="py-12 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
     <div class="max-w-3xl mx-auto">
       <div class="text-center mb-12">
-        <h1 class="font-['Ma_Shan_Zheng'] text-5xl text-red-800 mb-4">联系我们</h1>
+        <h1 class="font-['Ma_Shan_Zheng'] text-5xl text-primary mb-4">联系我们</h1>
         <p class="text-lg text-red-700">您的建议是我们进步的动力</p>
       </div>
   
@@ -32,7 +32,7 @@
         >
           {#if form?.error}
             <div class="bg-red-50 border-2 border-red-200 rounded-lg p-4 mb-6">
-              <p class="text-sm text-red-800">{form.error}</p>
+              <p class="text-sm text-primary">{form.error}</p>
             </div>
           {/if}
   

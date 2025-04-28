@@ -300,7 +300,7 @@
 <div class="min-h-screen bg-red-50 py-8 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
 <div class="max-w-7xl mx-auto">
   <div class="text-center mb-12">
-    <h1 class="font-['Ma_Shan_Zheng'] text-5xl text-red-800 mb-4">作家专区</h1>
+    <h1 class="font-['Ma_Shan_Zheng'] text-5xl text-primary mb-4">作家专区</h1>
     <p class="text-lg text-red-700">笔墨生花，妙手著文</p>
   </div>
 
@@ -315,7 +315,7 @@
 
   {#if error}
     <div class="bg-red-50 border-2 border-red-200 rounded-lg p-4 mb-6">
-      <p class="text-sm text-red-800">{error}</p>
+      <p class="text-sm text-primary">{error}</p>
     </div>
   {/if}
 
@@ -352,7 +352,7 @@
                 <div class="flex items-center gap-4 text-sm text-gray-600 mb-4">
                   <div class="flex flex-wrap gap-2">
                     {#each novel.categories || [] as category}
-                      <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full">
+                      <span class="bg-red-100 text-primary px-2 py-1 rounded-full">
                         {category.name}
                       </span>
                     {/each}
@@ -366,7 +366,7 @@
                 <div class="mt-4">
                   <button
                     on:click={() => startAddChapter(novel)}
-                    class="bg-red-100 hover:bg-red-200 text-red-800 px-4 py-2 rounded-full text-sm transition duration-200"
+                    class="bg-red-100 hover:bg-red-200 text-primary px-4 py-2 rounded-full text-sm transition duration-200"
                   >
                     添加新章节
                   </button>
@@ -383,7 +383,7 @@
                     href={`/novel/${novel.id}/chapter/${chapter.id}`}
                     class="group p-3 rounded-lg border-2 border-red-100 hover:border-red-300 hover:bg-red-50 transition-all duration-200"
                   >
-                    <h5 class="text-gray-900 group-hover:text-red-800 transition-colors duration-200">
+                    <h5 class="text-gray-900 group-hover:text-primary transition-colors duration-200">
                       {chapter.title}
                     </h5>
                   </a>
@@ -449,7 +449,7 @@
               <button
                 type="button"
                 on:click={addNewCategory}
-                class="px-4 py-2 bg-red-100 text-red-800 rounded-md hover:bg-red-200"
+                class="px-4 py-2 bg-red-100 text-primary rounded-md hover:bg-red-200"
               >
                 添加
               </button>
@@ -513,7 +513,7 @@
           <button
             type="button"
             on:click={() => showNovelForm = false}
-            class="px-4 py-2 border-2 border-red-200 text-red-800 rounded-md hover:bg-red-50"
+            class="px-4 py-2 border-2 border-red-200 text-primary rounded-md hover:bg-red-50"
           >
             取消
           </button>
@@ -564,7 +564,7 @@
           <button
             type="button"
             on:click={() => showChapterForm = false}
-            class="px-4 py-2 border-2 border-red-200 text-red-800 rounded-md hover:bg-red-50"
+            class="px-4 py-2 border-2 border-red-200 text-primary rounded-md hover:bg-red-50"
           >
             取消
           </button>

@@ -123,16 +123,16 @@
     <div class="p-6 border-b-2 border-red-100 flex items-center justify-between">
       <a
         href={`/novel/${novelId}`}
-        class="text-red-700 hover:text-red-800 transition-colors duration-200"
+        class="text-red-700 hover:text-primary transition-colors duration-200"
       >
         ← 返回目录
       </a>
-      <h1 class="font-['Ma_Shan_Zheng'] text-2xl text-red-800">{chapter.novels.title}</h1>
+      <h1 class="font-['Ma_Shan_Zheng'] text-2xl text-primary">{chapter.novels.title}</h1>
       
       {#if $user && isApproved}
         <button
           on:click={toggleBookshelf}
-          class="text-red-700 cursor-pointer hover:text-red-800 transition-colors duration-200"
+          class="text-red-700 cursor-pointer hover:text-primary transition-colors duration-200"
         >
           {isInBookshelf ? '移出书架' : '加入书架'}
         </button>
@@ -144,13 +144,13 @@
       <div class="p-4 border-b-2 border-red-100 flex justify-center space-x-4">
         <button
           on:click={() => changeFontSize(-2)}
-          class="px-3 py-1 bg-red-100 text-red-800 rounded-full hover:bg-red-200 transition-colors"
+          class="px-3 py-1 bg-red-100 text-primary rounded-full hover:bg-red-200 transition-colors"
         >
           A-
         </button>
         <button
           on:click={() => changeFontSize(2)}
-          class="px-3 py-1 bg-red-100 text-red-800 rounded-full hover:bg-red-200 transition-colors"
+          class="px-3 py-1 bg-red-100 text-primary rounded-full hover:bg-red-200 transition-colors"
         >
           A+
         </button>
@@ -201,7 +201,7 @@
       {#if prevChapterId}
         <a
           href={`/novel/${novelId}/chapter/${prevChapterId}`}
-          class="px-6 py-2 bg-red-100 text-red-800 rounded-full hover:bg-red-200 transition-colors duration-200"
+          class="px-6 py-2 bg-red-100 text-primary rounded-full hover:bg-red-200 transition-colors duration-200"
         >
           ← 上一章
         </a>
@@ -212,7 +212,7 @@
       {#if nextChapterId}
         <a
           href={`/novel/${novelId}/chapter/${nextChapterId}`}
-          class="px-6 py-2 bg-red-100 text-red-800 rounded-full hover:bg-red-200 transition-colors duration-200"
+          class="px-6 py-2 bg-red-100 text-primary rounded-full hover:bg-red-200 transition-colors duration-200"
         >
           下一章 →
         </a>

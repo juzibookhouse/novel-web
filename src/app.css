@@ -1,11 +1,20 @@
 @import "tailwindcss";
 
+:root {
+  --text-color: #C86600;
+  --bg-color: #C86600;
+  overflow-x: hidden;
+}
 
 body {
   min-width: 1024px;
   overflow-x: auto;
 }
 
-:root {
-  overflow-x: hidden;
+button {
+  @apply bg-[#C86600] text-white border-red-200 placeholder:text-gray-400 sm:text-sm transition duration-200 cursor-pointer hover:opacity-80;
+}
+
+.text-primary {
+  @apply text-[#C86600];
 }

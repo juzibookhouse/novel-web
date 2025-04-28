@@ -58,7 +58,7 @@
 <div class="min-h-screen bg-red-50 py-8 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-12">
-      <h1 class="font-['Ma_Shan_Zheng'] text-5xl text-red-800 mb-4">墨香书库</h1>
+      <h1 class="font-['Ma_Shan_Zheng'] text-5xl text-primary mb-4">墨香书库</h1>
       <p class="text-lg text-red-700">千卷书中自有黄金屋</p>
     </div>
 
@@ -132,7 +132,7 @@
           </div>
           <div class="p-4">
             <div class="flex items-center gap-2 mb-3">
-              <span class="bg-red-50 text-red-800 px-3 py-1 rounded-full text-sm font-medium">
+              <span class="bg-red-50 text-primary px-3 py-1 rounded-full text-sm font-medium">
                 {novel.category || '未分类'}
               </span>
               <span class="text-sm {novel.status === 'ongoing' ? 'bg-green-50 text-green-800' : 'bg-blue-50 text-blue-800'} px-3 py-1 rounded-full font-medium">
@@ -144,7 +144,7 @@
             <p class="text-sm text-gray-500 line-clamp-2 mb-4">{novel.description || '暂无简介'}</p>
             <a
               href={`/novel/${novel.id}`}
-              class="inline-flex items-center text-red-700 hover:text-red-800 text-sm font-medium group-hover:translate-x-1 transition-transform duration-200"
+              class="inline-flex items-center text-red-700 hover:text-primary text-sm font-medium group-hover:translate-x-1 transition-transform duration-200"
             >
               开始阅读 →
             </a>
@@ -160,7 +160,7 @@
           <button
             class="px-4 py-2 rounded-lg {data.currentPage === i + 1
               ? 'bg-[#FEF9D5] text-white shadow-md'
-              : 'bg-white text-red-800 hover:bg-red-50'} 
+              : 'bg-white text-primary hover:bg-red-50'} 
               border-2 border-red-100 transition-all duration-200 hover:shadow-md"
             on:click={() => goToPage(i + 1)}
           >

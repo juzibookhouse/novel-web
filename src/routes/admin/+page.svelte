@@ -75,13 +75,13 @@
   <div class="min-h-screen bg-red-50 py-8 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
-        <h1 class="font-['Ma_Shan_Zheng'] text-5xl text-red-800 mb-4">管理后台</h1>
+        <h1 class="font-['Ma_Shan_Zheng'] text-5xl text-primary mb-4">管理后台</h1>
         <p class="text-lg text-red-700">运筹帷幄，决胜千里</p>
       </div>
   
       {#if error}
         <div class="bg-red-50 border-2 border-red-200 rounded-lg p-4 mb-6">
-          <p class="text-sm text-red-800">{error}</p>
+          <p class="text-sm text-primary">{error}</p>
         </div>
       {/if}
   
@@ -97,7 +97,7 @@
               <button
                 class="w-1/3 py-4 px-1 text-center border-b-2 font-medium text-sm
                   {activeTab === tab.id
-                    ? 'border-red-800 text-red-800'
+                    ? 'border-red-800 text-primary'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}"
                 on:click={() => activeTab = tab.id as any}
               >
@@ -138,14 +138,14 @@
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap">
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                          {user.is_approved ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                          {user.is_approved ? 'bg-green-100 text-green-800' : 'bg-red-100 text-primary'}">
                           {user.is_approved ? '已审核' : '未审核'}
                         </span>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
                           on:click={() => toggleApproval(user.id, user.is_approved)}
-                          class="text-red-600 hover:text-red-800"
+                          class="text-red-600 hover:text-primary"
                         >
                           {user.is_approved ? '取消审核' : '通过审核'}
                         </button>
@@ -180,14 +180,14 @@
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap">
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                          {author.is_approved ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                          {author.is_approved ? 'bg-green-100 text-green-800' : 'bg-red-100 text-primary'}">
                           {author.is_approved ? '已审核' : '未审核'}
                         </span>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
                           on:click={() => toggleApproval(author.id, author.is_approved)}
-                          class="text-red-600 hover:text-red-800"
+                          class="text-red-600 hover:text-primary"
                         >
                           {author.is_approved ? '取消审核' : '通过审核'}
                         </button>
@@ -224,7 +224,7 @@
                       <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <a
                           href={`/novel/${novel.id}`}
-                          class="text-red-600 hover:text-red-800"
+                          class="text-red-600 hover:text-primary"
                         >
                           查看详情
                         </a>

@@ -89,7 +89,7 @@
            <div class="flex flex-col sm:flex-row justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
              <a
                href="/novels"
-               class="bg-yellow-100 text-red-800 px-8 py-3 rounded-full hover:bg-yellow-200 transition duration-200 text-center"
+               class="bg-yellow-100 text-primary px-8 py-3 rounded-full hover:bg-yellow-200 transition duration-200 text-center"
              >
                浏览书库
              </a>
@@ -144,7 +144,7 @@
    <!-- Rankings Section -->
    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white/80">
      <div class="max-w-7xl mx-auto">
-       <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-red-800 text-center mb-12">热门榜单</h2>
+       <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-primary text-center mb-12">热门榜单</h2>
        <div class="flex justify-center space-x-4 mb-8">
          {#each [
            { id: 'daily', label: '日榜' },
@@ -152,7 +152,7 @@
            { id: 'monthly', label: '月榜' }
          ] as tab}
            <button
-             class="px-6 py-2 rounded-full {activeRanking === tab.id ? 'bg-[#FEF9D5] text-white' : 'bg-red-50 text-red-800'} hover:bg-red-700 hover:text-white transition-colors"
+             class="px-6 py-2 rounded-full {activeRanking === tab.id ? 'bg-[#FEF9D5] text-white' : 'bg-red-50 text-primary'} hover:bg-red-700 hover:text-white transition-colors"
              on:click={() => activeRanking = tab.id as any}
            >
              {tab.label}
@@ -188,7 +188,7 @@
    <!-- Features Section -->
    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white/80">
      <div class="max-w-7xl mx-auto">
-       <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-red-800 text-center mb-12">平台特色</h2>
+       <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-primary text-center mb-12">平台特色</h2>
        <div class="grid grid-cols-4 gap-8">
          {#each features as feature}
            <div class="text-center p-6 rounded-lg border-2 border-red-100 hover:border-red-300 transition-all duration-200">
@@ -204,7 +204,7 @@
    <!-- Categories Section -->
    <section class="py-16 px-4 sm:px-6 lg:px-8">
      <div class="max-w-7xl mx-auto">
-       <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-red-800 text-center mb-12">精选分类</h2>
+       <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-primary text-center mb-12">精选分类</h2>
        <div class="grid grid-cols-4 gap-8">
          {#each categories as category}
            <a
@@ -223,7 +223,7 @@
    <!-- Ongoing Novels Section -->
    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-red-50/50">
      <div class="max-w-7xl mx-auto">
-       <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-red-800 text-center mb-12">连载作品</h2>
+       <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-primary text-center mb-12">连载作品</h2>
        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
          {#each ongoingNovels as novel}
            <a
@@ -256,7 +256,7 @@
    <!-- Finished Novels Section -->
    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white/80">
      <div class="max-w-7xl mx-auto">
-       <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-red-800 text-center mb-12">完结作品</h2>
+       <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-primary text-center mb-12">完结作品</h2>
        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
          {#each finishedNovels as novel}
            <a
@@ -291,7 +291,7 @@
      <div class="max-w-7xl mx-auto">
        <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
          <div>
-           <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-red-800 mb-6">关于{WEBSITE_NAME}</h2>
+           <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-primary mb-6">关于{WEBSITE_NAME}</h2>
            <div class="prose prose-lg">
              <p class="text-gray-600 mb-4">
                {WEBSITE_NAME}成立于2025年，是一个专注于中文网络文学创作与阅读的综合性平台。我们致力于为读者提供优质的阅读体验，为作者打造理想的创作平台。
@@ -307,7 +307,7 @@
          <div class="mt-10 lg:mt-0 grid grid-cols-2 gap-6">
            {#each stats as stat}
              <div class="bg-red-50 rounded-lg p-6 text-center">
-               <div class="text-3xl font-bold text-red-800">{stat.number}</div>
+               <div class="text-3xl font-bold text-primary">{stat.number}</div>
                <div class="text-sm text-red-600 mt-1">{stat.label}</div>
              </div>
            {/each}

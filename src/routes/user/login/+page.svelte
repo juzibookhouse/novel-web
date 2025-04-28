@@ -59,7 +59,7 @@
 <div class="min-h-screen bg-red-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
   <div class="w-full max-w-md space-y-8">
     <div class="text-center">
-      <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-red-800 mb-2">
+      <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-primary mb-2">
         {WEBSITE_NAME}
       </h2>
       <p class="text-lg text-red-700">登录您的账户</p>
@@ -69,7 +69,7 @@
       <div class="rounded-md bg-red-50 border-2 border-red-200 p-4">
         <div class="flex">
           <div class="ml-3">
-            <h3 class="text-sm font-medium text-red-800">{error}</h3>
+            <h3 class="text-sm font-medium text-primary">{error}</h3>
           </div>
         </div>
       </div>
