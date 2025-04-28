@@ -55,7 +55,7 @@
           >
           <button
             on:click={handleLogout}
-            class="bg-[#C86600] text-white px-4 py-2 rounded-full transition-colors cursor-pointer"
+            class="px-4 py-2 rounded-full transition-colors cursor-pointer"
           >
             退出
           </button>
@@ -67,7 +67,7 @@
             >
             <a
               href="/user/signup"
-              class="bg-[#C86600] text-white px-4 py-2 rounded-full transition-colors"
+              class="px-4 py-2 rounded-full transition-colors"
             >
               注册
             </a>

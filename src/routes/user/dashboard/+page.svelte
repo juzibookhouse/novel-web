@@ -171,7 +171,7 @@
                  <p class="text-gray-600 mb-4">您还不是会员</p>
                  <button
                    on:click={() => showMembershipModal = true}
-                   class="bg-[#FEF9D5] text-white px-6 py-2 rounded-full hover:bg-red-700 transition-colors"
+                   class="px-6 py-2 rounded-full transition-colors"
                  >
                    立即开通
                  </button>
@@ -209,7 +209,7 @@
                <button
                  on:click={updateProfile}
                  disabled={loading}
-                 class="bg-[#FEF9D5] text-white px-6 py-2 rounded-full hover:bg-red-700 disabled:bg-red-300 transition-colors"
+                 class="px-6 py-2 rounded-full transition-colors"
                >
                  {loading ? '更新中...' : '更新资料'}
                </button>
