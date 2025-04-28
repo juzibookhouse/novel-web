@@ -14,6 +14,10 @@
     await loadData();
   });
 
+  const isValidMembership = (user) => {
+    return user.user_memberships.length > 0;
+  }
+
   async function loadData() {
       try {
           loading = true;
@@ -22,8 +26,22 @@
           // Load users from user_profiles
           const { data: usersData, error: usersError } = await supabase
               .from('user_profiles')
-              .select('*')
-              .eq('role', 'reader');
+              .select(`
+                id,
+                user_id,
+                role,
+                created_at,
+                first_name,
+                last_name,
+                user_memberships (
+                  id,
+                  status,
+                  plan_id,
+                  end_date
+                )
+              `)
+              .eq('role', 'reader')
+              .gte('user_memberships.end_date', new Date().toISOString());
 
           if (usersError) throw usersError;
           users = usersData;
@@ -97,7 +115,7 @@
               <button
                 class="w-1/3 py-4 px-1 text-center border-b-2 font-medium text-sm
                   {activeTab === tab.id
-                    ? 'border-red-800 text-primary'
+                    ? 'border-red-800 underline'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}"
                 on:click={() => activeTab = tab.id as any}
               >
@@ -131,24 +149,19 @@
                 <tbody class="divide-y divide-red-100">
                   {#each users as user}
                     <tr>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.username}</td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.first_name}</td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.email}</td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {new Date(user.created_at).toLocaleDateString('zh-CN')}
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap">
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                          {user.is_approved ? 'bg-green-100 text-green-800' : 'bg-red-100 text-primary'}">
-                          {user.is_approved ? '已审核' : '未审核'}
+                          {isValidMembership(user) ? 'bg-green-100 text-green-800' : 'bg-red-100 text-primary'}">
+                          {isValidMembership(user) ? '会员' : '非会员'}
                         </span>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          on:click={() => toggleApproval(user.id, user.is_approved)}
-                          class="text-red-600 hover:text-primary"
-                        >
-                          {user.is_approved ? '取消审核' : '通过审核'}
-                        </button>
+                        
                       </td>
                     </tr>
                   {/each}

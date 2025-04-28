@@ -33,7 +33,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   event.locals.user = session?.user || null;
 
   // Protected routes
-  const protectedRoutes = ["/admin", "/author/dashboard", "/user/dashboard"];
+  const protectedRoutes = ["/author/dashboard", "/user/dashboard"];
   const isProtectedRoute = protectedRoutes.some((route) =>
     event.url.pathname.startsWith(route),
   );

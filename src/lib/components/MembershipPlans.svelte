@@ -64,7 +64,7 @@
 
     const { clientSecret } = await response.json();
     
-    if ($user.membership) {
+    if ($user?.membership) {
       // update existing subscription
       const { error: subscribeError } = await supabase
         .from('user_memberships')
@@ -137,10 +137,9 @@
           status: 'active', 
           end_date: getMemberShipEndDate(selectedPlan.duration)
         }).
-        eq('id', $user.membership.id);
+        eq('id', $user?.membership?.id);
       
       if (subscribeError) throw subscribeError;
-      setUser($user);
       
       onClose();
     } catch (e: any) {
@@ -161,12 +160,12 @@
     <div class="p-6 border-b border-red-100">
       <div class="flex justify-between items-center">
         <h2 class="text-2xl font-semibold text-gray-900">选择会员计划</h2>
-        <button
+        <a
           on:click={onClose}
-          class="text-gray-400 hover:text-gray-500"
+          class="text-gray-400 hover:text-gray-500 cursor-pointer"
         >
           ✕
-        </button>
+        </a>
       </div>
     </div>
 

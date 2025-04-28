@@ -17,13 +17,8 @@
 
   onMount(async () => {
     if ($user) {
-      const { data: profile } = await supabase
-        .from('user_profiles')
-        .select('is_approved')
-        .eq('user_id', $user.id)
-        .single();
 
-      isApproved = $user?.membership?.end_date > new Date().toISOString();
+      isApproved = $user?.membership?.status == 'active' || $user?.membership?.end_date > new Date().toISOString();
 
       if (!isApproved) {
         showMembershipModal = true;
@@ -103,6 +98,12 @@
 
     isInBookshelf = !isInBookshelf;
   }
+
+  const handleClose = () => {
+    showMembershipModal = false;
+    setUser($user);
+  }
+
 </script>
 
 <svelte:head>
@@ -111,7 +112,7 @@
 
 {#if showMembershipModal}
 <MembershipPlans
-  onClose={() => showMembershipModal = false}
+  onClose={() => handleClose()}
   redirectUrl={`/novel/${novelId}/chapter/${chapter.id}`}
 />
 {/if}
@@ -129,7 +130,7 @@
       </a>
       <h1 class="font-['Ma_Shan_Zheng'] text-2xl text-primary">{chapter.novels.title}</h1>
       
-      {#if $user && isApproved}
+      {#if $user?.isMembership}
         <button
           on:click={toggleBookshelf}
           class="text-red-700 cursor-pointer hover:text-primary transition-colors duration-200"
@@ -140,17 +141,17 @@
     </div>
 
     <!-- Reading Controls -->
-    {#if $user && isApproved}
+    {#if $user?.isMembership}
       <div class="p-4 border-b-2 border-red-100 flex justify-center space-x-4">
         <button
           on:click={() => changeFontSize(-2)}
-          class="px-3 py-1 bg-red-100 text-primary rounded-full hover:bg-red-200 transition-colors"
+          class="px-3 py-1 rounded-full"
         >
           A-
         </button>
         <button
           on:click={() => changeFontSize(2)}
-          class="px-3 py-1 bg-red-100 text-primary rounded-full hover:bg-red-200 transition-colors"
+          class="px-3 py-1 rounded-full"
         >
           A+
         </button>
@@ -174,12 +175,12 @@
             立即登录
           </a>
         </div>
-      {:else if !isApproved}
+      {:else if !$user?.isMembership}
         <div class="text-center py-8">
           <p class="text-gray-800 mb-4">订阅会员后即可继续阅读</p>
           <button
             on:click={() => showMembershipModal = true}
-            class="bg-[#FEF9D5] text-white px-6 py-2 rounded-full hover:bg-red-700 transition-colors"
+            class="px-6 py-2 rounded-full"
           >
             立即订阅
           </button>

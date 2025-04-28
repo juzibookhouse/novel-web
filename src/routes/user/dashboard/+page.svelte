@@ -127,7 +127,7 @@
              <button
                class="w-1/3 py-4 px-1 text-center border-b-2 font-medium text-sm
                  {activeTab === tab.id
-                   ? 'border-red-800 text-primary'
+                   ? 'border-red-800'
                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}"
                on:click={() => activeTab = tab.id}
              >
@@ -160,7 +160,7 @@
                    <p class="text-red-100">状态: {$user.membership.status === 'active' ? '有效' : '待续费'}</p>
                    <button
                      on:click={() => showMembershipModal = true}
-                     class="bg-white text-primary px-4 py-2 rounded-full text-sm hover:bg-red-50 transition-colors"
+                     class="px-4 py-2 rounded-full text-sm hover:bg-red-50 transition-colors"
                    >
                      续费会员
                    </button>

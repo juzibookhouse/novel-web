@@ -23,7 +23,7 @@ You can preview the production build with `npm run preview`.
 
 
 ## Todos
-- [ ] reader subscription
+- [x] reader subscription
 - [x] novel creat time and words
 - [x] prevent user copy
 - [x] disable mobile version
