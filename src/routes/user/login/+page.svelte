@@ -116,7 +116,7 @@
       <div>
         <button
           type="submit"
-          class="group relative flex w-full justify-center rounded-md bg-red-800 py-2.5 px-3 text-sm font-semibold text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:bg-red-300 transition duration-200"
+          class="group relative flex w-full justify-center rounded-md bg-[#FEF9D5] py-2.5 px-3 text-sm font-semibold text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:bg-red-300 transition duration-200"
           disabled={loading}
         >
           {loading ? '登录中...' : '登录'}

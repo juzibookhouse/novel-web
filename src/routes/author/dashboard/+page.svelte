@@ -307,7 +307,7 @@
   <div class="flex justify-end mb-8">
     <button
       on:click={() => showNovelForm = true}
-      class="bg-red-800 hover:bg-red-700 text-white font-medium py-2 px-6 rounded-full shadow-sm transition duration-200"
+      class="bg-[#FEF9D5] hover:bg-red-700 text-white font-medium py-2 px-6 rounded-full shadow-sm transition duration-200"
     >
       创作新作品
     </button>
@@ -519,7 +519,7 @@
           </button>
           <button
             type="submit"
-            class="px-4 py-2 bg-red-800 text-white rounded-md hover:bg-red-700"
+            class="px-4 py-2 bg-[#FEF9D5] text-white rounded-md hover:bg-red-700"
           >
             {newNovel.id ? '更新' : '创建'}
           </button>
@@ -570,7 +570,7 @@
           </button>
           <button
             type="submit"
-            class="px-4 py-2 bg-red-800 text-white rounded-md hover:bg-red-700"
+            class="px-4 py-2 bg-[#FEF9D5] text-white rounded-md hover:bg-red-700"
           >
             创建
           </button>

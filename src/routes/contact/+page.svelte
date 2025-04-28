@@ -82,7 +82,7 @@
             <div>
               <button
                 type="submit"
-                class="w-full bg-red-800 text-white py-3 px-6 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-200"
+                class="w-full bg-[#FEF9D5] text-white py-3 px-6 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-200"
               >
                 提交
               </button>

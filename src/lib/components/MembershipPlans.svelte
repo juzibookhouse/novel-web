@@ -228,7 +228,7 @@
               <button
                 on:click={handlePayment}
                 disabled={processing}
-                class="w-full bg-red-800 text-white py-3 px-4 rounded-lg hover:bg-red-700 disabled:bg-red-300 transition-colors"
+                class="w-full bg-[#FEF9D5] text-white py-3 px-4 rounded-lg hover:bg-red-700 disabled:bg-red-300 transition-colors"
               >
                 {processing ? '处理中...' : '确认支付'}
               </button>
