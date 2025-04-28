@@ -23,7 +23,7 @@
         .eq('user_id', $user.id)
         .single();
 
-      isApproved = profile?.is_approved || false;
+      isApproved = $user?.membership?.end_date > new Date().toISOString();
 
       if (!isApproved) {
         showMembershipModal = true;

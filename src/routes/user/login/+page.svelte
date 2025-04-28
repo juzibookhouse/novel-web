@@ -33,12 +33,7 @@
       if ($user?.profile?.role == 'author') {
         goto('/author/dashboard');
       } else {
-        if (!$user.profile.is_approved) {
-          showMembership = true;
-        } else {
-          // Redirect to dashboard
-          goto('/');
-        }
+        goto('/');
       }
     } catch (e: any) {
       error = e.message;

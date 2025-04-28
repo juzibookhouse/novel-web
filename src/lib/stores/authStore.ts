@@ -46,7 +46,7 @@ export const setUser = async (newUser: User | null) => {
   const now = new Date().toISOString();
   const { data: membership, error: membershipError } = await supabase
     .from("user_memberships")
-    .select("plan_id, start_date, end_date")
+    .select("id, plan_id, start_date, end_date, stripe_client_secret")
     .eq("user_id", newUser.id)
     .gte("end_date", now)
     .lte("start_date", now)
@@ -77,7 +77,7 @@ supabase.auth.getSession().then(async ({ data }) => {
 });
 
 // Subscribe to auth changes
-const PATHS_TO_REDIRECT = ["/user/login", "/user/signup","author/signup"];
+const PATHS_TO_REDIRECT = ["/user/login", "/user/signup", "author/signup"];
 supabase.auth.onAuthStateChange(async (event, session) => {
   if (session) {
     setUser(session.user);

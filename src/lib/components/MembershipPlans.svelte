@@ -1,13 +1,12 @@
 <script lang="ts">
   import { PUBLIC_STRIPE_PUBLISHABLE_KEY } from "$env/static/public"
   import { supabase } from '$lib/supabaseClient';
-  import { user } from '$lib/stores/authStore';
+  import { user, setUser } from '$lib/stores/authStore';
   import { goto } from '$app/navigation';
   import { loadStripe } from '@stripe/stripe-js';
   import { onMount } from 'svelte';
 
   export let onClose = () => {};
-  export let redirectUrl: string | null = null;
 
   let plans: any[] = [];
   let loading = true;
@@ -50,7 +49,7 @@
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ planId: selectedPlan.id }),
+      body: JSON.stringify({ planId: selectedPlan.id, stripeClientSecret: $user?.membership?.stripe_client_secret }),
     });
 
     if (!response.ok) {
@@ -58,6 +57,35 @@
     }
 
     const { clientSecret } = await response.json();
+
+    const membershipEndDate = new Date();
+    membershipEndDate.setMonth(membershipEndDate.getMonth() + selectedPlan.duration);
+    console.log(membershipEndDate);
+    
+    if ($user.membership) {
+      // update existing subscription
+      const { error: subscribeError } = await supabase
+        .from('user_memberships')
+        .update({ 
+          status: 'pending', 
+          end_date: membershipEndDate}).
+        eq('id', $user.membership.id);
+      if (subscribeError) throw subscribeError;
+      setUser($user)
+    } else {
+        const { error: subscribeError } = await supabase
+        .from('user_memberships')
+        .insert([{
+          stripe_client_secret: clientSecret,
+          user_id: $user.id,
+          plan_id: selectedPlan.id,
+          status: 'pending',
+          end_date: membershipEndDate
+        }]);
+        setUser($user)
+        
+      if (subscribeError) throw subscribeError;
+    }
 
     // Initialize Elements
     elements = stripe.elements({
@@ -100,26 +128,16 @@
         return;
       }
 
-      // Update user membership
+        // update existing subscription
       const { error: subscribeError } = await supabase
         .from('user_memberships')
-        .insert([{
-          user_id: $user.id,
-          plan_id: selectedPlan.id,
-          status: 'active',
-          end_date: new Date(Date.now() + selectedPlan.duration * 24 * 60 * 60 * 1000)
-        }]);
-
+        .update({ 
+          status: 'active', 
+          end_date: new Date(Date.now() + selectedPlan.duration * 24 * 60 * 60 * 1000)}).
+        eq('id', $user.membership.id);
+      
       if (subscribeError) throw subscribeError;
-
-      // Update user profile
-      const { error: updateError } = await supabase
-        .from('user_profiles')
-        .update({ is_approved: true })
-        .eq('user_id', $user.id);
-
-      if (updateError) throw updateError;
-
+      
       onClose();
     } catch (e: any) {
       paymentError = e.message;

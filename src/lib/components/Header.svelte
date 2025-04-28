@@ -44,6 +44,9 @@
               class="hover:text-yellow-200 transition-colors">注册成为作家</a
             >
           {/if}
+          <a href="/user/dashboard" class="hover:text-yellow-200 transition-colors"
+            >个人中心</a
+          >
           <button
             on:click={handleLogout}
             class="bg-red-700 hover:bg-red-600 px-4 py-2 rounded-full transition-colors cursor-pointer"

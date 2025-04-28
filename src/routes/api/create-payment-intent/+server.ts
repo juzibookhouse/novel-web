@@ -7,7 +7,9 @@ const stripe = new Stripe(STRIPE_SECRET_KEY);
 
 export async function POST({ request }) {
   try {
-    const { planId } = await request.json();
+    const { planId, stripeClientSecret } = await request.json();
+
+    console.log('Received planId:', stripeClientSecret);
 
     // Get plan details from Supabase
     const { data: plan } = await supabase
@@ -20,14 +22,29 @@ export async function POST({ request }) {
       return json({ error: 'Plan not found' }, { status: 404 });
     }
 
-    // Create payment intent
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: plan.price * 100, // Convert to cents
-      currency: 'usd',
-      metadata: {
-        planId,
-      },
-    });
+    let paymentIntent;
+
+    if (stripeClientSecret) {
+      // Extract payment intent ID from client secret
+      const paymentIntentId = stripeClientSecret.split('_secret_')[0];
+
+      // Update existing payment intent
+      paymentIntent = await stripe.paymentIntents.update(paymentIntentId, {
+        amount: plan.price * 100, // Convert to cents
+        metadata: {
+          planId,
+        },
+      });
+    } else {
+      // Create payment intent
+      paymentIntent = await stripe.paymentIntents.create({
+        amount: plan.price * 100, // Convert to cents
+        currency: 'usd',
+        metadata: {
+          planId,
+        },
+      });
+    }
 
     return json({ clientSecret: paymentIntent.client_secret });
   } catch (error) {
