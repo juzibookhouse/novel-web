@@ -1,8 +1,13 @@
 <script lang="ts">
   import { WEBSITE_NAME } from "$lib/constants";
-  import { user } from "$lib/stores/authStore";
+  import { user, getUserSession } from "$lib/stores/authStore";
   import { supabase } from "$lib/supabaseClient";
   import { goto } from "$app/navigation";
+  import { onMount } from "svelte";
+
+  onMount(() => {
+    getUserSession()
+  })
 
   async function handleLogout() {
     await supabase.auth.signOut();

@@ -67,14 +67,17 @@ export const setUser = async (newUser: User | null) => {
   user.set(userData);
 };
 
-// Initialize the store with the current session user
-supabase.auth.getSession().then(async ({ data }) => {
+export const getUserSession = async () => {
+  const { data, error } = await supabase.auth.getSession();
+  if (error) throw error;
   if (data.session?.user) {
     setUser(data.session.user);
   } else {
     setUser(null);
   }
-});
+};
+
+getUserSession();
 
 // Subscribe to auth changes
 const PATHS_TO_REDIRECT = ["/user/login", "/user/signup", "author/signup"];

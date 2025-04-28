@@ -40,6 +40,12 @@
     }
   }
 
+  const getMemberShipEndDate = (duration) => {
+    const membershipEndDate = new Date();
+    membershipEndDate.setMonth(membershipEndDate.getMonth() + duration);
+    return membershipEndDate
+  }
+
   async function initializePaymentElement() {
     if (!stripe || !selectedPlan) return;
 
@@ -57,10 +63,6 @@
     }
 
     const { clientSecret } = await response.json();
-
-    const membershipEndDate = new Date();
-    membershipEndDate.setMonth(membershipEndDate.getMonth() + selectedPlan.duration);
-    console.log(membershipEndDate);
     
     if ($user.membership) {
       // update existing subscription
@@ -68,7 +70,7 @@
         .from('user_memberships')
         .update({ 
           status: 'pending', 
-          end_date: membershipEndDate}).
+          end_date: getMemberShipEndDate(selectedPlan.duration)}).
         eq('id', $user.membership.id);
       if (subscribeError) throw subscribeError;
       setUser($user)
@@ -80,7 +82,7 @@
           user_id: $user.id,
           plan_id: selectedPlan.id,
           status: 'pending',
-          end_date: membershipEndDate
+          end_date: getMemberShipEndDate(selectedPlan.duration)
         }]);
         setUser($user)
         
@@ -133,10 +135,12 @@
         .from('user_memberships')
         .update({ 
           status: 'active', 
-          end_date: new Date(Date.now() + selectedPlan.duration * 24 * 60 * 60 * 1000)}).
+          end_date: getMemberShipEndDate(selectedPlan.duration)
+        }).
         eq('id', $user.membership.id);
       
       if (subscribeError) throw subscribeError;
+      setUser($user);
       
       onClose();
     } catch (e: any) {

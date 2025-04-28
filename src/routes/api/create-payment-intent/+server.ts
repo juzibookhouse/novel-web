@@ -9,8 +9,6 @@ export async function POST({ request }) {
   try {
     const { planId, stripeClientSecret } = await request.json();
 
-    console.log('Received planId:', stripeClientSecret);
-
     // Get plan details from Supabase
     const { data: plan } = await supabase
       .from('membership_plans')
