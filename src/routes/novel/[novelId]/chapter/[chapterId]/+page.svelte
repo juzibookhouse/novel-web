@@ -1,7 +1,7 @@
 <script lang="ts">
   import { WEBSITE_NAME } from '$lib/constants';
-  import { onMount, onDestroy, afterNavigate } from 'svelte';
-  import { invalidateAll } from '$app/navigation';
+  import { onMount, onDestroy } from 'svelte';
+  import { invalidateAll, afterNavigate } from '$app/navigation';
   import { supabase } from '$lib/supabaseClient';
   import { user } from '$lib/stores/authStore';
   import MembershipPlans from '$lib/components/MembershipPlans.svelte';
@@ -175,7 +175,7 @@
           <p class="text-gray-800 mb-4">请登录后继续阅读</p>
           <a
             href="/user/login"
-            class="inline-block bg-[#FEF9D5] text-white px-6 py-2 rounded-full hover:bg-red-700 transition-colors"
+            class="inline-block bg-red-800 text-white px-6 py-2 rounded-full hover:bg-red-700 transition-colors"
           >
             立即登录
           </a>
