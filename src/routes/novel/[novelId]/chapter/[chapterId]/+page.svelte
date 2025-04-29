@@ -1,9 +1,14 @@
 <script lang="ts">
   import { WEBSITE_NAME } from '$lib/constants';
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy, afterNavigate } from 'svelte';
+  import { invalidateAll } from '$app/navigation';
   import { supabase } from '$lib/supabaseClient';
   import { user } from '$lib/stores/authStore';
   import MembershipPlans from '$lib/components/MembershipPlans.svelte';
+
+  afterNavigate(() => {
+    invalidateAll();
+  });
 
   export let data;
   const { chapter, prevChapterId, nextChapterId, novelId } = data;
