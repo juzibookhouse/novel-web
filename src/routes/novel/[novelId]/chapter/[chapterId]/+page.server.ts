@@ -20,7 +20,6 @@ export async function load({ params, locals }: { params: { novelId: string; chap
   }
 
   // Check if user is the author of the novel
-  console.log(locals.user);
   if (locals.user?.id) {
     const { data: userProfile } = await supabase
       .from('user_profiles')
