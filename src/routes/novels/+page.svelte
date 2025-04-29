@@ -132,9 +132,11 @@
           </div>
           <div class="p-4">
             <div class="flex items-center gap-2 mb-3">
+              {#each novel.categories as category}
               <span class="bg-red-50 text-primary px-3 py-1 rounded-full text-sm font-medium">
-                {novel.category || '未分类'}
+                {category.name}
               </span>
+              {/each}
               <span class="text-sm {novel.status === 'ongoing' ? 'bg-green-50 text-green-800' : 'bg-blue-50 text-blue-800'} px-3 py-1 rounded-full font-medium">
                 {novel.status === 'ongoing' ? '连载中' : '已完结'}
               </span>
