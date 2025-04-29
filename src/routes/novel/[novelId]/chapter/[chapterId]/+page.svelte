@@ -1,17 +1,13 @@
 <script lang="ts">
   import { WEBSITE_NAME } from '$lib/constants';
   import { onMount, onDestroy } from 'svelte';
-  import { invalidateAll, afterNavigate } from '$app/navigation';
+  import { page } from '$app/stores';
   import { supabase } from '$lib/supabaseClient';
   import { user } from '$lib/stores/authStore';
   import MembershipPlans from '$lib/components/MembershipPlans.svelte';
 
-  afterNavigate(() => {
-    invalidateAll();
-  });
-
   export let data;
-  const { chapter, prevChapterId, nextChapterId, novelId } = data;
+  $: ({ chapter, prevChapterId, nextChapterId, novelId } = data);
 
   let showMembershipModal = false;
   let isApproved = false;
@@ -207,6 +203,7 @@
       {#if prevChapterId}
         <a
           href={`/novel/${novelId}/chapter/${prevChapterId}`}
+          data-sveltekit-reload
           class="px-6 py-2 bg-red-100 text-primary rounded-full hover:bg-red-200 transition-colors duration-200"
         >
           ← 上一章
@@ -218,6 +215,7 @@
       {#if nextChapterId}
         <a
           href={`/novel/${novelId}/chapter/${nextChapterId}`}
+          data-sveltekit-reload
           class="px-6 py-2 bg-red-100 text-primary rounded-full hover:bg-red-200 transition-colors duration-200"
         >
           下一章 →
