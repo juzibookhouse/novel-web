@@ -203,7 +203,6 @@
       {#if prevChapterId}
         <a
           href={`/novel/${novelId}/chapter/${prevChapterId}`}
-          data-sveltekit-reload
           class="px-6 py-2 bg-red-100 text-primary rounded-full hover:bg-red-200 transition-colors duration-200"
         >
           ← 上一章
@@ -215,7 +214,6 @@
       {#if nextChapterId}
         <a
           href={`/novel/${novelId}/chapter/${nextChapterId}`}
-          data-sveltekit-reload
           class="px-6 py-2 bg-red-100 text-primary rounded-full hover:bg-red-200 transition-colors duration-200"
         >
           下一章 →
