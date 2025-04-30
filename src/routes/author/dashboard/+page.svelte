@@ -3,6 +3,8 @@
   import { supabase } from '$lib/supabaseClient';
   import { user } from '$lib/stores/authStore';
   import { WEBSITE_NAME } from '$lib/constants';
+  import { Quill } from 'svelte-quill';
+  import 'quill/dist/quill.snow.css';
   
   interface Category {
     id: string;
@@ -266,17 +268,31 @@
     try {
       if (!selectedNovel?.id) throw new Error('请选择小说');
       
-      const { data, error: createError } = await supabase
-        .from('chapters')
-        .insert([{
-          title: newChapter.title,
-          content: newChapter.content,
-          novel_id: selectedNovel.id,
-          chapter_order: (selectedNovel.chapters?.length || 0) + 1
-        }])
-        .select();
+      if (newChapter.novel_id) {
+        // Update existing chapter
+        const { error: updateError } = await supabase
+          .from('chapters')
+          .update({
+            title: newChapter.title,
+            content: newChapter.content
+          })
+          .eq('id', newChapter.novel_id);
+          
+        if (updateError) throw updateError;
+      } else {
+        // Create new chapter
+        const { data, error: createError } = await supabase
+          .from('chapters')
+          .insert([{
+            title: newChapter.title,
+            content: newChapter.content,
+            novel_id: selectedNovel.id,
+            chapter_order: (selectedNovel.chapters?.length || 0) + 1
+          }])
+          .select();
       
       if (createError) throw createError;
+      }
       
       await fetchNovels();
       showChapterForm = false;
@@ -379,14 +395,30 @@
               <h4 class="text-lg font-medium text-gray-900 mb-4">章节列表</h4>
               <div class="grid grid-cols-3 gap-4">
                 {#each novel.chapters as chapter}
-                  <a
-                    href={`/novel/${novel.id}/chapter/${chapter.id}`}
-                    class="group p-3 rounded-lg border-2 border-red-100 hover:border-red-300 hover:bg-red-50 transition-all duration-200"
-                  >
-                    <h5 class="text-gray-900 group-hover:text-primary transition-colors duration-200">
-                      {chapter.title}
-                    </h5>
-                  </a>
+                  <div class="group p-3 rounded-lg border-2 border-red-100 hover:border-red-300 hover:bg-red-50 transition-all duration-200">
+                    <div class="flex justify-between items-center">
+                      <a
+                        href={`/novel/${novel.id}/chapter/${chapter.id}`}
+                        class="text-gray-900 group-hover:text-primary transition-colors duration-200"
+                      >
+                        <h5>{chapter.title}</h5>
+                      </a>
+                      <button
+                        on:click={() => {
+                          selectedNovel = novel;
+                          newChapter = {
+                            title: chapter.title,
+                            content: chapter.content || '',
+                            novel_id: chapter.id
+                          };
+                          showChapterForm = true;
+                        }}
+                        class="px-3 py-1 text-sm bg-yellow-100 text-yellow-800 rounded-full hover:bg-yellow-200"
+                      >
+                        编辑
+                      </button>
+                    </div>
+                  </div>
                 {/each}
               </div>
             </div>
@@ -551,13 +583,12 @@
           </div>
           <div>
             <label for="content" class="block text-sm font-medium text-gray-700">章节内容</label>
-            <textarea
-              id="content"
+            <Quill
               bind:value={newChapter.content}
-              rows="12"
-              class="mt-1 block w-full rounded-md border-2 border-red-200 px-3 py-2 focus:border-red-500 focus:ring-red-500"
+              theme="snow"
+              class="h-96"
               placeholder="请输入章节内容"
-            ></textarea>
+            />
           </div>
         </div>
         <div class="mt-6 flex justify-end gap-3">
