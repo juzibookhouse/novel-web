@@ -449,7 +449,7 @@
               <button
                 type="button"
                 on:click={addNewCategory}
-                class="px-4 py-2 bg-red-100 text-primary rounded-md hover:bg-red-200"
+                class="px-4 py-2 rounded-md"
               >
                 添加
               </button>
@@ -513,7 +513,7 @@
           <button
             type="button"
             on:click={() => showNovelForm = false}
-            class="px-4 py-2 border-2 border-red-200 text-primary rounded-md hover:bg-red-50"
+            class="px-4 py-2 border-2 rounded-md"
           >
             取消
           </button>
@@ -564,7 +564,7 @@
           <button
             type="button"
             on:click={() => showChapterForm = false}
-            class="px-4 py-2 border-2 border-red-200 text-primary rounded-md hover:bg-red-50"
+            class="px-4 py-2 border-2 border-red-200 rounded-md"
           >
             取消
           </button>
