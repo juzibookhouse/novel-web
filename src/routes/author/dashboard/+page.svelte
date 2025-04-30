@@ -3,8 +3,6 @@
   import { supabase } from '$lib/supabaseClient';
   import { user } from '$lib/stores/authStore';
   import { WEBSITE_NAME } from '$lib/constants';
-  import { Quill } from 'svelte-quill';
-  import 'quill/dist/quill.snow.css';
   
   interface Category {
     id: string;
@@ -113,6 +111,7 @@
           chapters (
             id,
             title,
+            content,
             created_at
           ),
           novel_categories (
@@ -583,12 +582,11 @@
           </div>
           <div>
             <label for="content" class="block text-sm font-medium text-gray-700">章节内容</label>
-            <Quill
+            <textarea
               bind:value={newChapter.content}
-              theme="snow"
-              class="h-96"
+              class="h-96 w-full mt-1 block rounded-md border-2 border-red-200 px-3 py-2 focus:border-red-500 focus:ring-red-500"
               placeholder="请输入章节内容"
-            />
+            ></textarea>
           </div>
         </div>
         <div class="mt-6 flex justify-end gap-3">
