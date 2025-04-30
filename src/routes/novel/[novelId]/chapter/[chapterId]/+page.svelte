@@ -1,7 +1,5 @@
 <script lang="ts">
   import { WEBSITE_NAME } from '$lib/constants';
-  import { Quill } from 'svelte-quill';
-  import 'quill/dist/quill.snow.css';
   import { onMount, onDestroy } from 'svelte';
   import { page } from '$app/stores';
   import { supabase } from '$lib/supabaseClient';
@@ -189,35 +187,14 @@
           </button>
         </div>
       {:else}
-        {#if $user?.membership?.plan_id && chapter.novels.user_id === $user.id}
-          <div class="prose prose-lg max-w-none">
-            <div class="mb-4">
-              <Quill
-                bind:value={chapter.content}
-                theme="snow"
-                on:change={async () => {
-                  const { error } = await supabase
-                    .from('chapters')
-                    .update({ content: chapter.content })
-                    .eq('id', chapter.id);
-                  
-                  if (error) {
-                    console.error('Failed to save:', error);
-                  }
-                }}
-              />
-            </div>
+        <div class="prose prose-lg max-w-none">
+          <div 
+            class="text-gray-800 leading-relaxed"
+            style="font-size: {fontSize}px"
+          >
+            {@html chapter.content || '本章节暂无内容'}
           </div>
-        {:else}
-          <div class="prose prose-lg max-w-none">
-            <div 
-              class="text-gray-800 leading-relaxed"
-              style="font-size: {fontSize}px"
-            >
-              {@html chapter.content || '本章节暂无内容'}
-            </div>
-          </div>
-        {/if}
+        </div>
       {/if}
     </div>
 
