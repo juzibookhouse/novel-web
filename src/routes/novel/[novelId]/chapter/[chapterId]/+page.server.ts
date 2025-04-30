@@ -5,10 +5,15 @@ export async function load({ params, locals }: { params: { novelId: string; chap
   const { data: chapter, error: chapterError } = await supabase
     .from('chapters')
     .select(`
-      *,
+      id,
+      title,
+      content,
+      is_free,
+      updated_at,
       novels (
         id,
         title,
+        is_free,
         user_id
       )
     `)

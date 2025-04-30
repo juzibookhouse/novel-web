@@ -131,7 +131,7 @@
       </a>
       <h1 class="font-['Ma_Shan_Zheng'] text-2xl text-primary">{chapter.novels.title}</h1>
       
-      {#if $user?.isMembership}
+      {#if $user}
         <button
           on:click={toggleBookshelf}
           class="text-red-700 cursor-pointer hover:text-primary transition-colors duration-200"
@@ -142,7 +142,7 @@
     </div>
 
     <!-- Reading Controls -->
-    {#if $user?.isMembership}
+    {#if $user}
       <div class="p-4 border-b-2 border-red-100 flex justify-center space-x-4">
         <button
           on:click={() => changeFontSize(-2)}
@@ -166,27 +166,8 @@
         <p>字数: {chapter.content?.length || 0}</p>
         <p>更新时间: {new Date(chapter.updated_at || chapter.created_at).toLocaleString('zh-CN')}</p>
       </div>
-      {#if !$user}
-        <div class="text-center py-8">
-          <p class="text-gray-800 mb-4">请登录后继续阅读</p>
-          <a
-            href="/user/login"
-            class="inline-block bg-red-800 text-white px-6 py-2 rounded-full hover:bg-red-700 transition-colors"
-          >
-            立即登录
-          </a>
-        </div>
-      {:else if !$user?.isMembership}
-        <div class="text-center py-8">
-          <p class="text-gray-800 mb-4">订阅会员后即可继续阅读</p>
-          <button
-            on:click={() => showMembershipModal = true}
-            class="px-6 py-2 rounded-full"
-          >
-            立即订阅
-          </button>
-        </div>
-      {:else}
+      
+      {#if chapter.is_free || chapter.novels.is_free || $user?.isMembership}
         <div class="prose prose-lg max-w-none">
           <div 
             class="text-gray-800 leading-relaxed"
@@ -195,6 +176,28 @@
             {@html chapter.content || '本章节暂无内容'}
           </div>
         </div>
+      {:else}
+        {#if !$user}
+          <div class="text-center py-8">
+            <p class="text-gray-800 mb-4">请登录后继续阅读</p>
+            <a
+              href="/user/login"
+              class="inline-block bg-red-800 text-white px-6 py-2 rounded-full hover:bg-red-700 transition-colors"
+            >
+              立即登录
+            </a>
+          </div>
+        {:else if !$user?.isMembership}
+          <div class="text-center py-8">
+            <p class="text-gray-800 mb-4">订阅会员后即可继续阅读</p>
+            <button
+              on:click={() => showMembershipModal = true}
+              class="px-6 py-2 rounded-full"
+            >
+              立即订阅
+            </button>
+          </div>
+        {/if}
       {/if}
     </div>
 

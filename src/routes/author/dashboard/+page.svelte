@@ -15,6 +15,7 @@
     title: string;
     content?: string;
     novel_id: string;
+    is_free: boolean;
     created_at: string;
   }
   
@@ -27,6 +28,7 @@
     created_at: string;
     categories?: Category[];
     cover_url?: string;
+    is_free?: boolean;
     chapters?: Chapter[];
   }
   
@@ -38,12 +40,14 @@
     status: string;
     cover_url?: string;
     cover_file?: File;
+    is_free?: boolean;
   }
   
   interface NewChapter {
     id: string;
     title: string;
     content: string;
+    is_free:boolean;
     novel_id: string | null;
   }
   
@@ -117,12 +121,14 @@
           description,
           status,
           user_id,
+          is_free,
           created_at,
           cover_url,
           chapters (
             id,
             title,
             content,
+            is_free,
             created_at
           ),
           novel_categories (
@@ -212,6 +218,7 @@
             title: newNovel.title,
             description: newNovel.description,
             status: newNovel.status,
+            is_free: newNovel.is_free,
             cover_url,
             user_id: $user.id
           }])
@@ -228,6 +235,7 @@
             title: newNovel.title,
             description: newNovel.description,
             status: newNovel.status,
+            is_free: newNovel.is_free,
             cover_url,
           })
           .eq('id', novelId);
@@ -283,7 +291,8 @@
           .from('chapters')
           .update({
             title: newChapter.title,
-            content: newChapter.content
+            content: newChapter.content,
+            is_free: newChapter.is_free
           })
           .eq('id', newChapter.id);
           
@@ -295,6 +304,7 @@
           .insert([{
             title: newChapter.title,
             content: newChapter.content,
+            is_free: newChapter.is_free,
             novel_id: newChapter.novel_id,
             chapter_order: (selectedNovel.chapters?.length || 0) + 1
           }])
@@ -424,6 +434,7 @@
                           newChapter = {
                             title: chapter.title,
                             content: chapter.content || '',
+                            is_free: chapter.is_free,
                             id: chapter.id,
                             novel_id: selectedNovel.id
                           };
@@ -464,6 +475,15 @@
               required
               class="mt-1 block w-full rounded-md border-2 border-red-200 px-3 py-2 focus:border-red-500 focus:ring-red-500"
               placeholder="请输入作品名称"
+            />
+          </div>
+          <div>
+            <label for="is_free" class="block text-sm font-medium text-gray-700">免费阅读？</label>
+            <input
+              type="checkbox"
+              id="is_free"
+              bind:checked={newNovel.is_free}
+              class=""
             />
           </div>
           <div>
@@ -596,6 +616,15 @@
               required
               class="mt-1 block w-full rounded-md border-2 border-red-200 px-3 py-2 focus:border-red-500 focus:ring-red-500"
               placeholder="请输入章节标题"
+            />
+          </div>
+          <div>
+            <label for="chapter-is_free" class="block text-sm font-medium text-gray-700">章节免费</label>
+            <input
+              type="checkbox"
+              id="chapter-is_free"
+              bind:checked={newChapter.is_free}
+              class=""
             />
           </div>
           <div class="">
