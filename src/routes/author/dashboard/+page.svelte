@@ -366,7 +366,7 @@
                 <div class="mt-4">
                   <button
                     on:click={() => startAddChapter(novel)}
-                    class="bg-red-100 hover:bg-red-200 text-primary px-4 py-2 rounded-full text-sm transition duration-200"
+                    class="px-4 py-2 rounded-full text-sm"
                   >
                     添加新章节
                   </button>

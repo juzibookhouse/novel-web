@@ -49,7 +49,7 @@ export const setUser = async (newUser: User | null) => {
     .from("user_memberships")
     .select("id, plan_id, start_date, end_date, status, stripe_client_secret")
     .eq("user_id", newUser.id)
-    .or('status.eq.active,status.eq.pending)')
+    .or("status.eq.active,status.eq.pending)")
     .gte("end_date", now)
     .lte("start_date", now)
     .limit(1)
@@ -65,7 +65,9 @@ export const setUser = async (newUser: User | null) => {
     ...newUser,
     profile,
     membership: membership || undefined,
-    isMembership: membership?.status == 'active' || membership?.end_date > new Date().toISOString()
+    isMembership:
+      membership?.status == "active" &&
+      membership?.end_date > new Date().toISOString(),
   };
   user.set(userData);
 };

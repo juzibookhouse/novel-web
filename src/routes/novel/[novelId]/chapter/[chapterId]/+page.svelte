@@ -19,7 +19,7 @@
   onMount(async () => {
     if ($user) {
 
-      isApproved = $user?.membership?.status == 'active' || $user?.membership?.end_date > new Date().toISOString();
+      isApproved = $user.isMembership;
 
       if (!isApproved) {
         showMembershipModal = true;
