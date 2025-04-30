@@ -158,12 +158,14 @@
                  </div>
                  <div class="flex justify-between items-center">
                    <p class="text-red-100">状态: {$user.membership.status === 'active' ? '有效' : '待续费'}</p>
+                   {#if !$user.isMembership}
                    <button
                      on:click={() => showMembershipModal = true}
                      class="px-4 py-2 rounded-full text-sm hover:bg-red-50 transition-colors"
                    >
                      续费会员
                    </button>
+                   {/if}
                  </div>
                </div>
              {:else}
