@@ -118,7 +118,7 @@
    </section>
 
    <!-- Promotions Section -->
-   <section class="py-16 px-4 sm:px-6 lg:px-8">
+   <!-- <section class="py-16 px-4 sm:px-6 lg:px-8">
      <div class="max-w-7xl mx-auto">
        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
          {#each promotions as promo}
@@ -139,10 +139,10 @@
          {/each}
        </div>
      </div>
-   </section>
+   </section> -->
 
    <!-- Rankings Section -->
-   <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white/80">
+   <!-- <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white/80">
      <div class="max-w-7xl mx-auto">
        <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-primary text-center mb-12">热门榜单</h2>
        <div class="flex justify-center space-x-4 mb-8">
@@ -183,10 +183,10 @@
          {/each}
        </div>
      </div>
-   </section>
+   </section> -->
 
    <!-- Features Section -->
-   <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white/80">
+   <!-- <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white/80">
      <div class="max-w-7xl mx-auto">
        <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-primary text-center mb-12">平台特色</h2>
        <div class="grid grid-cols-4 gap-8">
@@ -199,7 +199,7 @@
          {/each}
        </div>
      </div>
-   </section>
+   </section> -->
 
    <!-- Categories Section -->
    <section class="py-16 px-4 sm:px-6 lg:px-8">
