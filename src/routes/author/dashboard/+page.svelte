@@ -3,7 +3,7 @@
   import { supabase } from '$lib/supabaseClient';
   import { user } from '$lib/stores/authStore';
   import { WEBSITE_NAME } from '$lib/constants';
-  import Quill from 'svelte-quill';
+  import { Quill } from 'svelte-quill';
   import 'quill/dist/quill.snow.css';
   
   interface Category {
