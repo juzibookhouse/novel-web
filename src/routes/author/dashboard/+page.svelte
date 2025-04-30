@@ -582,11 +582,12 @@
           </div>
           <div>
             <label for="content" class="block text-sm font-medium text-gray-700">章节内容</label>
-            <textarea
-              bind:value={newChapter.content}
-              class="h-96 w-full mt-1 block rounded-md border-2 border-red-200 px-3 py-2 focus:border-red-500 focus:ring-red-500"
+            <div
+              contenteditable
+              bind:innerHTML={newChapter.content}
+              class="h-96 w-full mt-1 block rounded-md border-2 border-red-200 overflow-hidden overflow-y-scroll px-3 py-2"
               placeholder="请输入章节内容"
-            ></textarea>
+            ></div>
           </div>
         </div>
         <div class="mt-6 flex justify-end gap-3">
