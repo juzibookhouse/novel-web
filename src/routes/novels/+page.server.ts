@@ -44,8 +44,6 @@ export async function load({ url }: { url: URL }) {
     error,
   } = await query.range(start, end).order("created_at", { ascending: false });
 
-  console.log(novels, count, error);
-
   const { data: categories } = await supabase
     .from("categories")
     .select("*")

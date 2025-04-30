@@ -3,6 +3,7 @@
   import { supabase } from '$lib/supabaseClient';
   import { user } from '$lib/stores/authStore';
   import { WEBSITE_NAME } from '$lib/constants';
+  import Quill from 'quill';
   
   interface Category {
     id: string;
@@ -79,6 +80,14 @@
       fetchCategories()
     });
   });
+
+  function initialChapterEditor() {
+    setTimeout(()=>{
+      const quill = new Quill('#chapterEditor', {
+        theme: 'snow'
+      });
+    },1);
+  }
 
   async function fetchCategories() {
     const { data, error: fetchError } = await supabase
@@ -303,13 +312,18 @@
   
   function startAddChapter(novel: Novel) {
     selectedNovel = novel;
+    newChapter.title = '';
+    newChapter.content = '';
     newChapter.novel_id = novel.id;
     showChapterForm = true;
+    initialChapterEditor();
   }
 </script>
 
 <svelte:head>
 <title>作家专区 - {WEBSITE_NAME}</title>
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 </svelte:head>
 
 <div class="min-h-screen bg-red-50 py-8 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
@@ -411,6 +425,7 @@
                             novel_id: chapter.id
                           };
                           showChapterForm = true;
+                          initialChapterEditor();
                         }}
                         class="px-3 py-1 text-sm bg-yellow-100 text-yellow-800 rounded-full hover:bg-yellow-200"
                       >
@@ -580,17 +595,20 @@
               placeholder="请输入章节标题"
             />
           </div>
-          <div>
+          <div class="">
             <label for="content" class="block text-sm font-medium text-gray-700">章节内容</label>
+            <div class="h-96">
             <div
+              id="chapterEditor"
               contenteditable
               bind:innerHTML={newChapter.content}
-              class="h-96 w-full mt-1 block rounded-md border-2 border-red-200 overflow-hidden overflow-y-scroll px-3 py-2"
+              class="w-full mt-1 block rounded-md border-2 border-red-200"
               placeholder="请输入章节内容"
             ></div>
+            </div>
           </div>
         </div>
-        <div class="mt-6 flex justify-end gap-3">
+        <div class="mt-15 flex justify-end gap-3">
           <button
             type="button"
             on:click={() => showChapterForm = false}
