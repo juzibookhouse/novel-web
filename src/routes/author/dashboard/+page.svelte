@@ -41,6 +41,7 @@
   }
   
   interface NewChapter {
+    id: string;
     title: string;
     content: string;
     novel_id: string | null;
@@ -62,6 +63,7 @@
     status: 'ongoing'
   };
   let newChapter: NewChapter = {
+    id: '',
     title: '',
     content: '',
     novel_id: null
@@ -275,8 +277,7 @@
   async function createChapter() {
     try {
       if (!selectedNovel?.id) throw new Error('请选择小说');
-      
-      if (newChapter.novel_id) {
+      if (newChapter.id) {
         // Update existing chapter
         const { error: updateError } = await supabase
           .from('chapters')
@@ -284,7 +285,7 @@
             title: newChapter.title,
             content: newChapter.content
           })
-          .eq('id', newChapter.novel_id);
+          .eq('id', newChapter.id);
           
         if (updateError) throw updateError;
       } else {
@@ -294,7 +295,7 @@
           .insert([{
             title: newChapter.title,
             content: newChapter.content,
-            novel_id: selectedNovel.id,
+            novel_id: newChapter.novel_id,
             chapter_order: (selectedNovel.chapters?.length || 0) + 1
           }])
           .select();
@@ -304,7 +305,7 @@
       
       await fetchNovels();
       showChapterForm = false;
-      newChapter = { title: '', content: '', novel_id: null };
+      newChapter = { id: '', title: '', content: '', novel_id: null };
     } catch (e: any) {
       error = e.message;
     }
@@ -312,6 +313,7 @@
   
   function startAddChapter(novel: Novel) {
     selectedNovel = novel;
+    newChapter.id = '';
     newChapter.title = '';
     newChapter.content = '';
     newChapter.novel_id = novel.id;
@@ -422,7 +424,8 @@
                           newChapter = {
                             title: chapter.title,
                             content: chapter.content || '',
-                            novel_id: chapter.id
+                            id: chapter.id,
+                            novel_id: selectedNovel.id
                           };
                           showChapterForm = true;
                           initialChapterEditor();
