@@ -1,22 +1,23 @@
 import { supabase } from "$lib/supabaseClient";
 
 export async function load() {
-  const { data: ongoingNovels } = await supabase
+  const { data: novels } = await supabase
     .from("novels")
-    .select()
-    .eq('status', 'ongoing')
+    .select('id,title,description,updated_at,status,cover_url')
     .limit(6)
     .order('created_at', { ascending: false });
+  
+  const ongoingNovels = novels?.filter((novel)=>novel.status === 'ongoing');
+  const finishedNovels = novels?.filter((novel)=>novel.status === 'finished');
 
-  const { data: finishedNovels } = await supabase
-    .from("novels")
-    .select()
-    .eq('status', 'finished')
-    .limit(6)
-    .order('created_at', { ascending: false });
+  let randomNovel = null;
+  if (novels?.length) {
+    randomNovel = novels[Math.floor(Math.random()*novels.length)];
+  }
 
   return {
     ongoingNovels: ongoingNovels ?? [],
     finishedNovels: finishedNovels ?? [],
+    randomNovel
   };
 }

@@ -1,7 +1,7 @@
  <script lang="ts">
    import { WEBSITE_NAME } from '$lib/constants';
    export let data;
-   const { ongoingNovels, finishedNovels } = data;
+   const { ongoingNovels, finishedNovels, randomNovel } = data;
 
    const categories = [
      { name: '武侠', icon: '⚔️', desc: '侠之大者，为国为民', color: 'bg-blue-50' },
@@ -200,6 +200,13 @@
        </div>
      </div>
    </section> -->
+
+   <section class="py-16 px-4 flex flex-col gap-5 justify-center max-w-7xl mx-auto">
+    <a href="/novel/{randomNovel.id}" class="cursor-pointer">
+      <p class="italic">{randomNovel.description}</p>
+      <h2 class="text-center text-3xl">{randomNovel.title}</h2>
+    </a>
+   </section>
 
    <!-- Categories Section -->
    <section class="py-16 px-4 sm:px-6 lg:px-8">
