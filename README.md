@@ -28,3 +28,4 @@ You can preview the production build with `npm run preview`.
 - [x] prevent user copy
 - [x] disable mobile version
 - [ ] show reading total time
+- [ ] home page reference https://tyler.com/templates/love-nature/
