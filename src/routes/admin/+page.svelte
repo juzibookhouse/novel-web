@@ -2,6 +2,7 @@
   import { WEBSITE_NAME } from '$lib/constants';
   import { onMount } from 'svelte';
   import { supabase } from '$lib/supabaseClient';
+  import { getNovelStatus } from '$lib/novel';
 
   let activeTab: 'users' | 'authors' | 'novels' = 'users';
   let users: any[] = [];
@@ -16,6 +17,16 @@
 
   const isValidMembership = (user) => {
     return user.user_memberships.length > 0;
+  }
+
+  const getUserDateFormat = (date) => {
+    return new Date(date).toLocaleDateString('zh-CN');
+  }
+
+  const getUserMembershipDate = (user) => {
+    const memberships = user.user_memberships;
+    if (memberships.length === 0) return '';
+    return getUserDateFormat(memberships[0].end_date);
   }
 
   async function loadData() {
@@ -40,8 +51,8 @@
                   end_date
                 )
               `)
-              .eq('role', 'reader')
-              .gte('user_memberships.end_date', new Date().toISOString());
+              .gte('user_memberships.end_date', new Date().toISOString())
+              .eq('user_memberships.status', 'active');
 
           if (usersError) throw usersError;
           users = usersData;
@@ -58,7 +69,12 @@
           // Load novels
           const { data: novelsData, error: novelsError } = await supabase
               .from('novels')
-              .select('*');
+              .select(`
+                id,
+                title,
+                status,
+                created_at
+              `);
 
           if (novelsError) throw novelsError;
           novels = novelsData;
@@ -143,16 +159,16 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">邮箱</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">注册时间</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
-                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">会员日期</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-red-100">
                   {#each users as user}
                     <tr>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.first_name}</td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.email}</td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.first_name} {user.last_name}</td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.user_id}</td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(user.created_at).toLocaleDateString('zh-CN')}
+                        {getUserDateFormat(user.created_at)}
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap">
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
@@ -161,7 +177,7 @@
                         </span>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        
+                        {getUserMembershipDate(user)}
                       </td>
                     </tr>
                   {/each}
@@ -186,10 +202,10 @@
                 <tbody class="divide-y divide-red-100">
                   {#each authors as author}
                     <tr>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{author.username}</td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{author.first_name} {author.last_name}</td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{author.email}</td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(author.created_at).toLocaleDateString('zh-CN')}
+                        {getUserDateFormat(author.created_at)}
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap">
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
@@ -219,8 +235,7 @@
                 <thead>
                   <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">作品名</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">作者</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">类别</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">创建时间</th>
                     <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
                   </tr>
@@ -229,10 +244,9 @@
                   {#each novels as novel}
                     <tr>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{novel.title}</td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{novel.author}</td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{novel.category}</td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{getNovelStatus(novel)}</td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(novel.created_at).toLocaleDateString('zh-CN')}
+                        {getUserDateFormat(novel.created_at)}
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <a

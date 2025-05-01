@@ -4,52 +4,7 @@
   import { user } from '$lib/stores/authStore';
   import { WEBSITE_NAME } from '$lib/constants';
   import Quill from 'quill';
-  
-  interface Category {
-    id: string;
-    name: string;
-  }
-
-  interface Chapter {
-    id: string;
-    title: string;
-    content?: string;
-    novel_id: string;
-    is_free: boolean;
-    created_at: string;
-  }
-  
-  interface Novel {
-    id: string;
-    title: string;
-    description: string;
-    status: string;
-    user_id: string;
-    created_at: string;
-    categories?: Category[];
-    cover_url?: string;
-    is_free?: boolean;
-    chapters?: Chapter[];
-  }
-  
-  interface NewNovel {
-    id?: string;
-    title: string;
-    description: string;
-    categories: string[];
-    status: string;
-    cover_url?: string;
-    cover_file?: File;
-    is_free?: boolean;
-  }
-  
-  interface NewChapter {
-    id: string;
-    title: string;
-    content: string;
-    is_free:boolean;
-    novel_id: string | null;
-  }
+  import type { Category, NewNovel, NewChapter, Novel } from '$lib/novel';
   
   let novels: Novel[] = [];
   let categories: Category[] = [];
@@ -496,7 +451,7 @@
                     value={category.id}
                     checked={newNovel.categories.includes(category.id)}
                     on:change={(e) => {
-                      if (e && e.target.checked) {
+                      if (e && e.target?.checked) {
                         newNovel.categories = [...newNovel.categories, category.id];
                       } else {
                         newNovel.categories = newNovel.categories.filter(id => id !== category.id);
