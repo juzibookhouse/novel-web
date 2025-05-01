@@ -201,10 +201,10 @@
      </div>
    </section> -->
 
-   <section class="py-16 px-4 flex flex-col gap-5 justify-center max-w-7xl mx-auto">
-    <a href="/novel/{randomNovel.id}" class="cursor-pointer">
-      <p class="italic">{randomNovel.description}</p>
-      <h2 class="text-center text-3xl">{randomNovel.title}</h2>
+   <section class="py-16 px-4">
+    <a href="/novel/{randomNovel.id}" class="cursor-pointer flex flex-col gap-5 justify-center max-w-4xl mx-auto">
+      <p class="italic text-xl">“{randomNovel.description}”</p>
+      <h2 class="text-center text-3xl text-primary">{randomNovel.title}</h2>
     </a>
    </section>
 
