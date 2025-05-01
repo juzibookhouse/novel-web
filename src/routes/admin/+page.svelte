@@ -3,6 +3,7 @@
   import { onMount } from 'svelte';
   import { supabase } from '$lib/supabaseClient';
   import { getNovelStatus } from '$lib/novel';
+  import { getUserDateFormat, getUserMembershipDate, isValidMembership } from '$lib/user';
 
   let activeTab: 'users' | 'authors' | 'novels' = 'users';
   let users: any[] = [];
@@ -14,20 +15,6 @@
   onMount(async () => {
     await loadData();
   });
-
-  const isValidMembership = (user) => {
-    return user.user_memberships.length > 0;
-  }
-
-  const getUserDateFormat = (date) => {
-    return new Date(date).toLocaleDateString('zh-CN');
-  }
-
-  const getUserMembershipDate = (user) => {
-    const memberships = user.user_memberships;
-    if (memberships.length === 0) return '';
-    return getUserDateFormat(memberships[0].end_date);
-  }
 
   async function loadData() {
       try {
