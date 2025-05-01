@@ -2,7 +2,7 @@
 
 :root {
   --text-color: #C86600;
-  --bg-color: #C86600;
+  --bg-color: rgb(253 250 217);
   overflow-x: hidden;
 }
 
@@ -11,10 +11,14 @@ body {
   overflow-x: auto;
 }
 
-button {
-  @apply bg-[#C86600] text-white border-red-200 placeholder:text-gray-400 sm:text-sm transition duration-200 cursor-pointer hover:opacity-80;
+.text-primary {
+  @apply text-(--text-color);
 }
 
-.text-primary {
-  @apply text-[#C86600];
+.bg-primary {
+  @apply bg-(--bg-color)
+}
+
+button {
+  @apply bg-(--text-color) text-white border-red-200 placeholder:text-gray-400 sm:text-sm transition duration-200 cursor-pointer hover:opacity-80;
 }

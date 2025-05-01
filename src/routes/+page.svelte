@@ -201,7 +201,7 @@
      </div>
    </section> -->
 
-   <section class="py-16 px-4">
+   <section class="py-16 px-4 bg-primary">
     <a href="/novel/{randomNovel.id}" class="cursor-pointer flex flex-col gap-5 justify-center max-w-4xl mx-auto">
       <p class="italic text-xl">“{randomNovel.description}”</p>
       <h2 class="text-center text-3xl text-primary">{randomNovel.title}</h2>
