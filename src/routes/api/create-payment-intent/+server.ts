@@ -7,7 +7,7 @@ const stripe = new Stripe(STRIPE_SECRET_KEY);
 
 export async function POST({ request }) {
   try {
-    const { planId, stripeClientSecret } = await request.json();
+    const { planId, stripeClientSecret, paymentMethod } = await request.json();
 
     // Get plan details from Supabase
     const { data: plan } = await supabase
@@ -21,6 +21,9 @@ export async function POST({ request }) {
     }
 
     let paymentIntent;
+    const amount = plan.price * 100; // Convert to cents
+
+    const paymentMethodTypes = [paymentMethod]; //card,alipay,wechat_pay
 
     if (stripeClientSecret) {
       // Extract payment intent ID from client secret
@@ -28,19 +31,17 @@ export async function POST({ request }) {
 
       // Update existing payment intent
       paymentIntent = await stripe.paymentIntents.update(paymentIntentId, {
-        amount: plan.price * 100, // Convert to cents
-        metadata: {
-          planId,
-        },
+        amount,
+        metadata: { planId },
+        payment_method_types: paymentMethodTypes
       });
     } else {
       // Create payment intent
       paymentIntent = await stripe.paymentIntents.create({
-        amount: plan.price * 100, // Convert to cents
-        currency: 'usd',
-        metadata: {
-          planId,
-        },
+        amount,
+        currency: 'cny',
+        metadata: { planId },
+        payment_method_types: paymentMethodTypes
       });
     }
 

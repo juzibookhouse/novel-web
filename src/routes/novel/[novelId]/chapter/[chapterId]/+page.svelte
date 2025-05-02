@@ -3,7 +3,7 @@
   import { onMount, onDestroy } from 'svelte';
   import { page } from '$app/stores';
   import { supabase } from '$lib/supabaseClient';
-  import { user } from '$lib/stores/authStore';
+  import { user, setUser } from '$lib/stores/authStore';
   import MembershipPlans from '$lib/components/MembershipPlans.svelte';
 
   export let data;
@@ -22,7 +22,6 @@
       isApproved = $user.isMembership;
 
       if (!isApproved) {
-        showMembershipModal = true;
       } else {
         // Check if novel is in bookshelf
         const { data: bookshelf } = await supabase
