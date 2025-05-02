@@ -4,14 +4,15 @@
    import { onMount } from 'svelte';
    import { WEBSITE_NAME } from '$lib/constants';
    import MembershipPlans from '$lib/components/MembershipPlans.svelte';
+    import type { Novel } from '$lib/novel';
 
    let activeTab = 'profile';
    let firstName = '';
    let lastName = '';
    let loading = false;
    let message = '';
-   let shelfNovels: any[] = [];
-   let readNovels: any[] = [];
+   let shelfNovels: Novel[] = [];
+   let readNovels: Novel[] = [];
    let membershipPlan: any = null;
    let showMembershipModal = false;
 
@@ -147,17 +148,17 @@
                  <div class="flex justify-between items-start mb-4">
                    <div>
                      <h3 class="text-2xl font-semibold">{membershipPlan?.name || '会员'}</h3>
-                     <p class="text-red-100">会员编号: {$user.membership.id}</p>
+                     <p class="text-red-100">会员编号: {$user.membership?.id}</p>
                    </div>
                    <div class="text-right">
                      <p class="text-xl font-bold">¥{membershipPlan?.price || 0}/月</p>
                      <p class="text-red-100">
-                       到期时间: {formatDate($user.membership.end_date)}
+                       到期时间: {formatDate($user.membership?.end_date)}
                      </p>
                    </div>
                  </div>
                  <div class="flex justify-between items-center">
-                   <p class="text-red-100">状态: {$user.membership.status === 'active' ? '有效' : '待续费'}</p>
+                   <p class="text-red-100">状态: {$user.membership?.status === 'active' ? '有效' : '待续费'}</p>
                    {#if !$user.isMembership}
                    <button
                      on:click={() => showMembershipModal = true}

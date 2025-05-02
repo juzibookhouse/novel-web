@@ -82,9 +82,10 @@
       
       <div class="p-6 bg-gray-50 flex flex-wrap gap-4">
         <div class="flex-1 min-w-[200px]">
-          <label class="block text-sm font-medium text-gray-700 mb-2">类别</label>
+          <label for="category" class="block text-sm font-medium text-gray-700 mb-2">类别</label>
           <div class="relative">
             <select
+              id="category"
               bind:value={selectedCategory}
               on:change={handleCategoryChange}
               class="w-full pl-4 pr-10 py-2.5 bg-white rounded-lg border-2 border-red-100 focus:border-red-500 focus:ring-red-500 appearance-none transition-all duration-200"
@@ -101,9 +102,10 @@
         </div>
         
         <div class="flex-1 min-w-[200px]">
-          <label class="block text-sm font-medium text-gray-700 mb-2">状态</label>
+          <label for="status" class="block text-sm font-medium text-gray-700 mb-2">状态</label>
           <div class="relative">
             <select
+              id="status"
               bind:value={selectedStatus}
               on:change={handleStatusChange}
               class="w-full pl-4 pr-10 py-2.5 bg-white rounded-lg border-2 border-red-100 focus:border-red-500 focus:ring-red-500 appearance-none transition-all duration-200"
@@ -121,7 +123,7 @@
     </div>
 
     <!-- Novel Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+    <div class="grid grid-cols-4 gap-6 mb-8">
       {#each data.novels as novel}
         <NovelCard novel={novel} />
       {/each}

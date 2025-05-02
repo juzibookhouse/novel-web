@@ -14,6 +14,8 @@ interface UserProfile {
 
 interface UserMembership {
   plan_id: string;
+  status: string;
+  id: string;
   start_date: string;
   end_date: string;
 }
