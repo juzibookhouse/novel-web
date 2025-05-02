@@ -1,0 +1,36 @@
+<script lang="ts">
+  import { getNovelStatus } from "$lib/novel";
+
+  export let novel;
+</script>
+
+<a
+  href={`/novel/${novel.id}`}
+  class="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
+>
+  <div class="relative">
+    <img
+      src={novel.cover_url ||
+        "https://via.placeholder.com/400x300?text=封面未上传"}
+      alt={novel.title}
+      class="w-full h-64 object-cover group-hover:scale-105 transition duration-300"
+    />
+    <div class="absolute top-4 right-4">
+      <span class="{novel.status === 'ongoing' ? 'bg-green-500' : 'bg-blue-500'} text-white px-4 py-1 rounded-full text-sm">
+        {getNovelStatus(novel)}
+      </span>
+    </div>
+  </div>
+  <div class="p-6">
+    <h3 class="text-2xl font-medium text-gray-900 mb-2">{novel.title}</h3>
+    <p class="text-gray-600 line-clamp-2 mb-4">{novel.description}</p>
+    <div class="flex items-center justify-between">
+      <span class="text-sm text-gray-500">{novel.author || "佚名"}</span>
+      <span
+        class="text-red-600 group-hover:translate-x-2 transition-transform duration-300"
+      >
+        阅读更多 →
+      </span>
+    </div>
+  </div>
+</a>

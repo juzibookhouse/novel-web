@@ -1,6 +1,7 @@
 <script lang="ts">
   import { WEBSITE_NAME } from '$lib/constants';
   import { goto } from '$app/navigation';
+    import NovelCard from '$lib/components/novels/NovelCard.svelte';
   
   export let data;
   
@@ -122,36 +123,7 @@
     <!-- Novel Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
       {#each data.novels as novel}
-        <div class="bg-white/90 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group">
-          <div class="aspect-w-3 aspect-h-4 bg-red-100 relative overflow-hidden">
-            <img
-              src={novel.cover_url || 'https://via.placeholder.com/300x400?text=封面未上传'}
-              alt={novel.title}
-              class="object-cover w-full h-48 group-hover:scale-105 transition-transform duration-300"
-            />
-          </div>
-          <div class="p-4">
-            <div class="flex items-center gap-2 mb-3">
-              {#each novel.categories as category}
-              <span class="bg-red-50 text-primary px-3 py-1 rounded-full text-sm font-medium">
-                {category.name}
-              </span>
-              {/each}
-              <span class="text-sm {novel.status === 'ongoing' ? 'bg-green-50 text-green-800' : 'bg-blue-50 text-blue-800'} px-3 py-1 rounded-full font-medium">
-                {novel.status === 'ongoing' ? '连载中' : '已完结'}
-              </span>
-            </div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-1 line-clamp-1">{novel.title}</h3>
-            <p class="text-sm text-gray-600 mb-2">作者：{novel.author || '佚名'}</p>
-            <p class="text-sm text-gray-500 line-clamp-2 mb-4">{novel.description || '暂无简介'}</p>
-            <a
-              href={`/novel/${novel.id}`}
-              class="inline-flex items-center text-red-700 hover:text-primary text-sm font-medium group-hover:translate-x-1 transition-transform duration-200"
-            >
-              开始阅读 →
-            </a>
-          </div>
-        </div>
+        <NovelCard novel={novel} />
       {/each}
     </div>
 
