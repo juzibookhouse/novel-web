@@ -135,25 +135,6 @@
 
     return publicUrl;
   }
-
-  async function addNewCategory() {
-    if (!newCategoryName.trim()) return;
-
-    const { data, error: categoryError } = await supabase
-      .from('categories')
-      .insert([{ name: newCategoryName.trim() }])
-      .select()
-      .single();
-
-    if (categoryError) {
-      console.error('Error adding category:', categoryError);
-      return;
-    }
-
-    categories = [...categories, data];
-    newCategoryName = '';
-    await fetchCategories();
-  }
   
   async function upsertNovel() {
     try {
@@ -462,21 +443,6 @@
                   <span class="ml-2">{category.name}</span>
                 </label>
               {/each}
-            </div>
-            <div class="mt-2 flex gap-2">
-              <input
-                type="text"
-                bind:value={newCategoryName}
-                placeholder="添加新类别"
-                class="flex-1 rounded-md border-2 border-red-200 px-3 py-2 focus:border-red-500 focus:ring-red-500"
-              />
-              <button
-                type="button"
-                on:click={addNewCategory}
-                class="px-4 py-2 rounded-md"
-              >
-                添加
-              </button>
             </div>
           </div>
           <div>
