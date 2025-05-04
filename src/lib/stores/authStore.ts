@@ -5,8 +5,7 @@ import type { User } from "@supabase/supabase-js";
 interface UserProfile {
   id: string;
   user_id: string;
-  first_name: string;
-  last_name: string;
+  user_name: string;
   role: string;
   is_approved: boolean;
   created_at: string;

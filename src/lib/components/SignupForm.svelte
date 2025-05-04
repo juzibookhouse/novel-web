@@ -7,8 +7,7 @@
   
   let email = '';
   let password = '';
-  let firstName = '';
-  let lastName = '';
+  let username = '';
   let loading = false;
   let error: string | null = null;
   
@@ -29,8 +28,7 @@
         const {data:userProfile, error:userProfileError} = await supabase
         .from('user_profiles')
         .insert({
-          first_name: firstName,
-          last_name: lastName,
+          user_name: username,
           role,
           user_id: userId
         });
@@ -75,25 +73,13 @@
       <div class="space-y-4">
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label for="last-name" class="block text-sm font-medium text-gray-700">姓氏</label>
+            <label for="user_name" class="block text-sm font-medium text-gray-700">呢称</label>
             <input
-              id="last-name"
-              name="last-name"
+              id="user_name"
+              name="user_name"
               type="text"
               required
-              bind:value={lastName}
-              class="mt-1 block w-full rounded-md border-red-200 border-2 py-2 px-3 text-gray-900 placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500 sm:text-sm transition duration-200"
-              placeholder="请输入姓氏"
-            />
-          </div>
-          <div>
-            <label for="first-name" class="block text-sm font-medium text-gray-700">名字</label>
-            <input
-              id="first-name"
-              name="first-name"
-              type="text"
-              required
-              bind:value={firstName}
+              bind:value={username}
               class="mt-1 block w-full rounded-md border-red-200 border-2 py-2 px-3 text-gray-900 placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500 sm:text-sm transition duration-200"
               placeholder="请输入名字"
             />
