@@ -123,6 +123,15 @@
         </div>
       {/if}
       <div>
+        <label for="email" class="block text-sm font-medium text-gray-700"
+          >邮件</label
+        >
+        <p
+          id="email"
+          class="mt-1 block w-full py-2 text-gray-900"
+        >{$user?.email}</p>
+      </div>
+      <div>
         <label for="firstName" class="block text-sm font-medium text-gray-700"
           >呢称</label
         >

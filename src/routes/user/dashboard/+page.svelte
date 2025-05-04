@@ -5,30 +5,13 @@
    import { WEBSITE_NAME } from '$lib/constants';
     import type { Novel } from '$lib/novel';
     import UserProfile from '$lib/components/user/UserProfile.svelte';
+    import UserShelfNovels from '$lib/components/user/UserShelfNovels.svelte';
 
    let activeTab = 'profile';
-   let shelfNovels: Novel[] = [];
    let readNovels: Novel[] = [];
 
    onMount(async () => {
      if ($user) {
-       // Fetch bookshelf novels
-       const { data: shelf } = await supabase
-         .from('bookshelves')
-         .select(`
-           *,
-           novels (
-             id,
-             title,
-             cover_url
-           )
-         `)
-         .eq('user_id', $user.id);
-
-       if (shelf) {
-         shelfNovels = shelf.map(item => item.novels);
-       }
-
        // Fetch read novels
        const { data: read } = await supabase
          .from('bookshelves')
@@ -87,22 +70,7 @@
        {#if activeTab === 'profile'}
          <UserProfile />
        {:else if activeTab === 'shelf'}
-         <div class="p-6">
-           <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-             {#each shelfNovels as novel}
-               <a href="/novel/{novel.id}" class="block">
-                 <div class="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-shadow">
-                   <img
-                     src={novel.cover_url || 'https://via.placeholder.com/150'}
-                     alt={novel.title}
-                     class="w-full h-48 object-cover rounded-md mb-2"
-                   />
-                   <h3 class="text-gray-900 font-medium">{novel.title}</h3>
-                 </div>
-               </a>
-             {/each}
-           </div>
-         </div>
+         <UserShelfNovels />
        {:else if activeTab === 'read'}
          <div class="p-6">
            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
