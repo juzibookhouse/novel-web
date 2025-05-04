@@ -71,20 +71,17 @@
     
     <form class="mt-8 space-y-6 bg-white/80 backdrop-blur-sm p-8 rounded-lg border-2 border-red-100 shadow-xl" on:submit|preventDefault={handleSignup}>
       <div class="space-y-4">
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label for="user_name" class="block text-sm font-medium text-gray-700">呢称</label>
-            <input
-              id="user_name"
-              name="user_name"
-              type="text"
-              required
-              bind:value={username}
-              class="mt-1 block w-full rounded-md border-red-200 border-2 py-2 px-3 text-gray-900 placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500 sm:text-sm transition duration-200"
-              placeholder="请输入名字"
-            />
-          </div>
-          
+        <div>
+          <label for="user_name" class="block text-sm font-medium text-gray-700">呢称</label>
+          <input
+            id="user_name"
+            name="user_name"
+            type="text"
+            required
+            bind:value={username}
+            class="mt-1 block w-full rounded-md border-red-200 border-2 py-2 px-3 text-gray-900 placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500 sm:text-sm transition duration-200"
+            placeholder="请输入名字"
+          />
         </div>
         <div>
           <label for="email-address" class="block text-sm font-medium text-gray-700">电子邮箱</label>

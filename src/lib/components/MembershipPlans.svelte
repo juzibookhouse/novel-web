@@ -16,8 +16,9 @@
   let elements: any;
   let selectedPlan: any = null;
   let paymentError: string | null = null;
-  let selectedPaymentMethod = 'card';
+  let selectedPaymentMethod = '';
   let showPaymentMethods = false;
+  let paymentFormLoaded = false;
 
   const stripePromise = loadStripe(PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
@@ -48,7 +49,7 @@
     }
   }
 
-  const getMemberShipEndDate = (duration) => {
+  const getMemberShipEndDate = (duration:number) => {
     const membershipEndDate = new Date();
     membershipEndDate.setMonth(membershipEndDate.getMonth() + duration);
     return membershipEndDate
@@ -56,6 +57,7 @@
 
   async function initializePaymentElement() {
     if (!stripe || !selectedPlan) return;
+    paymentFormLoaded = true;
 
     // Create payment intent
     const response = await fetch('/api/create-payment-intent', {
@@ -91,7 +93,7 @@
         .from('user_memberships')
         .insert([{
           stripe_client_secret: clientSecret,
-          user_id: $user.id,
+          user_id: $user?.id,
           plan_id: selectedPlan.id,
           status: 'pending',
           end_date: getMemberShipEndDate(selectedPlan.duration)
@@ -121,12 +123,13 @@
     const paymentElement = elements.create('payment', {
       defaultValues: {
         billingDetails: {
-          name: `${$user?.profile?.first_name} ${$user?.profile?.last_name}`,
+          name: `${$user?.profile?.user_name}`,
         }
       },
       paymentMethodTypes: ['card', 'alipay', 'wechat_pay']
     });
     paymentElement.mount('#payment-element');
+    paymentFormLoaded = false;
   }
 
   async function handlePayment() {
@@ -179,7 +182,7 @@
   }
 </script>
 
-<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+<div class="fixed inset-0 top-0 left-0 w-full h-full flex items-center justify-center z-50 p-4">
   <div class="bg-white rounded-lg max-w-5xl w-full max-h-[90vh] overflow-y-auto">
     <div class="p-6 border-b border-red-100">
       <div class="flex justify-between items-center">
@@ -191,6 +194,14 @@
           ✕
         </button>
       </div>
+
+      <div class="mt-4">会员权益：成为会员后，畅读全平台所有已上线小说，不再另外收费。<br/>
+
+        加入会员须知：本平台内容为原创文学作品，包括成人向题材，会员必须年满18周岁。<br/>
+        
+        会员服务为数字内容访问权限，开通后即视为服务开始，不支持退款。感谢您的理解和支持。<br/>
+        
+        支付为第三方安全通道。</div>
     </div>
 
     {#if error}
@@ -265,6 +276,7 @@
 
                 <div id="payment-element" class="mb-6"></div>
 
+                {#if !paymentFormLoaded}
                 <button
                   on:click={handlePayment}
                   disabled={processing}
@@ -272,6 +284,9 @@
                 >
                   {processing ? '处理中...' : '确认支付'}
                 </button>
+                {:else}
+                <div>加载中</div>
+                {/if}
               </div>
             {/if}
           {/if}
