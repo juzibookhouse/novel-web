@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { supabase } from '$lib/supabaseClient';
+  import { getAuthorNovels, supabase } from '$lib/supabaseClient';
   import { user } from '$lib/stores/authStore';
   import { WEBSITE_NAME } from '$lib/constants';
   import Quill from 'quill';
-  import type { Category, NewNovel, NewChapter, Novel } from '$lib/novel';
+  import { type Category, type NewNovel, type Novel, type Chapter, getSortedChapters } from '$lib/novel';
     import NovelForm from '$lib/components/author/NovelForm.svelte';
     import NovelChapterForm from '$lib/components/author/NovelChapterForm.svelte';
   
@@ -30,19 +30,23 @@
   
   let showChapterForm: boolean = false;
   function toggleNovelChapterForm() {
+    if (showChapterForm) {
+      newChapter = EMPTY_CHAPTER;
+    }
     showChapterForm = !showChapterForm;
   }
 
   let selectedNovel: Novel | null = null;
   let newNovel = EMPTY_NOVEL;
 
-  const EMPTY_CHAPTER: NewChapter = {
+  const EMPTY_CHAPTER: Chapter = {
     id: '',
     title: '',
     content: '',
-    novel_id: null,
+    novel_id: '',
     created_at: '',
-    is_free: false
+    is_free: false,
+    chapter_order: 0
   };
   let newChapter = EMPTY_CHAPTER;
 
@@ -81,39 +85,14 @@
     try {
       loading = true;
       if (!$user?.id) return;
-      const { data, error: fetchError } = await supabase
-        .from('novels')
-        .select(`
-          id,
-          title,
-          description,
-          status,
-          user_id,
-          is_free,
-          created_at,
-          cover_url,
-          chapters (
-            id,
-            title,
-            content,
-            is_free,
-            created_at
-          ),
-          novel_categories (
-            categories (
-              id,
-              name
-            )
-          )
-        `)
-        .eq('user_id', $user?.id)
-        .order('created_at', { ascending: false });
+      const {data, error: fetchError} = await getAuthorNovels($user);
       
       if (fetchError) throw fetchError;
       
       novels = (data || []).map(novel => ({
         ...novel,
-        categories: novel.novel_categories?.map(nc => nc.categories)
+        categories: novel.novel_categories?.map(nc => nc.categories),
+        chapters: getSortedChapters(novel.chapters)
       }));
     } catch (e: any) {
       error = e.message;
@@ -137,6 +116,7 @@
     selectedNovel = novel;
     newChapter = EMPTY_CHAPTER
     newChapter.novel_id = novel.id;
+    newChapter.chapter_order = (selectedNovel.chapters?.length || 0) + 1
     toggleNovelChapterForm();
     initialChapterEditor();
   }

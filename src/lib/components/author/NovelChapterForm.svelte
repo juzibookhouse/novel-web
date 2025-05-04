@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Chapter, Novel } from "$lib/novel";
-    import { supabase } from "$lib/supabaseClient";
+    import { supabase, upsertChapter } from "$lib/supabaseClient";
     import { error } from "@sveltejs/kit";
 
 
@@ -12,33 +12,8 @@
   async function createChapter() {
     try {
       if (!selectedNovel?.id) throw new Error('请选择小说');
-      if (newChapter.id) {
-        // Update existing chapter
-        const { error: updateError } = await supabase
-          .from('chapters')
-          .update({
-            title: newChapter.title,
-            content: newChapter.content,
-            is_free: newChapter.is_free
-          })
-          .eq('id', newChapter.id);
-          
-        if (updateError) throw updateError;
-      } else {
-        // Create new chapter
-        const { data, error: createError } = await supabase
-          .from('chapters')
-          .insert([{
-            title: newChapter.title,
-            content: newChapter.content,
-            is_free: newChapter.is_free,
-            novel_id: newChapter.novel_id,
-            chapter_order: (selectedNovel.chapters?.length || 0) + 1
-          }])
-          .select();
-      
-      if (createError) throw createError;
-      }
+      const {data,error} = await upsertChapter(newChapter);
+      if (error) throw error;
       
       fetchNovels();
       toggleNovelChapterForm()

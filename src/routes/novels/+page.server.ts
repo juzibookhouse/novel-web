@@ -1,4 +1,4 @@
-import { supabase } from "$lib/supabaseClient";
+import { getCategories, getNovels, supabase } from "$lib/supabaseClient";
 
 export async function load({ url }: { url: URL }) {
   const page = Number(url.searchParams.get("page")) || 1;
@@ -9,45 +9,13 @@ export async function load({ url }: { url: URL }) {
   const start = (page - 1) * pageSize;
   const end = start + pageSize - 1;
 
-  let query = supabase.from("novels").select(
-    `
-      id,
-      title,
-      description,
-      cover_url,
-      status,
-      novel_categories (
-        categories!inner (
-          id,
-          name
-        )
-      )
-    `,
-    { count: "exact" },
-  );
-
-  if (search) {
-    query = query.ilike("title", `%${search}%`);
-  }
-
-  if (category) {
-    query = query.eq("novel_categories.categories.name", category);
-  }
-
-  if (status) {
-    query = query.eq("status", status);
-  }
-
   const {
     data: novels,
     count,
     error,
-  } = await query.range(start, end).order("created_at", { ascending: false });
+  } = await getNovels({search, category, status, start, end});
 
-  const { data: categories } = await supabase
-    .from("categories")
-    .select("*")
-    .order("name");
+  const {data:categories} = await getCategories();
 
   // Clean up the novels data to remove the nested structure
   const cleanedNovels =

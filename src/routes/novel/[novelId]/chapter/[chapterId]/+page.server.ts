@@ -1,24 +1,8 @@
-import { supabase } from "$lib/supabaseClient";
+import { getChapter, getChapterSilbings, supabase } from "$lib/supabaseClient";
 import { error } from '@sveltejs/kit';
 
 export async function load({ params, locals }: { params: { novelId: string; chapterId: string }, locals: App.Locals }) {
-  const { data: chapter, error: chapterError } = await supabase
-    .from('chapters')
-    .select(`
-      id,
-      title,
-      content,
-      is_free,
-      updated_at,
-      novels (
-        id,
-        title,
-        is_free,
-        user_id
-      )
-    `)
-    .eq('id', params.chapterId)
-    .single();
+  const {data:chapter, error:chapterError} = await getChapter(params.chapterId);
 
   if (chapterError) {
     throw error(404, 'Chapter not found');
@@ -38,11 +22,7 @@ export async function load({ params, locals }: { params: { novelId: string; chap
   }
 
   // Get previous and next chapters
-  const { data: siblings } = await supabase
-    .from('chapters')
-    .select('id, chapter_order')
-    .eq('novel_id', params.novelId)
-    .order('chapter_order');
+  const { data: siblings } = await getChapterSilbings(params.novelId);
 
   if (!siblings) {
     throw error(404, 'Chapters not found');
