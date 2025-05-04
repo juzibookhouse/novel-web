@@ -34,6 +34,7 @@ export interface NewChapter {
   content: string;
   is_free?:boolean;
   novel_id: string | null;
+  created_at: string;
 }
 
 export interface Novel {

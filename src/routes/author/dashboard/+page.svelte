@@ -6,6 +6,7 @@
   import Quill from 'quill';
   import type { Category, NewNovel, NewChapter, Novel } from '$lib/novel';
     import NovelForm from '$lib/components/author/NovelForm.svelte';
+    import NovelChapterForm from '$lib/components/author/NovelChapterForm.svelte';
   
   const EMPTY_NOVEL:NewNovel = {
     title: '',
@@ -28,14 +29,22 @@
   }
   
   let showChapterForm: boolean = false;
+  function toggleNovelChapterForm() {
+    showChapterForm = !showChapterForm;
+  }
+
   let selectedNovel: Novel | null = null;
   let newNovel = EMPTY_NOVEL;
-  let newChapter: NewChapter = {
+
+  const EMPTY_CHAPTER: NewChapter = {
     id: '',
     title: '',
     content: '',
-    novel_id: null
+    novel_id: null,
+    created_at: '',
+    is_free: false
   };
+  let newChapter = EMPTY_CHAPTER;
 
   let newCategoryName: string = '';
   
@@ -51,7 +60,7 @@
       const quill = new Quill('#chapterEditor', {
         theme: 'snow'
       });
-    },1);
+    },10);
   }
 
   async function fetchCategories() {
@@ -123,52 +132,12 @@
     showNovelForm = true;
   }
   
-  async function createChapter() {
-    try {
-      if (!selectedNovel?.id) throw new Error('请选择小说');
-      if (newChapter.id) {
-        // Update existing chapter
-        const { error: updateError } = await supabase
-          .from('chapters')
-          .update({
-            title: newChapter.title,
-            content: newChapter.content,
-            is_free: newChapter.is_free
-          })
-          .eq('id', newChapter.id);
-          
-        if (updateError) throw updateError;
-      } else {
-        // Create new chapter
-        const { data, error: createError } = await supabase
-          .from('chapters')
-          .insert([{
-            title: newChapter.title,
-            content: newChapter.content,
-            is_free: newChapter.is_free,
-            novel_id: newChapter.novel_id,
-            chapter_order: (selectedNovel.chapters?.length || 0) + 1
-          }])
-          .select();
-      
-      if (createError) throw createError;
-      }
-      
-      await fetchNovels();
-      showChapterForm = false;
-      newChapter = { id: '', title: '', content: '', novel_id: null };
-    } catch (e: any) {
-      error = e.message;
-    }
-  }
   
   function startAddChapter(novel: Novel) {
     selectedNovel = novel;
-    newChapter.id = '';
-    newChapter.title = '';
-    newChapter.content = '';
+    newChapter = EMPTY_CHAPTER
     newChapter.novel_id = novel.id;
-    showChapterForm = true;
+    toggleNovelChapterForm();
     initialChapterEditor();
   }
 </script>
@@ -272,14 +241,9 @@
                       <button
                         on:click={() => {
                           selectedNovel = novel;
-                          newChapter = {
-                            title: chapter.title,
-                            content: chapter.content || '',
-                            is_free: chapter.is_free,
-                            id: chapter.id,
-                            novel_id: selectedNovel.id
-                          };
-                          showChapterForm = true;
+                          newChapter = chapter;
+                          newChapter.novel_id = novel.id;
+                          toggleNovelChapterForm();
                           initialChapterEditor();
                         }}
                         class="px-3 py-1 text-sm bg-yellow-100 text-yellow-800 rounded-full hover:bg-yellow-200"
@@ -305,65 +269,7 @@
 
 <!-- Create Chapter Modal -->
 {#if showChapterForm && selectedNovel}
-  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg overflow-hidden shadow-xl max-w-lg w-full mx-4">
-      <div class="px-6 py-4 border-b-2 border-red-100">
-        <h3 class="text-xl font-medium text-gray-900">添加新章节 - {selectedNovel.title}</h3>
-      </div>
-      <form on:submit|preventDefault={createChapter} class="px-6 py-4">
-        <div class="space-y-4">
-          <div>
-            <label for="chapter-title" class="block text-sm font-medium text-gray-700">章节标题</label>
-            <input
-              type="text"
-              id="chapter-title"
-              bind:value={newChapter.title}
-              required
-              class="mt-1 block w-full rounded-md border-2 border-red-200 px-3 py-2 focus:border-red-500 focus:ring-red-500"
-              placeholder="请输入章节标题"
-            />
-          </div>
-          <div>
-            <label for="chapter-is_free" class="block text-sm font-medium text-gray-700">章节免费</label>
-            <input
-              type="checkbox"
-              id="chapter-is_free"
-              bind:checked={newChapter.is_free}
-              class=""
-            />
-          </div>
-          <div class="">
-            <label for="content" class="block text-sm font-medium text-gray-700">章节内容</label>
-            <div class="h-96">
-            <div
-              id="chapterEditor"
-              contenteditable
-              on:paste={(e)=>newChapter.content = e.clipboardData?.getData('text/html')}
-              bind:innerHTML={newChapter.content}
-              class="w-full mt-1 block rounded-md border-2 border-red-200"
-              placeholder="请输入章节内容"
-            ></div>
-            </div>
-          </div>
-        </div>
-        <div class="mt-15 flex justify-end gap-3">
-          <button
-            type="button"
-            on:click={() => showChapterForm = false}
-            class="px-4 py-2 border-2 border-red-200 rounded-md"
-          >
-            取消
-          </button>
-          <button
-            type="submit"
-            class="px-4 py-2 bg-[#FEF9D5] text-white rounded-md hover:bg-red-700"
-          >
-            创建
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
+  <NovelChapterForm toggleNovelChapterForm={toggleNovelChapterForm} fetchNovels={fetchNovels} newChapter={newChapter} selectedNovel={selectedNovel} />
 {/if}
 </div>
 
