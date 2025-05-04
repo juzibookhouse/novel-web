@@ -166,7 +166,7 @@
         <p>更新时间: {new Date(chapter.updated_at || chapter.created_at).toLocaleString('zh-CN')}</p>
       </div>
       
-      {#if chapter.is_free || chapter.novels.is_free || $user?.isMembership}
+      {#if (chapter.novels.user_id === $user?.id) || chapter.is_free || chapter.novels.is_free || $user?.isMembership}
         <div class="prose prose-lg max-w-none">
           <div 
             class="text-gray-800 leading-relaxed"
