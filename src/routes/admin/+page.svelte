@@ -6,8 +6,9 @@
     import AdminCategories from '$lib/components/admin/AdminCategories.svelte';
     import AdminUsers from '$lib/components/admin/AdminUsers.svelte';
     import AdminAuthor from '$lib/components/admin/AdminAuthor.svelte';
+    import AdminTags from '$lib/components/admin/AdminTags.svelte';
 
-  let activeTab: 'users' | 'authors' | 'novels' | 'categories' = 'users';
+  let activeTab: 'users' | 'authors' | 'novels' | 'categories' | 'tags' = 'users';
   
   let novels: any[] = [];
   let loading = true;
@@ -70,7 +71,8 @@
             { id: 'users', name: '读者管理' },
             { id: 'authors', name: '作家管理' },
             { id: 'novels', name: '作品管理' },
-            { id: 'categories', name: '分类管理' }
+            { id: 'categories', name: '分类管理' },
+            { id: 'tags', name: '标签管理' }
           ] as tab}
             <button
               class="w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm
@@ -112,6 +114,12 @@
         {#if activeTab === 'categories'}
           <AdminCategories />
         {/if}
+
+        <!-- Tags Tab -->
+        {#if activeTab === 'tags'}
+          <AdminTags />
+        {/if}
+
       {/if}
     </div>
   </div>

@@ -7,9 +7,11 @@
     title: '',
     description: '',
     categories: [],
+    tags: [],
     status: 'ongoing'
   };
   export let categories;
+  export let tags;
   export let toggleNovelForm:Function;
   export let fetchNovels:Function;
 
@@ -64,6 +66,7 @@
             description: newNovel.description,
             status: newNovel.status,
             is_free: newNovel.is_free,
+            category_id: newNovel.category_id,
             cover_url,
             user_id: $user.id
           }])
@@ -79,6 +82,7 @@
           .update({
             title: newNovel.title,
             description: newNovel.description,
+            category_id: newNovel.category_id,
             status: newNovel.status,
             is_free: newNovel.is_free,
             cover_url,
@@ -88,26 +92,26 @@
         if (updateError) throw updateError;
       }
 
-      // Delete existing categories
+      // Delete existing tags
       if (novelId) {
         await supabase
-          .from('novel_categories')
+          .from('novel_tags')
           .delete()
           .eq('novel_id', novelId);
       }
 
-      // Insert new categories
-      if (newNovel.categories.length > 0) {
-        const categoryLinks = newNovel.categories.map(categoryId => ({
+      // Insert new tags
+      if (newNovel.tags.length > 0) {
+        const tagLinks = newNovel.tags.map(tagId => ({
           novel_id: novelId,
-          category_id: categoryId
+          tag_id: tagId
         }));
 
-        const { error: categoryError } = await supabase
-          .from('novel_categories')
-          .insert(categoryLinks);
+        const { error: tagError } = await supabase
+          .from('novel_tags')
+          .insert(tagLinks);
 
-        if (categoryError) throw categoryError;
+        if (tagError) throw tagError;
       }
       
       fetchNovels();
@@ -146,24 +150,44 @@
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700">类别</label>
+            <label for="category" class="block text-sm font-medium text-gray-700">类别</label>
             <div class="mt-2 space-y-2">
               {#each categories as category}
                 <label class="inline-flex items-center mr-4">
                   <input
+                    id="category"
                     type="checkbox"
                     value={category.id}
-                    checked={newNovel.categories.includes(category.id)}
+                    checked={newNovel.category_id === category?.id}
                     on:change={(e) => {
-                      if (e && e.target?.checked) {
-                        newNovel.categories = [...newNovel.categories, category.id];
-                      } else {
-                        newNovel.categories = newNovel.categories.filter(id => id !== category.id);
-                      }
+                      newNovel.category_id = category?.id;
                     }}
                     class="form-checkbox h-4 w-4 text-red-600 border-red-300 rounded"
                   />
                   <span class="ml-2">{category.name}</span>
+                </label>
+              {/each}
+            </div>
+          </div>
+          <div>
+            <label for="tags" class="block text-sm font-medium text-gray-700">标签</label>
+            <div class="mt-2 space-y-2">
+              {#each tags as tag}
+                <label class="inline-flex items-center mr-4">
+                  <input
+                    type="checkbox"
+                    value={tag.id}
+                    checked={newNovel.tags.includes(tag.id)}
+                    on:change={(e) => {
+                      if (e && e.target?.checked) {
+                        newNovel.tags = [...newNovel.tags, tag.id];
+                      } else {
+                        newNovel.tags = newNovel.tags.filter(id => id !== tag.id);
+                      }
+                    }}
+                    class="form-checkbox h-4 w-4 text-red-600 border-red-300 rounded"
+                  />
+                  <span class="ml-2">{tag.name}</span>
                 </label>
               {/each}
             </div>

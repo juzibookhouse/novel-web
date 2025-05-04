@@ -22,7 +22,8 @@ export interface NewNovel {
   id?: string;
   title: string;
   description: string;
-  categories: string[];
+  category_id: string;
+  tags:[];
   status: string;
   cover_url?: string;
   cover_file?: File;
@@ -36,10 +37,11 @@ export interface Novel {
   status: string;
   user_id: string;
   created_at: string;
-  categories?: Category[];
+  category_id?: string;
   cover_url?: string;
   is_free?: boolean;
   chapters?: Chapter[];
+  tags:[];
 }
 
 export const getNovelStatus = (novel:Novel) => {

@@ -15,6 +15,10 @@ export const getCategories = async () => {
     .order("name");
 }
 
+export const getTags = async() => {
+  return await supabase.from("tags").select("*");
+}
+
 interface SearchNovelsParams {
   search?: string,
   category?: string,
@@ -31,8 +35,11 @@ export const getNovels = async ({ search, category, status, start, end }: Search
       description,
       cover_url,
       status,
-      novel_categories (
-        categories!inner (
+      categories (
+        id,name
+      ),
+      novel_tags (
+        tags!inner (
           id,
           name
         )
@@ -46,7 +53,7 @@ export const getNovels = async ({ search, category, status, start, end }: Search
   }
 
   if (category) {
-    query = query.eq("novel_categories.categories.name", category);
+    query = query.eq("categories.name", category);
   }
 
   if (status) {
@@ -71,6 +78,7 @@ export const getAuthorNovels = async (user: User) => {
           user_id,
           is_free,
           created_at,
+          category_id,
           cover_url,
           chapters (
             id,
@@ -80,8 +88,8 @@ export const getAuthorNovels = async (user: User) => {
             chapter_order,
             created_at
           ),
-          novel_categories (
-            categories (
+          novel_tags (
+            tags (
               id,
               name
             )

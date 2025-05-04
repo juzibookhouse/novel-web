@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { getAuthorNovels, supabase } from '$lib/supabaseClient';
+  import { getAuthorNovels, getCategories, getTags, supabase } from '$lib/supabaseClient';
   import { user } from '$lib/stores/authStore';
   import { WEBSITE_NAME } from '$lib/constants';
   import Quill from 'quill';
@@ -12,11 +12,13 @@
     title: '',
     description: '',
     categories: [],
+    tags:[],
     status: 'ongoing'
   };
   
   let novels: Novel[] = [];
   let categories: Category[] = [];
+  let tags:Category = [];
   let loading: boolean = true;
   let error: string | null = null;
   let uploadProgress: number = 0;
@@ -54,8 +56,9 @@
   
   onMount(async () => {
     supabase.auth.onAuthStateChange((event, session) => {
-      fetchNovels(),
-      fetchCategories()
+      fetchNovels();
+      fetchCategories();
+      fetchTags();
     });
   });
 
@@ -67,11 +70,19 @@
     },10);
   }
 
+  async function fetchTags() {
+    const { data, error: fetchError } = await getTags();
+    
+    if (fetchError) {
+      console.error('Error fetching tags:', fetchError);
+      return;
+    }
+    
+    tags = data || [];
+  }
+
   async function fetchCategories() {
-    const { data, error: fetchError } = await supabase
-      .from('categories')
-      .select('*')
-      .order('name');
+    const { data, error: fetchError } = await getCategories();
     
     if (fetchError) {
       console.error('Error fetching categories:', fetchError);
@@ -91,7 +102,7 @@
       
       novels = (data || []).map(novel => ({
         ...novel,
-        categories: novel.novel_categories?.map(nc => nc.categories),
+        tags: novel.novel_tags?.map(nc => nc.tags),
         chapters: getSortedChapters(novel.chapters)
       }));
     } catch (e: any) {
@@ -106,6 +117,7 @@
     selectedNovel = novel;
     newNovel = {
       ...novel,
+      tags: novel.tags?.map(c => c.id) || [],
       categories: novel.categories?.map(c => c.id) || []
     };
     showNovelForm = true;
@@ -244,7 +256,7 @@
 
 <!-- Create Novel Modal -->
 {#if showNovelForm}
-  <NovelForm categories={categories} newNovel={newNovel} fetchNovels={fetchNovels} toggleNovelForm={toggleNovelForm} />
+  <NovelForm categories={categories} tags={tags} newNovel={newNovel} fetchNovels={fetchNovels} toggleNovelForm={toggleNovelForm} />
 {/if}
 
 <!-- Create Chapter Modal -->

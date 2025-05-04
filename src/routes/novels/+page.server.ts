@@ -18,10 +18,11 @@ export async function load({ url }: { url: URL }) {
   const {data:categories} = await getCategories();
 
   // Clean up the novels data to remove the nested structure
+  console.log(novels);
   const cleanedNovels =
     novels?.map((novel) => ({
       ...novel,
-      categories: novel.novel_categories.map((nc: any) => nc.categories),
+      tags: novel.novel_tags.map((nc: any) => nc.tags),
     })) || [];
 
   return {
