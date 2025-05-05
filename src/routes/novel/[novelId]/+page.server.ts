@@ -6,6 +6,8 @@ export async function load({ params }: { params: { novelId: string } }) {
   
   const {data:novel,error:novelError} = await getNovel(params.novelId);
 
+  novel.tags = novel.novel_tags.map(({tags})=>tags);
+
   novel.chapters = getSortedChapters(novel.chapters);
 
   if (novelError) {

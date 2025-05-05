@@ -109,6 +109,14 @@ export const getNovel = async (novelId: string) => {
         title,
         created_at,
         chapter_order
+      ),
+      categories (
+        id,name
+      ),
+      novel_tags (
+        tags (
+          id,name
+        )
       )
     `)
     .eq('id', novelId)

@@ -31,8 +31,16 @@
                 <div class="flex items-center">
                   <span class="text-gray-600">类别：</span>
                   <span class="ml-2 bg-red-100 text-primary px-3 py-1 rounded-full text-sm">
-                    {novel.category || '未分类'}
+                    {novel.categories?.name || '未分类'}
                   </span>
+                </div>
+                <div class="flex items-center">
+                  <span class="text-gray-600">标签：</span>
+                  {#each novel.tags as tag}
+                  <span class="ml-2 bg-green-500 text-white px-3 py-1 rounded-full text-sm">
+                    {tag.name}
+                  </span>
+                  {/each}
                 </div>
                 <div>
                   <span class="text-gray-600">简介：</span>

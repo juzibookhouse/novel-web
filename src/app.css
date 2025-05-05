@@ -11,8 +11,8 @@ body {
   overflow-x: auto;
 }
 
-a {
-  @apply transition-transform duration-200 hover:scale-110;
+a:hover {
+  transform: scale(103%);
 }
 
 .text-primary {

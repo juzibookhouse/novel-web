@@ -27,31 +27,31 @@
       </a>
 
       <div class="flex space-x-6 items-center">
-        <a href="/novels" class="hover:underline"
+        <a href="/novels" class="transition"
           >书库</a
         >
-        <a href="/contact" class="hover:underline"
+        <a href="/contact" class="transition"
           >联系我们</a
         >
 
         {#if $user}
           {#if $user?.profile?.role === "admin"}
-            <a href="/admin" class="hover:underline"
+            <a href="/admin" class="transition"
               >管理员面板</a
             >
           {/if}
           {#if $user?.profile?.role === "author"}
             <a
               href="/author/dashboard"
-              class="hover:underline">作家专区</a
+              class="transition">作家专区</a
             >
           {:else}
             <a
               href="/author/signup"
-              class="hover:underline">注册成为作家</a
+              class="transition">注册成为作家</a
             >
           {/if}
-          <a href="/user/dashboard" class="hover:underline"
+          <a href="/user/dashboard" class="transition"
             >个人中心</a
           >
           <button
@@ -64,7 +64,7 @@
           <div class="space-x-4">
             <a
               href="/user/login"
-              class="hover:underline">登录</a
+              class="transition">登录</a
             >
             <a
               href="/user/signup"
