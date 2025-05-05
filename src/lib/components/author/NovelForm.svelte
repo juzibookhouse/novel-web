@@ -122,7 +122,7 @@
   }
 </script>
 
-<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+<div class="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
     <div class="bg-white rounded-lg overflow-hidden shadow-xl max-w-lg w-full mx-4">
       <div class="px-6 py-4 border-b-2 border-red-100">
         <h3 class="text-xl font-medium text-gray-900">创作新作品</h3>

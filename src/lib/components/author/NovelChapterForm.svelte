@@ -23,7 +23,7 @@
   }
 </script>
 <div
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  class="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
 >
   <div
     class="bg-white rounded-lg overflow-hidden shadow-xl max-w-lg w-full mx-4"
