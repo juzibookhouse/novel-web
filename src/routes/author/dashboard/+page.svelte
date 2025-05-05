@@ -261,7 +261,7 @@
 
 <!-- Create Novel Modal -->
 {#if showNovelForm}
-  <NovelForm categories={categories} tags={tags} newNovel={newNovel} fetchNovels={fetchNovels} toggleNovelForm={toggleNovelForm} />
+  <NovelForm fetchTags={fetchTags} categories={categories} tags={tags} newNovel={newNovel} fetchNovels={fetchNovels} toggleNovelForm={toggleNovelForm} />
 {/if}
 
 <!-- Create Chapter Modal -->
