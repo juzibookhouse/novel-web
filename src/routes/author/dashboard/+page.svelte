@@ -178,20 +178,25 @@
           <div class="p-6">
             <div class="flex items-start gap-6">
               <div class="w-32 h-44 flex-shrink-0">
-                <img
-                  src={novel.cover_url || 'https://via.placeholder.com/300x400?text=封面未上传'}
-                  alt={novel.title}
-                  class="w-full h-full object-cover rounded-lg"
-                />
+                <a href="/novel/{novel.id}">
+                  <img
+                    src={novel.cover_url || 'https://via.placeholder.com/300x400?text=封面未上传'}
+                    alt={novel.title}
+                    class="w-full h-full object-cover rounded-lg"
+                  />
+                </a>
               </div>
               <div class="flex-grow">
-                <button
-                  on:click={() => startEditNovel(novel)}
-                  class="bg-yellow-100 cursor-pointer hover:bg-yellow-200 text-yellow-800 px-4 py-2 rounded-full text-sm transition duration-200"
-                >
-                  编辑
-                </button>
-                <h3 class="text-2xl font-medium text-gray-900 mb-2">{novel.title}</h3>
+                <div class="flex justify-between items-center">
+                  <h3 class="text-2xl font-medium text-gray-900 mb-2">{novel.title}</h3>
+                  <button
+                    on:click={() => startEditNovel(novel)}
+                    class="bg-yellow-100 cursor-pointer hover:bg-yellow-200 text-yellow-800 px-4 py-2 rounded-full text-sm transition duration-200"
+                  >
+                    编辑小说
+                  </button>
+                </div>
+                
                 <div class="flex items-center gap-4 text-sm text-gray-600 mb-4">
                   <div class="flex flex-wrap gap-2">
                     {#each novel.categories || [] as category}
