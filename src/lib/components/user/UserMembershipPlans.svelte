@@ -14,13 +14,13 @@
       {getPlanPrice(plan)}
     </div>
     <p class="text-gray-600 mb-4">{plan.description}</p>
-    <ul class="space-y-2 mb-6">
+    <!-- <ul class="space-y-2 mb-6">
       {#each plan.features as feature}
         <li class="flex items-center text-gray-700">
           <span class="text-green-500 mr-2">✓</span>
           {feature}
         </li>
       {/each}
-    </ul>
+    </ul> -->
   </div>
 {/each}
