@@ -2,6 +2,7 @@
 import { createClient, type User } from "@supabase/supabase-js";
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from "$env/static/public"
 import type { Chapter, NewNovel } from "./novel";
+import { getMemberShipEndDate } from "./membership";
 
 const supabaseUrl = PUBLIC_SUPABASE_URL;
 const supabaseKey = PUBLIC_SUPABASE_ANON_KEY;
@@ -260,5 +261,30 @@ export const upsertChapter = async (newChapter: Chapter) => {
         chapter_order: newChapter.chapter_order
       }])
       .select();
+  }
+}
+
+
+export const upsertMembership = async({user, selectedPlan,clientSecret}) => {
+  if (user?.membership) {
+    // update existing subscription
+    return await supabase
+      .from('user_memberships')
+      .update({ 
+        status: 'pending', 
+        end_date: getMemberShipEndDate(selectedPlan.duration)}).
+      eq('id', user.membership.id);
+  } else {
+    return await supabase
+      .from('user_memberships')
+      .insert([{
+        stripe_client_secret: clientSecret,
+        user_id: user?.id,
+        plan_id: selectedPlan.id,
+        status: 'pending',
+        end_date: getMemberShipEndDate(selectedPlan.duration)
+      }]);
+      
+    
   }
 }

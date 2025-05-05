@@ -21,7 +21,13 @@ export async function POST({ request }) {
     }
 
     let paymentIntent;
-    const amount = plan.price * 100; // Convert to cents
+    let amount = plan.price * 100; // Convert to cents
+    let currency = 'usd';
+    if (paymentMethod != 'card') {
+      amount = plan.price_cn * 100;
+      currency = 'cny';
+    }
+
 
     const paymentMethodTypes = [paymentMethod]; //card,alipay,wechat_pay
 
@@ -32,6 +38,7 @@ export async function POST({ request }) {
       // Update existing payment intent
       paymentIntent = await stripe.paymentIntents.update(paymentIntentId, {
         amount,
+        currency,
         metadata: { planId },
         payment_method_types: paymentMethodTypes
       });
@@ -39,7 +46,7 @@ export async function POST({ request }) {
       // Create payment intent
       paymentIntent = await stripe.paymentIntents.create({
         amount,
-        currency: 'cny',
+        currency,
         metadata: { planId },
         payment_method_types: paymentMethodTypes
       });

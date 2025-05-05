@@ -3,6 +3,7 @@
   import { supabase } from "$lib/supabaseClient";
   import { user } from "$lib/stores/authStore";
   import { onMount } from "svelte";
+    import { getPlanPrice } from "$lib/membership";
 
   let userName = "";
   let membershipPlan: any;
@@ -80,7 +81,7 @@
             <p class="text-red-100">会员编号: {$user.membership?.id}</p>
           </div>
           <div class="text-right">
-            <p class="text-xl font-bold">¥{membershipPlan?.price || 0}/月</p>
+            <p class="text-xl font-bold">{getPlanPrice(membershipPlan)}</p>
             <p class="text-red-100">
               到期时间: {formatDate($user.membership?.end_date)}
             </p>

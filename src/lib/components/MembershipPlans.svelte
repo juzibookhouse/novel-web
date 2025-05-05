@@ -1,10 +1,12 @@
 <script lang="ts">
   import { PUBLIC_STRIPE_PUBLISHABLE_KEY } from "$env/static/public"
-  import { supabase } from '$lib/supabaseClient';
+  import { supabase, upsertMembership } from '$lib/supabaseClient';
   import { user, setUser } from '$lib/stores/authStore';
   import { goto } from '$app/navigation';
   import { loadStripe } from '@stripe/stripe-js';
   import { onMount } from 'svelte';
+    import UserMembershipPlans from "./user/UserMembershipPlans.svelte";
+    import { getMemberShipEndDate, getPlanPrice } from "$lib/membership";
 
   export let onClose = () => {};
 
@@ -49,12 +51,6 @@
     }
   }
 
-  const getMemberShipEndDate = (duration:number) => {
-    const membershipEndDate = new Date();
-    membershipEndDate.setMonth(membershipEndDate.getMonth() + duration);
-    return membershipEndDate
-  }
-
   async function initializePaymentElement() {
     if (!stripe || !selectedPlan) return;
     paymentFormLoaded = true;
@@ -78,30 +74,9 @@
 
     const { clientSecret } = await response.json();
     
-    if ($user?.membership) {
-      // update existing subscription
-      const { error: subscribeError } = await supabase
-        .from('user_memberships')
-        .update({ 
-          status: 'pending', 
-          end_date: getMemberShipEndDate(selectedPlan.duration)}).
-        eq('id', $user.membership.id);
-      if (subscribeError) throw subscribeError;
-      setUser($user)
-    } else {
-      const { error: subscribeError } = await supabase
-        .from('user_memberships')
-        .insert([{
-          stripe_client_secret: clientSecret,
-          user_id: $user?.id,
-          plan_id: selectedPlan.id,
-          status: 'pending',
-          end_date: getMemberShipEndDate(selectedPlan.duration)
-        }]);
-      setUser($user)
-        
-      if (subscribeError) throw subscribeError;
-    }
+    const {error: subscribeError} = await upsertMembership({user:$user, selectedPlan, clientSecret});
+    if (subscribeError) throw subscribeError;
+    setUser($user);
 
     // Initialize Elements
     elements = stripe.elements({
@@ -216,32 +191,11 @@
           <div class="animate-spin rounded-full h-12 w-12 border-4 border-red-800 border-t-transparent"></div>
         </div>
       {:else}
-        <div class="grid md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-2 gap-6">
           <!-- Plans List -->
           {#if !showPaymentMethods}
-            <div class="space-y-6 md:col-span-2">
-              {#each plans as plan}
-                <div 
-                  class="border-2 {selectedPlan?.id === plan.id ? 'border-red-500' : 'border-red-100'} 
-                         rounded-lg p-6 hover:border-red-300 transition-colors cursor-pointer"
-                  on:click={() => selectPlan(plan)}
-                >
-                  <h3 class="text-xl font-semibold text-gray-900 mb-2">{plan.name}</h3>
-                  <div class="text-3xl font-bold text-primary mb-4">
-                    ¥{plan.price}<span class="text-base font-normal text-gray-600">/月</span>
-                  </div>
-                  <p class="text-gray-600 mb-4">{plan.description}</p>
-                  <ul class="space-y-2 mb-6">
-                    {#each plan.features as feature}
-                      <li class="flex items-center text-gray-700">
-                        <span class="text-green-500 mr-2">✓</span>
-                        {feature}
-                      </li>
-                    {/each}
-                  </ul>
-                </div>
-              {/each}
-            </div>
+            <UserMembershipPlans selectPlan={selectPlan} plans={plans} />
+
           {:else}
             <!-- Payment Methods -->
             <div class="space-y-6">
@@ -265,7 +219,7 @@
                 <h3 class="text-xl font-semibold text-gray-900 mb-4">支付信息</h3>
                 <div class="mb-6">
                   <p class="text-gray-600">您选择了 <span class="font-semibold">{selectedPlan.name}</span></p>
-                  <p class="text-2xl font-bold text-primary mt-2">¥{selectedPlan.price}/月</p>
+                  <p class="text-2xl font-bold text-primary mt-2">{getPlanPrice(selectedPlan)}</p>
                 </div>
 
                 {#if paymentError}
@@ -289,6 +243,8 @@
                 {/if}
               </div>
             {/if}
+
+
           {/if}
         </div>
       {/if}
