@@ -11,6 +11,10 @@ body {
   overflow-x: auto;
 }
 
+a {
+  @apply transition-transform duration-200 hover:scale-110;
+}
+
 .text-primary {
   @apply text-(--text-color);
 }
