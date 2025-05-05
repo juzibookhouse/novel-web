@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { WEBSITE_NAME } from '$lib/constants';
+  import { COVER_PLACEHOLDER, WEBSITE_NAME } from '$lib/constants';
     export let data;
     const { novel } = data;
   </script>
@@ -16,7 +16,7 @@
           <div class="flex flex-col md:flex-row gap-8">
             <div class="w-1/3">
               <img
-                src={novel.cover_url || 'https://via.placeholder.com/300x400?text=封面未上传'}
+                src={novel.cover_url || COVER_PLACEHOLDER}
                 alt={novel.title}
                 class="w-full h-auto rounded-lg shadow-lg"
               />

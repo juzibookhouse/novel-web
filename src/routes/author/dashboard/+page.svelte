@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { getAuthorNovels, getCategories, getTags, supabase } from '$lib/supabaseClient';
   import { user } from '$lib/stores/authStore';
-  import { WEBSITE_NAME } from '$lib/constants';
+  import { COVER_PLACEHOLDER, WEBSITE_NAME } from '$lib/constants';
   import Quill from 'quill';
   import { type Category, type Tag, type NewNovel, type Novel, type Chapter, getSortedChapters } from '$lib/novel';
     import NovelForm from '$lib/components/author/NovelForm.svelte';
@@ -18,7 +18,7 @@
   
   let novels: Novel[] = [];
   let categories: Category[] = [];
-  let tags:Tag = [];
+  let tags:Tag[] = [];
   let loading: boolean = true;
   let error: string | null = null;
   let uploadProgress: number = 0;
@@ -180,7 +180,7 @@
               <div class="w-32 h-44 flex-shrink-0">
                 <a href="/novel/{novel.id}">
                   <img
-                    src={novel.cover_url || 'https://via.placeholder.com/300x400?text=封面未上传'}
+                    src={novel.cover_url || COVER_PLACEHOLDER}
                     alt={novel.title}
                     class="w-full h-full object-cover rounded-lg"
                   />

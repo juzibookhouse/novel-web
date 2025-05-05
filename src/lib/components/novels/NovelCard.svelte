@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { COVER_PLACEHOLDER } from "$lib/constants";
   import { getNovelStatus } from "$lib/novel";
 
   export let novel;
@@ -10,8 +11,7 @@
 >
   <div class="relative">
     <img
-      src={novel.cover_url ||
-        "https://via.placeholder.com/400x300?text=封面未上传"}
+      src={novel.cover_url || COVER_PLACEHOLDER}
       alt={novel.title}
       class="w-full h-64 object-cover group-hover:scale-105 transition duration-300"
     />
