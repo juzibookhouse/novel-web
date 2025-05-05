@@ -15,7 +15,7 @@
   }
 </script>
 
-<nav class="text-[#C86600] shadow-lg sticky top-0 z-50">
+<nav class="text-primary shadow-lg fixed w-full top-0 z-50 bg-red-50">
   <div class="container mx-auto px-4 py-3">
     <div class="flex items-center justify-between">
       <a

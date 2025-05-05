@@ -11,7 +11,7 @@
 
 <div class="flex flex-col min-h-screen bg-red-50">
   <Header />
-  <main class="flex-grow">
+  <main class="flex-grow mt-14">
     <slot />
   </main>
   <Footer />
