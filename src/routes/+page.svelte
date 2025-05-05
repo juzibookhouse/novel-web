@@ -1,5 +1,6 @@
 <script lang="ts">
-    import NovelCard from '$lib/components/novels/NovelCard.svelte';
+    import Novels from '$lib/components/home/Novels.svelte';
+import NovelCard from '$lib/components/novels/NovelCard.svelte';
    import { WEBSITE_NAME } from '$lib/constants';
    export let data;
    const { ongoingNovels, finishedNovels, randomNovel } = data;
@@ -92,29 +93,9 @@
      </div>
    </section>
 
-   <!-- Ongoing Novels Section -->
-   <section class="py-24 px-4 bg-red-50/50">
-     <div class="max-w-7xl mx-auto">
-       <h2 class="font-['Ma_Shan_Zheng'] text-5xl text-primary text-center mb-16">连载作品</h2>
-       <div class="grid grid-cols-3 gap-8">
-         {#each ongoingNovels as novel}
-           <NovelCard novel={novel} />
-         {/each}
-       </div>
-     </div>
-   </section>
+   <Novels novels={ongoingNovels} title={"连载作品"} status={"ongoing"} bg={"bg-red-50/50"} />
 
-   <!-- Finished Novels Section -->
-   <section class="py-24 px-4 bg-white/80">
-     <div class="max-w-7xl mx-auto">
-       <h2 class="font-['Ma_Shan_Zheng'] text-5xl text-primary text-center mb-16">完结作品</h2>
-       <div class="grid grid-cols-3 gap-8">
-         {#each finishedNovels as novel}
-          <NovelCard novel={novel} />
-         {/each}
-       </div>
-     </div>
-   </section>
+   <Novels novels={finishedNovels} title={"完结作品"} status={"finished"} bg={"bg-white/80"} />
 
    <!-- About Section -->
    <section class="py-24 px-4 bg-primary">
