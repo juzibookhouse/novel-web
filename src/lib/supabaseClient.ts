@@ -1,7 +1,7 @@
 
 import { createClient, type User } from "@supabase/supabase-js";
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from "$env/static/public"
-import type { Chapter } from "./novel";
+import type { Chapter, NewNovel } from "./novel";
 
 const supabaseUrl = PUBLIC_SUPABASE_URL;
 const supabaseKey = PUBLIC_SUPABASE_ANON_KEY;
@@ -15,7 +15,7 @@ export const getCategories = async () => {
     .order("name");
 }
 
-export const getTags = async() => {
+export const getTags = async () => {
   return await supabase.from("tags").select("*");
 }
 
@@ -121,6 +121,91 @@ export const getNovel = async (novelId: string) => {
     `)
     .eq('id', novelId)
     .single();
+}
+
+async function uploadCover(file: File): Promise<string> {
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+  const filePath = `novel-covers/${fileName}`;
+
+  const { error: uploadError, data } = await supabase.storage
+    .from('covers')
+    .upload(filePath, file, {
+      upsert: true
+    });
+
+  if (uploadError) throw uploadError;
+
+  const { data: { publicUrl } } = supabase.storage
+    .from('covers')
+    .getPublicUrl(filePath);
+
+  return publicUrl;
+}
+
+
+export const upsertNovel = async (user:User, newNovel:NewNovel) => {
+  let cover_url = newNovel.cover_url;
+  if (newNovel.cover_file) {
+    cover_url = await uploadCover(newNovel.cover_file);
+  }
+  let novelId = newNovel.id;
+  if (!novelId) {
+    // Insert new novel
+    const { data: novel, error: novelError } = await supabase
+      .from('novels')
+      .insert([{
+        title: newNovel.title,
+        description: newNovel.description,
+        status: newNovel.status,
+        is_free: newNovel.is_free,
+        category_id: newNovel.category_id,
+        cover_url,
+        user_id: user.id
+      }])
+      .select()
+      .single();
+
+    if (novelError) throw novelError;
+    novelId = novel.id;
+  } else {
+    // Update existing novel
+    const { error: updateError } = await supabase
+      .from('novels')
+      .update({
+        title: newNovel.title,
+        description: newNovel.description,
+        category_id: newNovel.category_id,
+        status: newNovel.status,
+        is_free: newNovel.is_free,
+        cover_url,
+      })
+      .eq('id', novelId);
+
+    if (updateError) throw updateError;
+  }
+
+  // Delete existing tags
+  if (novelId) {
+    await supabase
+      .from('novel_tags')
+      .delete()
+      .eq('novel_id', novelId);
+  }
+
+  // Insert new tags
+  if (newNovel.tags.length > 0) {
+    const tagLinks = newNovel.tags.map(tagId => ({
+      novel_id: novelId,
+      tag_id: tagId
+    }));
+
+    const { error: tagError } = await supabase
+      .from('novel_tags')
+      .insert(tagLinks);
+
+    if (tagError) throw tagError;
+  }
 }
 
 export const getChapter = async (chapterId: string) => {

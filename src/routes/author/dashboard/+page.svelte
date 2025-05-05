@@ -4,21 +4,21 @@
   import { user } from '$lib/stores/authStore';
   import { WEBSITE_NAME } from '$lib/constants';
   import Quill from 'quill';
-  import { type Category, type NewNovel, type Novel, type Chapter, getSortedChapters } from '$lib/novel';
+  import { type Category, type Tag, type NewNovel, type Novel, type Chapter, getSortedChapters } from '$lib/novel';
     import NovelForm from '$lib/components/author/NovelForm.svelte';
     import NovelChapterForm from '$lib/components/author/NovelChapterForm.svelte';
   
   const EMPTY_NOVEL:NewNovel = {
     title: '',
     description: '',
-    categories: [],
+    category_id:'',
     tags:[],
     status: 'ongoing'
   };
   
   let novels: Novel[] = [];
   let categories: Category[] = [];
-  let tags:Category = [];
+  let tags:Tag = [];
   let loading: boolean = true;
   let error: string | null = null;
   let uploadProgress: number = 0;

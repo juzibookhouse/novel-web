@@ -1,12 +1,12 @@
 <script lang="ts">
     import type { NewNovel } from "$lib/novel";
     import { user } from "$lib/stores/authStore";
-    import { supabase } from "$lib/supabaseClient";
+    import { supabase, upsertNovel } from "$lib/supabaseClient";
 
   export let newNovel: NewNovel = {
     title: '',
     description: '',
-    categories: [],
+    category_id:'',
     tags: [],
     status: 'ongoing'
   };
@@ -27,92 +27,11 @@
     }
   }
 
-  async function uploadCover(file: File): Promise<string> {
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
-    const filePath = `novel-covers/${fileName}`;
-
-    const { error: uploadError, data } = await supabase.storage
-      .from('covers')
-      .upload(filePath, file, {
-        upsert: true
-      });
-
-    if (uploadError) throw uploadError;
-
-    const { data: { publicUrl } } = supabase.storage
-      .from('covers')
-      .getPublicUrl(filePath);
-
-    return publicUrl;
-  }
-
-  async function upsertNovel() {
+  async function handleUpsertNovel() {
     try {
       if (!$user?.id) throw new Error('请先登录');
       
-      let cover_url = newNovel.cover_url;
-      if (newNovel.cover_file) {
-        cover_url = await uploadCover(newNovel.cover_file);
-      }
-
-      let novelId = newNovel.id;
-      if (!novelId) {
-        // Insert new novel
-        const { data: novel, error: novelError } = await supabase
-          .from('novels')
-          .insert([{
-            title: newNovel.title,
-            description: newNovel.description,
-            status: newNovel.status,
-            is_free: newNovel.is_free,
-            category_id: newNovel.category_id,
-            cover_url,
-            user_id: $user.id
-          }])
-          .select()
-          .single();
-
-        if (novelError) throw novelError;
-        novelId = novel.id;
-      } else {
-        // Update existing novel
-        const { error: updateError } = await supabase
-          .from('novels')
-          .update({
-            title: newNovel.title,
-            description: newNovel.description,
-            category_id: newNovel.category_id,
-            status: newNovel.status,
-            is_free: newNovel.is_free,
-            cover_url,
-          })
-          .eq('id', novelId);
-
-        if (updateError) throw updateError;
-      }
-
-      // Delete existing tags
-      if (novelId) {
-        await supabase
-          .from('novel_tags')
-          .delete()
-          .eq('novel_id', novelId);
-      }
-
-      // Insert new tags
-      if (newNovel.tags.length > 0) {
-        const tagLinks = newNovel.tags.map(tagId => ({
-          novel_id: novelId,
-          tag_id: tagId
-        }));
-
-        const { error: tagError } = await supabase
-          .from('novel_tags')
-          .insert(tagLinks);
-
-        if (tagError) throw tagError;
-      }
+      await upsertNovel($user, newNovel);
       
       fetchNovels();
       toggleNovelForm();
@@ -127,7 +46,7 @@
       <div class="px-6 py-4 border-b-2 border-red-100">
         <h3 class="text-xl font-medium text-gray-900">创作新作品</h3>
       </div>
-      <form on:submit|preventDefault={upsertNovel} class="px-6 py-4">
+      <form on:submit|preventDefault={handleUpsertNovel} class="px-6 py-4">
         <div class="space-y-4">
           <div>
             <label for="title" class="block text-sm font-medium text-gray-700">作品名称</label>
