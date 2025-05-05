@@ -1,14 +1,15 @@
 <script lang="ts">
-    import type { Category } from '$lib/novel';
-  import { supabase } from '$lib/supabaseClient';
-    import { onMount } from 'svelte';
-  let tags: Category[] = [];
+  import type { Tag } from "$lib/novel";
+  import { user } from "$lib/stores/authStore";
+  import { supabase } from "$lib/supabaseClient";
+  import { onMount } from "svelte";
+  let tags: Tag[] = [];
 
   // New category form
-  let newTagName = '';
+  let newTagName = "";
   let addingTag = false;
 
-  onMount(()=> {
+  onMount(() => {
     fetchTags();
   });
 
@@ -16,30 +17,40 @@
     try {
       // Load tags
       const { data: tagsData, error: tagsError } = await supabase
-          .from('tags')
-          .select('*')
-          .order('name');
+        .from("tags")
+        .select(
+          `
+            *,
+            user_profiles (
+              user_name
+            )
+          `,
+        )
+        .order("name");
 
       if (tagsError) throw tagsError;
-      tags = tagsData;
-    } catch (e) {
-
-    }
-    
+      tags = tagsData.map(({ id, name, user_profiles }) => {
+        return {
+          id,
+          name,
+          user_name: user_profiles ? user_profiles.user_name : "",
+        };
+      });
+    } catch (e) {}
   }
 
   async function addTag() {
     try {
       if (!newTagName.trim()) return;
-      
+
       addingTag = true;
       const { error: tagError } = await supabase
-        .from('tags')
-        .insert([{ name: newTagName.trim() }]);
+        .from("tags")
+        .insert([{ name: newTagName.trim(), user_id: $user?.id }]);
 
       if (tagError) throw tagError;
-      
-      newTagName = '';
+
+      newTagName = "";
       await fetchTags();
     } catch (e: any) {
       // error = e.message;
@@ -51,9 +62,9 @@
   async function delTag(tagId: string) {
     try {
       const { error: deleteError } = await supabase
-        .from('tags')
+        .from("tags")
         .delete()
-        .eq('id', tagId);
+        .eq("id", tagId);
 
       if (deleteError) throw deleteError;
       await fetchTags();
@@ -61,10 +72,10 @@
       // error = e.message;
     }
   }
-
 </script>
+
 <div class="p-6">
-  <div class="mb-6">
+  <!-- <div class="mb-6">
     <h3 class="text-lg font-medium text-gray-900 mb-4">添加新标签</h3>
     <div class="flex gap-4">
       <input
@@ -81,7 +92,7 @@
         {addingTag ? "添加中..." : "添加"}
       </button>
     </div>
-  </div>
+  </div> -->
 
   <table class="min-w-full divide-y divide-red-100">
     <thead>
@@ -89,6 +100,10 @@
         <th
           class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
           >标签名称</th
+        >
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >作家</th
         >
         <th
           class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -101,6 +116,9 @@
         <tr>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
             >{tag.name}</td
+          >
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+            >{tag.user_name}</td
           >
           <td
             class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
