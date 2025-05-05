@@ -15,7 +15,7 @@
       <a href="/novels?status={status}">{title}</a>
       <a href="/novels?status={status}" class="text-3xl">更多</a>
     </h2>
-    <div class="grid grid-cols-3 gap-8">
+    <div class="grid grid-cols-4 gap-8">
       {#each novels as novel}
         <NovelCard {novel} />
       {/each}

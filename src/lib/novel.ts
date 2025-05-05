@@ -8,6 +8,11 @@ export interface Category {
   name: string;
 }
 
+export interface Tag {
+  id: string;
+  name: string;
+}
+
 export interface Chapter {
   id: string;
   title: string;
