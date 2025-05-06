@@ -70,7 +70,10 @@
               id="chapterEditor"
               contenteditable
               on:paste={(e) =>
-                (newChapter.content = e.clipboardData?.getData("text/html"))}
+                {
+                  newChapter.content = document.getElementById('chapterEditor').innerHTML;
+                }
+              }
               bind:innerHTML={newChapter.content}
               class="w-full mt-1 block rounded-md border-2 border-red-200 overflow-hidden overflow-y-scroll"
               placeholder="请输入章节内容"
