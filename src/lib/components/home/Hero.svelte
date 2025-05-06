@@ -1,5 +1,6 @@
 <script>
   import { WEBSITE_NAME } from "$lib/constants";
+    import { user } from "$lib/stores/authStore";
 </script>
 
 <!-- Hero Section -->
@@ -12,11 +13,6 @@
   <div class="relative max-w-7xl mx-auto text-center">
     <div class="flex flex-col items-center justify-center space-y-8">
       <div class="flex items-center justify-center gap-4">
-        <img
-          src="/logo.jpg"
-          alt={WEBSITE_NAME}
-          class="w-24 h-24 rounded-full object-cover shadow-xl"
-        />
         <h1 class="font-['Ma_Shan_Zheng'] text-7xl text-white">
           {WEBSITE_NAME}
         </h1>
@@ -31,12 +27,14 @@
         >
           浏览书库
         </a>
+        {#if $user?.profile?.role === 'reader'}
         <a
           href="/author/signup"
           class="border-2 border-yellow-100 text-yellow-100 px-12 py-4 rounded-full text-lg hover:bg-red-700/30 transition duration-300"
         >
           成为作家
         </a>
+        {/if}
       </div>
     </div>
   </div>
