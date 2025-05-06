@@ -20,7 +20,7 @@ interface UserMembership {
   stripe_client_secret: string;
 }
 
-interface UserData extends User {
+export interface UserData extends User {
   profile?: UserProfile;
   membership?: UserMembership;
   isMembership?: Boolean;

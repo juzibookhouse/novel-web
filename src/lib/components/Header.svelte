@@ -17,6 +17,7 @@
   const adminMenuItems = [
     ...commonMenuItems,
     { href: "/admin", label: "管理员面板" },
+    { href: "/author/dashboard", label: "作家专区" },
     { href: "/user/dashboard", label: "个人中心" }
   ];
 

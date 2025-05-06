@@ -3,6 +3,7 @@ import { createClient, type User } from "@supabase/supabase-js";
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from "$env/static/public"
 import type { Chapter, NewNovel } from "./novel";
 import { getMemberShipEndDate } from "./membership";
+import type { UserData } from "./stores/authStore";
 
 const supabaseUrl = PUBLIC_SUPABASE_URL;
 const supabaseKey = PUBLIC_SUPABASE_ANON_KEY;
@@ -81,8 +82,8 @@ export const getNovels = async ({ search, category, status, start, end }: Search
   return {data:cleanedNovels,error, count};
 }
 
-export const getAuthorNovels = async (user: User) => {
-  return await supabase
+export const getAuthorNovels = async (user: UserData) => {
+  let query = supabase
     .from('novels')
     .select(`
           id,
@@ -108,9 +109,13 @@ export const getAuthorNovels = async (user: User) => {
               name
             )
           )
-        `)
-    .eq('user_id', user?.id)
-    .order('created_at', { ascending: false });
+        `);
+  if (user?.profile?.role === 'author') {
+    query = query.eq('user_id', user?.id);
+  }
+
+  return await query.order('created_at', { ascending: false });
+  
 }
 
 export const getNovel = async (novelId: string) => {
@@ -258,7 +263,8 @@ export const upsertChapter = async (newChapter: Chapter) => {
       .update({
         title: newChapter.title,
         content: newChapter.content,
-        is_free: newChapter.is_free
+        is_free: newChapter.is_free,
+        updated_at: new Date()
       })
       .eq('id', newChapter.id);
 
