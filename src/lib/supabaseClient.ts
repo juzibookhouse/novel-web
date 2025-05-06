@@ -71,7 +71,14 @@ export const getNovels = async ({ search, category, status, start, end }: Search
 
   query = query.eq("chapters.chapter_order", 1);
 
-  return await query.order("updated_at", { ascending: false });
+  const {data:novels, error, count} = await query.order("updated_at", { ascending: false });
+  // Clean up the novels data to remove the nested structure
+  const cleanedNovels =
+    novels?.map((novel) => ({
+      ...novel,
+      tags: novel.novel_tags.map((nc: any) => nc.tags),
+    })) || [];
+  return {data:cleanedNovels,error, count};
 }
 
 export const getAuthorNovels = async (user: User) => {

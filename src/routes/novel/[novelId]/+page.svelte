@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { COVER_PLACEHOLDER, WEBSITE_NAME } from '$lib/constants';
+  import NovelCatTags from '$lib/components/novels/NovelCatTags.svelte';
+import { COVER_PLACEHOLDER, WEBSITE_NAME } from '$lib/constants';
     export let data;
     const { novel } = data;
   </script>
@@ -30,17 +31,11 @@
                 </div>
                 <div class="flex items-center">
                   <span class="text-gray-600">类别：</span>
-                  <span class="ml-2 bg-red-100 text-primary px-3 py-1 rounded-full text-sm">
-                    {novel.categories?.name || '未分类'}
-                  </span>
+                  <NovelCatTags catTags={[novel.categories]} type='cat' />
                 </div>
                 <div class="flex items-center">
                   <span class="text-gray-600">标签：</span>
-                  {#each novel.tags as tag}
-                  <span class="ml-2 bg-green-500 text-white px-3 py-1 rounded-full text-sm">
-                    {tag.name}
-                  </span>
-                  {/each}
+                  <NovelCatTags catTags={novel.tags} />
                 </div>
                 <div>
                   <span class="text-gray-600">简介：</span>

@@ -1,6 +1,7 @@
 <script lang="ts">
     import { COVER_PLACEHOLDER } from "$lib/constants";
   import { getNovelStatus } from "$lib/novel";
+    import NovelCatTags from "./NovelCatTags.svelte";
 
   export let novel;
 </script>
@@ -21,9 +22,11 @@
       </span>
     </div>
   </div>
-  <div class="p-6">
-    <h3 class="text-2xl font-medium text-gray-900 mb-2">{novel.title}</h3>
-    <p class="text-gray-600 line-clamp-2 mb-4">{novel.description}</p>
+  <div class="p-6 space-y-2">
+    <h3 class="text-2xl font-medium text-gray-900">{novel.title}</h3>
+    <p class="text-gray-600 line-clamp-2">{novel.description}</p>
+    <NovelCatTags catTags={[novel.categories]} type='cat' />
+    <NovelCatTags catTags={novel.tags} />
     <div class="flex items-center justify-between">
       <span class="text-sm text-gray-500">{novel.author || "佚名"}</span>
       <span

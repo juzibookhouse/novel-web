@@ -17,15 +17,8 @@ export async function load({ url }: { url: URL }) {
 
   const {data:categories} = await getCategories();
 
-  // Clean up the novels data to remove the nested structure
-  const cleanedNovels =
-    novels?.map((novel) => ({
-      ...novel,
-      tags: novel.novel_tags.map((nc: any) => nc.tags),
-    })) || [];
-
   return {
-    novels: cleanedNovels,
+    novels,
     totalPages: Math.ceil((count || 0) / pageSize),
     currentPage: page,
     categories: categories || [],
