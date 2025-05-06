@@ -5,6 +5,8 @@
   import { supabase } from '$lib/supabaseClient';
   import { user, setUser } from '$lib/stores/authStore';
   import MembershipPlans from '$lib/components/MembershipPlans.svelte';
+    import { getUserDateFormat } from '$lib/user.js';
+    import { getChapterLength } from '$lib/novel.js';
 
   export let data;
   $: ({ chapter, prevChapterId, nextChapterId, novelId } = data);
@@ -162,8 +164,8 @@
     <div class="p-8">
       <h2 class="text-3xl text-gray-900 mb-4 text-center">{chapter.title}</h2>
       <div class="text-gray-600 text-center mb-8">
-        <p>字数: {chapter.content?.length || 0}</p>
-        <p>更新时间: {new Date(chapter.updated_at || chapter.created_at).toLocaleString('zh-CN')}</p>
+        <p>字数: {getChapterLength(chapter)}</p>
+        <p>更新时间: {getUserDateFormat(chapter.updated_at)}</p>
       </div>
       
       {#if (chapter.novels.user_id === $user?.id) || chapter.is_free || chapter.novels.is_free || $user?.isMembership}

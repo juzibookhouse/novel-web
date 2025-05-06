@@ -57,3 +57,7 @@ export const getNovelStatus = (novel:Novel) => {
 export const getSortedChapters = (chatpers:Chapter[]) => {
   return chatpers.sort((a, b) => a.chapter_order - b.chapter_order)
 }
+
+export const getChapterLength = (chapter:Chapter) => {
+  return chapter.content?.replace(/<[^>]*>/g, '').length;
+}
