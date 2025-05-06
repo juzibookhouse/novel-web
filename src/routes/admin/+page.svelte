@@ -1,47 +1,57 @@
 <script lang="ts">
-  import { WEBSITE_NAME } from '$lib/constants';
-  import { onMount } from 'svelte';
-  import { supabase } from '$lib/supabaseClient';
-    import AdminNovels from '$lib/components/admin/AdminNovels.svelte';
-    import AdminCategories from '$lib/components/admin/AdminCategories.svelte';
-    import AdminUsers from '$lib/components/admin/AdminUsers.svelte';
-    import AdminAuthor from '$lib/components/admin/AdminAuthor.svelte';
-    import AdminTags from '$lib/components/admin/AdminTags.svelte';
+  import { WEBSITE_NAME } from "$lib/constants";
+  import { onMount } from "svelte";
+  import { supabase } from "$lib/supabaseClient";
+  import AdminNovels from "$lib/components/admin/AdminNovels.svelte";
+  import AdminCategories from "$lib/components/admin/AdminCategories.svelte";
+  import AdminUsers from "$lib/components/admin/AdminUsers.svelte";
+  import AdminAuthor from "$lib/components/admin/AdminAuthor.svelte";
+  import AdminTags from "$lib/components/admin/AdminTags.svelte";
+  import AdminContactForms from "$lib/components/admin/AdminContactForms.svelte";
+  import { user } from "$lib/stores/authStore";
+  import { goto } from "$app/navigation";
 
-  let activeTab: 'users' | 'authors' | 'novels' | 'categories' | 'tags' = 'users';
-  
+  let activeTab:
+    | "users"
+    | "authors"
+    | "novels"
+    | "categories"
+    | "tags"
+    | "forms" = "users";
+
   let novels: any[] = [];
   let loading = true;
   let error: string | null = null;
 
-
   onMount(async () => {
+    if (!($user?.profile?.role === "admin")) {
+      return goto("/user/login");
+    }
     await loadData();
   });
 
   async function loadData() {
-      try {
-          loading = true;
-          error = null;
+    try {
+      loading = true;
+      error = null;
 
-          // Load novels
-          const { data: novelsData, error: novelsError } = await supabase
-              .from('novels')
-              .select(`
+      // Load novels
+      const { data: novelsData, error: novelsError } = await supabase.from(
+        "novels",
+      ).select(`
                 id,
                 title,
                 status,
                 created_at
               `);
 
-          if (novelsError) throw novelsError;
-          novels = novelsData;
-
-      } catch (e: any) {
-          error = e.message;
-      } finally {
-          loading = false;
-      }
+      if (novelsError) throw novelsError;
+      novels = novelsData;
+    } catch (e: any) {
+      error = e.message;
+    } finally {
+      loading = false;
+    }
   }
 </script>
 
@@ -49,37 +59,36 @@
   <title>管理后台 - {WEBSITE_NAME}</title>
 </svelte:head>
 
-  
-<div class="min-h-screen bg-red-50 py-8 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
+<div
+  class="min-h-screen bg-red-50 py-8 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]"
+>
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-12">
-      <h1 class="font-['Ma_Shan_Zheng'] text-5xl text-primary mb-4">管理后台</h1>
+      <h1 class="font-['Ma_Shan_Zheng'] text-5xl text-primary mb-4">
+        管理后台
+      </h1>
       <p class="text-lg text-red-700">运筹帷幄，决胜千里</p>
     </div>
-  
+
     {#if error}
       <div class="bg-red-50 border-2 border-red-200 rounded-lg p-4 mb-6">
         <p class="text-sm text-primary">{error}</p>
       </div>
     {/if}
-  
+
     <!-- Tabs -->
-    <div class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-red-100 shadow-xl mb-8">
+    <div
+      class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-red-100 shadow-xl mb-8"
+    >
       <div class="border-b border-red-100">
         <nav class="flex -mb-px" aria-label="Tabs">
-          {#each [
-            { id: 'users', name: '读者管理' },
-            { id: 'authors', name: '作家管理' },
-            { id: 'novels', name: '作品管理' },
-            { id: 'categories', name: '分类管理' },
-            { id: 'tags', name: '标签管理' }
-          ] as tab}
+          {#each [{ id: "users", name: "读者管理" }, { id: "authors", name: "作家管理" }, { id: "novels", name: "作品管理" }, { id: "categories", name: "分类管理" }, { id: "tags", name: "标签管理" }, { id: "forms", name: "表单管理" }] as tab}
             <button
               class="w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm
                 {activeTab === tab.id
-                  ? 'border-red-800 underline'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}"
-              on:click={() => activeTab = tab.id as any}
+                ? 'border-red-800 underline'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}"
+              on:click={() => (activeTab = tab.id as any)}
             >
               {tab.name}
             </button>
@@ -87,46 +96,53 @@
         </nav>
       </div>
     </div>
-  
+
     <!-- Content -->
-    <div class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-red-100 shadow-xl">
+    <div
+      class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-red-100 shadow-xl"
+    >
       {#if loading}
         <div class="flex justify-center py-12">
-          <div class="animate-spin rounded-full h-12 w-12 border-4 border-red-800 border-t-transparent"></div>
+          <div
+            class="animate-spin rounded-full h-12 w-12 border-4 border-red-800 border-t-transparent"
+          ></div>
         </div>
       {:else}
         <!-- Users Tab -->
-        {#if activeTab === 'users'}
+        {#if activeTab === "users"}
           <AdminUsers />
         {/if}
-  
+
         <!-- Authors Tab -->
-        {#if activeTab === 'authors'}
+        {#if activeTab === "authors"}
           <AdminAuthor />
         {/if}
-  
+
         <!-- Novels Tab -->
-        {#if activeTab === 'novels'}
-          <AdminNovels novels={novels} />
+        {#if activeTab === "novels"}
+          <AdminNovels {novels} />
         {/if}
 
         <!-- Categories Tab -->
-        {#if activeTab === 'categories'}
+        {#if activeTab === "categories"}
           <AdminCategories />
         {/if}
 
         <!-- Tags Tab -->
-        {#if activeTab === 'tags'}
+        {#if activeTab === "tags"}
           <AdminTags />
         {/if}
 
+        {#if activeTab === "forms"}
+          <AdminContactForms />
+        {/if}
       {/if}
     </div>
   </div>
 </div>
-  
+
 <style>
   :global(body) {
-    background-color: #FEF2F2;
+    background-color: #fef2f2;
   }
 </style>

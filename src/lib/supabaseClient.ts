@@ -288,3 +288,10 @@ export const upsertMembership = async({user, selectedPlan,clientSecret}) => {
     
   }
 }
+
+export const getContactForms = async () => {
+  return await supabase
+    .from('contact_forms')
+    .select('*')
+    .order('created_at');
+}
