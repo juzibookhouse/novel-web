@@ -40,6 +40,9 @@ export const getNovels = async ({ search, category, status, start, end }: Search
       categories!inner (
         id,name
       ),
+      chapters (
+        title
+      ),
       novel_tags (
         tags!inner (
           id,
@@ -66,7 +69,9 @@ export const getNovels = async ({ search, category, status, start, end }: Search
     query = query.range(start, end);
   }
 
-  return await query.order("created_at", { ascending: false });
+  query = query.eq("chapters.chapter_order", 1);
+
+  return await query.order("updated_at", { ascending: false });
 }
 
 export const getAuthorNovels = async (user: User) => {
