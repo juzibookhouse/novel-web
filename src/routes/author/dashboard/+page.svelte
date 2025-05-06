@@ -147,10 +147,13 @@
     <p class="text-lg text-red-700">笔墨生花，妙手著文</p>
   </div>
 
+  {#if ($user?.profile?.role === 'author') && ($user?.profile.is_approved === false)}
+  <h2 class="text-3xl text-center my-10">等待管理员通过作者审核</h2>
+  {:else}
   <div class="flex justify-end mb-8">
     <button
       on:click={() => toggleNovelForm()}
-      class="bg-[#FEF9D5] hover:bg-red-700 text-white font-medium py-2 px-6 rounded-full shadow-sm transition duration-200"
+      class="font-medium py-2 px-6 rounded-full shadow-sm transition duration-200"
     >
       创作新作品
     </button>
@@ -257,6 +260,8 @@
       {/each}
     </div>
   {/if}
+
+  {/if}<!--end of check author approved-->
 </div>
 
 <!-- Create Novel Modal -->
