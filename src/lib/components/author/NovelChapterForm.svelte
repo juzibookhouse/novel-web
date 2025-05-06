@@ -49,7 +49,7 @@
             placeholder="请输入章节标题"
           />
         </div>
-        <div>
+        <div class="inline-flex items-center">
           <label
             for="chapter-is_free"
             class="block text-sm font-medium text-gray-700">章节免费</label
