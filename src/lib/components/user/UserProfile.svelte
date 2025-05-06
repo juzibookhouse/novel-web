@@ -1,15 +1,16 @@
 <script lang="ts">
   import MembershipPlans from "$lib/components/MembershipPlans.svelte";
   import { supabase } from "$lib/supabaseClient";
-  import { user } from "$lib/stores/authStore";
+  import { user, setUser } from "$lib/stores/authStore";
   import { onMount } from "svelte";
-    import { getPlanPrice } from "$lib/membership";
+  import { getPlanPrice } from "$lib/membership";
 
   let userName = "";
   let membershipPlan: any;
   let loading = false;
   let message = "";
   let showMembershipModal = false;
+  let applyingAuthor = false;
 
   function formatDate(dateString: string) {
     return new Date(dateString).toLocaleDateString("zh-CN");
@@ -31,6 +32,32 @@
       message = "更新失败，请重试";
     } finally {
       loading = false;
+    }
+  }
+
+  async function applyForAuthor() {
+    try {
+      applyingAuthor = true;
+      const { error } = await supabase
+        .from("user_profiles")
+        .update({
+          role: "author",
+          is_approved: false
+        })
+        .eq("user_id", $user?.id);
+
+      if (error) throw error;
+      
+      // Refresh user data
+      if ($user) {
+        await setUser($user);
+      }
+      
+      message = "作家申请已提交，请等待管理员审核";
+    } catch (error) {
+      message = "申请失败，请重试";
+    } finally {
+      applyingAuthor = false;
     }
   }
 
@@ -143,6 +170,30 @@
           class="mt-1 block w-full rounded-md border-2 border-red-200 px-3 py-2 text-gray-900 placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500"
         />
       </div>
+
+      {#if $user?.profile?.role !== 'admin'}
+      <div>
+        <label class="block text-sm font-medium text-gray-700">作家状态</label>
+        {#if $user?.profile?.role === 'author'}
+          {#if $user?.profile?.is_approved}
+            <p class="mt-1 text-green-600">已是认证作家</p>
+          {:else}
+            <p class="mt-1 text-yellow-600">作家申请审核中</p>
+          {/if}
+        {:else}
+          <button
+            on:click={applyForAuthor}
+            disabled={applyingAuthor}
+            class="mt-1 px-4 py-2 bg-yellow-100 text-yellow-800 rounded-md hover:bg-yellow-200 transition-colors"
+          >
+            {applyingAuthor ? '申请中...' : '申请成为作家'}
+          </button>
+        {/if}
+      </div>
+      {:else}
+      <div>你是管理员</div>
+      {/if}
+      
       <button
         on:click={updateProfile}
         disabled={loading}
