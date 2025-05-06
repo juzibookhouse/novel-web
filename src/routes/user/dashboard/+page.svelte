@@ -6,6 +6,7 @@
     import type { Novel } from '$lib/novel';
     import UserProfile from '$lib/components/user/UserProfile.svelte';
     import UserShelfNovels from '$lib/components/user/UserShelfNovels.svelte';
+    import NovelCard from '$lib/components/novels/NovelCard.svelte';
 
    let activeTab = 'profile';
    let readNovels: Novel[] = [];
@@ -20,7 +21,17 @@
            novels (
              id,
              title,
-             cover_url
+             cover_url,
+             description,
+             categories!inner (
+              id,name
+             ),
+             novel_tags (
+              tags!inner (
+                id,
+                name
+              )
+            )
            )
          `)
          .eq('user_id', $user.id);
@@ -75,16 +86,7 @@
          <div class="p-6">
            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
              {#each readNovels as novel}
-               <a href="/novel/{novel.id}" class="block">
-                 <div class="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-shadow">
-                   <img
-                     src={novel.cover_url || 'https://via.placeholder.com/150'}
-                     alt={novel.title}
-                     class="w-full h-48 object-cover rounded-md mb-2"
-                   />
-                   <h3 class="text-gray-900 font-medium">{novel.title}</h3>
-                 </div>
-               </a>
+               <NovelCard novel={novel} />
              {/each}
            </div>
          </div>

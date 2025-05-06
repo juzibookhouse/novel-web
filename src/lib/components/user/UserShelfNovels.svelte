@@ -19,7 +19,17 @@
               id,
               title,
               cover_url,
-              status
+              status,
+              description,
+              categories!inner (
+                id,name
+              ),
+              novel_tags (
+                tags!inner (
+                  id,
+                  name
+                )
+              )
             )
           `,
         )
