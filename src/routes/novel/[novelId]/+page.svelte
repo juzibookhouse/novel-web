@@ -67,9 +67,3 @@ import { COVER_PLACEHOLDER, WEBSITE_NAME } from '$lib/constants';
       </div>
     </div>
   </div>
-  
-  <style>
-    :global(body) {
-      background-color: #FEF2F2;
-    }
-  </style>

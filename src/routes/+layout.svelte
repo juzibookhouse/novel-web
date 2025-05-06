@@ -16,9 +16,3 @@
   </main>
   <Footer />
 </div>
-
-<style>
-  :global(body) {
-    background-color: #FEF2F2;
-  }
-</style>

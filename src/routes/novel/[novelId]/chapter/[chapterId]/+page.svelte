@@ -232,7 +232,6 @@
 
 <style>
 :global(body) {
-  background-color: #FEF2F2;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;

@@ -108,9 +108,3 @@
     {/if}
   </div>
 </div>
-
-<style>
-  :global(body) {
-    background-color: #fef2f2;
-  }
-</style>

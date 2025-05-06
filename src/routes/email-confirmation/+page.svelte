@@ -4,9 +4,3 @@
       <p class="my-4">请前往注册邮箱激活</p>
   </div>
 </div>
-
-<style>
-  :global(body) {
-      background-color: #FEF2F2; /* Adjust based on your design */
-  }
-</style>

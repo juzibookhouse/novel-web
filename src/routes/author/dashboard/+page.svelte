@@ -274,9 +274,3 @@
   <NovelChapterForm toggleNovelChapterForm={toggleNovelChapterForm} fetchNovels={fetchNovels} newChapter={newChapter} selectedNovel={selectedNovel} />
 {/if}
 </div>
-
-<style>
-:global(body) {
-  background-color: #FEF2F2;
-}
-</style>
