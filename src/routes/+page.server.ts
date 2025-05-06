@@ -1,7 +1,9 @@
-import { getNovels } from "$lib/supabaseClient";
+import { getCategories, getNovels } from "$lib/supabaseClient";
 
 export async function load() {
   const { data: novels } = await getNovels({});
+
+  const { data: categories} = await getCategories();
   
   const ongoingNovels = novels?.filter((novel)=>novel.status === 'ongoing');
   const finishedNovels = novels?.filter((novel)=>novel.status === 'finished');
@@ -14,6 +16,7 @@ export async function load() {
   return {
     ongoingNovels: ongoingNovels ?? [],
     finishedNovels: finishedNovels ?? [],
+    categories,
     randomNovel
   };
 }

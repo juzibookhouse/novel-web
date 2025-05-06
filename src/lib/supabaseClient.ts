@@ -36,7 +36,8 @@ export const getNovels = async ({ search, category, status, start, end }: Search
       description,
       cover_url,
       status,
-      categories (
+      category_id,
+      categories!inner (
         id,name
       ),
       novel_tags (
