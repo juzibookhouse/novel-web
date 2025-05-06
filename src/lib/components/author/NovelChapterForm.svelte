@@ -34,7 +34,7 @@
       </h3>
     </div>
     <form on:submit|preventDefault={createChapter} class="px-6 py-4">
-      <div class="space-y-4">
+      <div class="space-y-2">
         <div>
           <label
             for="chapter-title"
