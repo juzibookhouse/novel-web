@@ -27,7 +27,7 @@
         >
           浏览书库
         </a>
-        {#if $user?.profile?.role === 'reader'}
+        {#if (!$user)}
         <a
           href="/author/signup"
           class="border-2 border-yellow-100 text-yellow-100 px-12 py-4 rounded-full text-lg hover:bg-red-700/30 transition duration-300"
