@@ -6,7 +6,7 @@
 </script>
 <!-- Novel Header -->
 <div class="p-8 border-b-2 border-red-100">
-  <div class="flex flex-col md:flex-row gap-8">
+  <div class="flex gap-8">
     <div class="w-1/3">
       <img
         src={novel.cover_url || COVER_PLACEHOLDER}

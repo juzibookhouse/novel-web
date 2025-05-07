@@ -9,6 +9,7 @@
     import { getMemberShipEndDate, getPlanPrice } from "$lib/membership";
 
   export let onClose = () => {};
+  export let redirectUrl;
 
   let plans: any[] = [];
   let loading = true;
