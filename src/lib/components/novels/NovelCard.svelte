@@ -28,7 +28,7 @@
     <NovelCatTags catTags={[novel.categories]} type='cat' />
     <NovelCatTags catTags={novel.tags} />
     <div class="flex items-center justify-between">
-      <span class="text-sm text-gray-500">{novel.author || "佚名"}</span>
+      <!-- <span class="text-sm text-gray-500">{novel.author || "佚名"}</span> -->
       <span
         class="text-red-600 group-hover:translate-x-2 transition-transform duration-300"
       >

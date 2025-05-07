@@ -25,10 +25,10 @@ import { COVER_PLACEHOLDER, WEBSITE_NAME } from '$lib/constants';
             <div class="w-2/3">
               <h1 class="font-['Ma_Shan_Zheng'] text-4xl text-primary mb-4">{novel.title}</h1>
               <div class="space-y-4">
-                <div class="flex items-center">
+                <!-- <div class="flex items-center">
                   <span class="text-gray-600">作者：</span>
                   <span class="ml-2 text-gray-900">{novel.author || '佚名'}</span>
-                </div>
+                </div> -->
                 <div class="flex items-center">
                   <span class="text-gray-600">类别：</span>
                   <NovelCatTags catTags={[novel.categories]} type='cat' />
