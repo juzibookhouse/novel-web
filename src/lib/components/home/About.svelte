@@ -1,5 +1,6 @@
 <script>
   import { WEBSITE_NAME } from "$lib/constants";
+  const date = new Date();
 </script>
 
 <!-- About Section -->
@@ -12,7 +13,7 @@
         </h2>
         <div class="prose prose-lg mx-auto">
           <p class="text-gray-600 mb-6">
-            {WEBSITE_NAME}成立于2025年，是一个专注于中文网络文学创作与阅读的综合性平台。我们致力于为读者提供优质的阅读体验，为作者打造理想的创作平台。
+            {WEBSITE_NAME}成立于{date.getFullYear()}年，是一个专注于中文网络文学创作与阅读的综合性平台。我们致力于为读者提供优质的阅读体验，为作者打造理想的创作平台。
           </p>
           <p class="text-gray-600 mb-6">
             在这里，您可以找到各类精品小说，从武侠仙侠到都市言情，应有尽有。我们重视原创内容，尊重知识产权，为作者提供合理的收益分成。
