@@ -168,7 +168,7 @@
 </script>
 
 <div
-  class="fixed inset-0 top-0 left-0 w-full h-full flex items-center justify-center z-50 p-4"
+  class="fixed inset-0 top-0 bg-black/50 left-0 w-full h-full flex items-center justify-center z-50 p-4"
 >
   <div
     class="bg-white rounded-lg max-w-5xl w-full max-h-[90vh] overflow-y-auto"
