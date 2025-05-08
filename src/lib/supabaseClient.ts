@@ -314,3 +314,28 @@ export const getContactForms = async () => {
     .select('*')
     .order('created_at');
 }
+
+export const checkUserNovel = async (user, novelId) => {
+  // Check if novel is in bookshelf
+  return await supabase
+  .from("bookshelves")
+  .select()
+  .eq("user_id", user.id)
+  .eq("novel_id", novelId)
+  .single();
+}
+
+export const addUserNovel = async (user, novelId) => {
+  await supabase.from("bookshelves").insert({
+    user_id: user.id,
+    novel_id: novelId,
+  });
+}
+
+export const removeUserNovel = async (user, novelId) => {
+  await supabase
+    .from("bookshelves")
+    .delete()
+    .eq("user_id", user.id)
+    .eq("novel_id", novelId);
+}

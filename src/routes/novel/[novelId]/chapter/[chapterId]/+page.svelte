@@ -2,7 +2,7 @@
   import { WEBSITE_NAME } from "$lib/constants";
   import { onMount, onDestroy } from "svelte";
   import { page } from "$app/stores";
-  import { supabase } from "$lib/supabaseClient";
+  import { addUserNovel, checkUserNovel, removeUserNovel, supabase } from "$lib/supabaseClient";
   import { user, setUser } from "$lib/stores/authStore";
   import MembershipPlans from "$lib/components/MembershipPlans.svelte";
   import { getUserDateFormat } from "$lib/user.js";
@@ -22,18 +22,11 @@
     if ($user) {
       isApproved = $user.isMembership;
 
+      const { data: bookshelf } = await checkUserNovel($user, novelId);
+      isInBookshelf = !!bookshelf;
+
       if (!isApproved) {
       } else {
-        // Check if novel is in bookshelf
-        const { data: bookshelf } = await supabase
-          .from("bookshelves")
-          .select()
-          .eq("user_id", $user.id)
-          .eq("novel_id", novelId)
-          .single();
-
-        isInBookshelf = !!bookshelf;
-
         // Start reading timer
         readingStartTime = Date.now();
         startReadingTimer();
@@ -81,16 +74,9 @@
     if (!$user) return;
 
     if (isInBookshelf) {
-      await supabase
-        .from("bookshelves")
-        .delete()
-        .eq("user_id", $user.id)
-        .eq("novel_id", novelId);
+      await removeUserNovel($user, novelId);
     } else {
-      await supabase.from("bookshelves").insert({
-        user_id: $user.id,
-        novel_id: novelId,
-      });
+      await addUserNovel($user, novelId);
     }
 
     isInBookshelf = !isInBookshelf;
