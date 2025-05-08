@@ -9,6 +9,8 @@
   import { getChapterLength } from "$lib/novel.js";
     import ChapterPagination from "$lib/components/novels/ChapterPagination.svelte";
     import ChapterContent from "$lib/components/novels/ChapterContent.svelte";
+    import ChapterLoginMsg from "$lib/components/novels/ChapterLoginMsg.svelte";
+    import ChapterMemberSubscriptionMsg from "$lib/components/novels/ChapterMemberSubscriptionMsg.svelte";
 
   export let data;
   $: ({ chapter, prevChapterId, nextChapterId, novelId } = data);
@@ -133,25 +135,9 @@
       {#if chapter.novels.user_id === $user?.id || chapter.is_free || chapter.novels.is_free || $user?.isMembership}
         <ChapterContent chapter={chapter} />
       {:else if !$user}
-        <div class="text-center py-8">
-          <p class="text-gray-800 mb-4">请登录后继续阅读</p>
-          <a
-            href="/user/login"
-            class="inline-block bg-red-800 text-white px-6 py-2 rounded-full hover:bg-red-700 transition-colors"
-          >
-            立即登录
-          </a>
-        </div>
+        <ChapterLoginMsg />
       {:else if !$user?.isMembership}
-        <div class="text-center py-8">
-          <p class="text-gray-800 mb-4">订阅会员后即可继续阅读</p>
-          <button
-            on:click={() => (showMembershipModal = true)}
-            class="px-6 py-2 rounded-full"
-          >
-            立即订阅
-          </button>
-        </div>
+        <ChapterMemberSubscriptionMsg handleMembershipModal={()=>showMembershipModal=true} />
       {/if}
     </div>
 
