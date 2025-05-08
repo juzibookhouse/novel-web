@@ -8,13 +8,14 @@
   import { getUserDateFormat } from "$lib/user.js";
   import { getChapterLength } from "$lib/novel.js";
     import ChapterPagination from "$lib/components/novels/ChapterPagination.svelte";
+    import ChapterContent from "$lib/components/novels/ChapterContent.svelte";
 
   export let data;
   $: ({ chapter, prevChapterId, nextChapterId, novelId } = data);
 
   let showMembershipModal = false;
   let isApproved = false;
-  let fontSize = 16;
+  
   let isInBookshelf = false;
   let readingStartTime: number | null = null;
   let readingTimer: NodeJS.Timeout;
@@ -34,11 +35,7 @@
       }
     }
 
-    // Load saved font size from localStorage
-    const savedFontSize = localStorage.getItem("reading-font-size");
-    if (savedFontSize) {
-      fontSize = parseInt(savedFontSize);
-    }
+    
   });
 
   onDestroy(() => {
@@ -64,11 +61,6 @@
       chapter_id: chapter.id,
       reading_time: readingTime,
     });
-  }
-
-  function changeFontSize(delta: number) {
-    fontSize = Math.max(12, Math.min(24, fontSize + delta));
-    localStorage.setItem("reading-font-size", fontSize.toString());
   }
 
   async function toggleBookshelf() {
@@ -130,41 +122,16 @@
       {/if}
     </div>
 
-    <!-- Reading Controls -->
-    {#if $user}
-      <div class="p-4 border-b-2 border-red-100 flex justify-center space-x-4">
-        <button
-          on:click={() => changeFontSize(-2)}
-          class="px-3 py-1 rounded-full"
-        >
-          A-
-        </button>
-        <button
-          on:click={() => changeFontSize(2)}
-          class="px-3 py-1 rounded-full"
-        >
-          A+
-        </button>
-      </div>
-    {/if}
-
     <!-- Chapter Content -->
     <div class="p-8">
       <h2 class="text-3xl text-gray-900 mb-4 text-center">{chapter.title}</h2>
-      <div class="text-gray-600 text-center mb-8">
+      <div class="text-gray-600 text-center mb-2">
         <p>字数: {getChapterLength(chapter)}</p>
         <p>更新时间: {getUserDateFormat(chapter.updated_at)}</p>
       </div>
 
       {#if chapter.novels.user_id === $user?.id || chapter.is_free || chapter.novels.is_free || $user?.isMembership}
-        <div class="prose prose-lg max-w-none">
-          <div
-            class="text-gray-800 leading-relaxed"
-            style="font-size: {fontSize}px"
-          >
-            {@html chapter.content || "本章节暂无内容"}
-          </div>
-        </div>
+        <ChapterContent chapter={chapter} />
       {:else if !$user}
         <div class="text-center py-8">
           <p class="text-gray-800 mb-4">请登录后继续阅读</p>
