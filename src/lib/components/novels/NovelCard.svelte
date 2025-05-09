@@ -17,7 +17,7 @@
       class="w-full h-64 object-cover group-hover:scale-105 transition duration-300"
     />
     <div class="absolute top-4 right-4">
-      <span class="{novel.status === 'ongoing' ? 'bg-green-500' : 'bg-blue-500'} text-white px-4 py-1 rounded-full text-sm">
+      <span class="{novel.status === 'ongoing' ? 'bg-orange-500' : 'bg-green-500'} text-white px-4 py-1 rounded-full text-sm">
         {getNovelStatus(novel)}
       </span>
     </div>

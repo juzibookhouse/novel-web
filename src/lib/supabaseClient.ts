@@ -29,6 +29,14 @@ interface SearchNovelsParams {
   end?: number
 }
 
+export const getUserProfile = async (user_id:string) => {
+  return await supabase
+    .from("user_profiles")
+    .select("user_name")
+    .eq("user_id", user_id)
+    .single();
+}
+
 export const getNovels = async ({ search, category, status, start, end }: SearchNovelsParams) => {
   let query = supabase.from("novels").select(
     `

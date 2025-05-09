@@ -1,5 +1,6 @@
 <script>
     import { COVER_PLACEHOLDER } from "$lib/constants";
+    import { getNovelStatus } from "$lib/novel";
     import NovelCatTags from "./NovelCatTags.svelte";
     export let novel;
 
@@ -19,17 +20,14 @@
         {novel.title}
       </h1>
       <div class="space-y-4">
-        <!-- <div class="flex items-center">
-            <span class="text-gray-600">作者：</span>
-            <span class="ml-2 text-gray-900">{novel.author || '佚名'}</span>
-          </div> -->
-        <div class="flex items-center">
-          <span class="text-gray-600">类别：</span>
+        <div class="flex items-center gap-2">
+          <NovelCatTags catTags={[{name:getNovelStatus(novel)}]} type={novel.status} />
           <NovelCatTags catTags={[novel.categories]} type="cat" />
+          <NovelCatTags catTags={novel.tags} />
         </div>
         <div class="flex items-center">
-          <span class="text-gray-600">标签：</span>
-          <NovelCatTags catTags={novel.tags} />
+          <span class="text-gray-600">作者：</span>
+          <span class="ml-2 text-gray-900">{novel.author?.user_name || '佚名'}</span>
         </div>
         <div>
           <span class="text-gray-600">简介：</span>
