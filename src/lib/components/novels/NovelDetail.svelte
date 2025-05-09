@@ -1,6 +1,6 @@
 <script>
     import { COVER_PLACEHOLDER } from "$lib/constants";
-    import { getNovelStatus } from "$lib/novel";
+    import { getNovelStatus, getNovelWordCount } from "$lib/novel";
     import NovelCatTags from "./NovelCatTags.svelte";
     export let novel;
 
@@ -25,10 +25,17 @@
           <NovelCatTags catTags={[novel.categories]} type="cat" />
           <NovelCatTags catTags={novel.tags} />
         </div>
+        
         <div class="flex items-center">
           <span class="text-gray-600">作者：</span>
           <span class="ml-2 text-gray-900">{novel.author?.user_name || '佚名'}</span>
         </div>
+        
+        <div class="flex items-center">
+          <span class="text-gray-600">字数：</span>
+          <span class="ml-2 text-gray-900">{getNovelWordCount(novel)}</span>
+        </div>
+
         <div>
           <span class="text-gray-600">简介：</span>
           <p class="mt-2 text-gray-800 leading-relaxed">

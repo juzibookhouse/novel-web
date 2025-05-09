@@ -59,5 +59,25 @@ export const getSortedChapters = (chatpers:Chapter[]) => {
 }
 
 export const getChapterLength = (chapter:Chapter) => {
+  if (!chapter.content) return 0;
   return chapter.content?.replace(/<[^>]*>/g, '').length;
+}
+
+export const getNovelWordCount = (novel:Novel) => {
+  if (!novel.chapters) return '0';
+  const wordCounts = novel.chapters?.reduce((acc, chapter)=> {
+    return acc + getChapterLength(chapter)
+  },0);
+  return formatNumberUnit(wordCounts);
+}
+
+export const formatNumberUnit = (num:number, unit = '万', threshold = 10000) => {
+  if (typeof num !== 'number' || isNaN(num)) return ''
+  
+  return num >= threshold 
+    ? `${(num / threshold)
+        .toFixed(2)
+        .replace(/\.?0+$/, '')
+        .replace(/\.$/, '')}${unit}`
+    : num.toString()
 }
