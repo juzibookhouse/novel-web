@@ -1,6 +1,7 @@
 <script>
     import { COVER_PLACEHOLDER } from "$lib/constants";
     import { getNovelStatus, getNovelWordCount } from "$lib/novel";
+    import FavNovel from "./FavNovel.svelte";
     import NovelCatTags from "./NovelCatTags.svelte";
     export let novel;
 
@@ -42,6 +43,10 @@
             {novel.description || "暂无简介"}
           </p>
         </div>
+
+        <FavNovel novelId={novel.id} />
+
+
       </div>
     </div>
   </div>

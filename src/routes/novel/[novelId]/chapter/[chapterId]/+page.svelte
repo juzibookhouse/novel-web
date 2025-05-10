@@ -11,6 +11,7 @@
     import ChapterContent from "$lib/components/novels/ChapterContent.svelte";
     import ChapterLoginMsg from "$lib/components/novels/ChapterLoginMsg.svelte";
     import ChapterMemberSubscriptionMsg from "$lib/components/novels/ChapterMemberSubscriptionMsg.svelte";
+    import FavNovel from "$lib/components/novels/FavNovel.svelte";
 
   export let data;
   $: ({ chapter, prevChapterId, nextChapterId, novelId } = data);
@@ -18,16 +19,13 @@
   let showMembershipModal = false;
   let isApproved = false;
   
-  let isInBookshelf = false;
+  
   let readingStartTime: number | null = null;
   let readingTimer: NodeJS.Timeout;
 
   onMount(async () => {
     if ($user) {
       isApproved = $user.isMembership;
-
-      const { data: bookshelf } = await checkUserNovel($user, novelId);
-      isInBookshelf = !!bookshelf;
 
       if (!isApproved) {
       } else {
@@ -63,18 +61,6 @@
       chapter_id: chapter.id,
       reading_time: readingTime,
     });
-  }
-
-  async function toggleBookshelf() {
-    if (!$user) return;
-
-    if (isInBookshelf) {
-      await removeUserNovel($user, novelId);
-    } else {
-      await addUserNovel($user, novelId);
-    }
-
-    isInBookshelf = !isInBookshelf;
   }
 
   const handleClose = () => {
@@ -114,14 +100,7 @@
         {chapter.novels.title}
       </h1>
 
-      {#if $user}
-        <button
-          on:click={toggleBookshelf}
-          class="text-red-700 cursor-pointer hover:text-primary transition-colors duration-200"
-        >
-          {isInBookshelf ? "移出书架" : "加入书架"}
-        </button>
-      {/if}
+      <FavNovel novelId={novelId} />
     </div>
 
     <!-- Chapter Content -->
