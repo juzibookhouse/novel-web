@@ -29,7 +29,7 @@
   class="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
 >
   <div
-    class="bg-white rounded-lg overflow-hidden shadow-xl max-w-lg w-full mx-4"
+    class="bg-white rounded-lg overflow-hidden shadow-xl max-w-4xl w-full mx-4"
   >
     <div class="px-6 py-4 border-b-2 border-red-100">
       <h3 class="text-xl font-medium text-gray-900">
@@ -37,18 +37,21 @@
       </h3>
     </div>
     <form on:submit|preventDefault={createChapter} class="px-6 py-4">
-      <div class="space-y-2">
+      <div class="grid grid-cols-2 gap-2">
+        <div class="space-y-2">
 
-        <TextInput title="章节标题" object={newChapter} field="title" />
-
-        <CheckInput title="发布" object={newChapter} field="published" />
-        <CheckInput title="章节免费" object={newChapter} field="is_free" />
+          <TextInput title="章节标题" object={newChapter} field="title" />
+  
+          <CheckInput title="发布" object={newChapter} field="published" />
+          <CheckInput title="章节免费" object={newChapter} field="is_free" />
+          <TextInput title="引文(用于随机显示在首页)" object={newChapter} field="quotation" rows={3} />
+        </div>
 
         <div class="">
           <label for="content" class="block text-sm font-medium text-gray-700"
             >章节内容</label
           >
-          <div class="h-96">
+          <div class="h-85">
             <div
               id="chapterEditor"
               contenteditable
@@ -58,14 +61,15 @@
                 }
               }
               bind:innerHTML={newChapter.content}
-              class="w-full mt-1 block rounded-md border-2 border-red-200 overflow-hidden overflow-y-scroll"
+              class="w-full mt-1 block rounded-md border-2 border-red-200"
               placeholder="请输入章节内容"
             ></div>
           </div>
         </div>
+
       </div>
 
-      <Btns handleCancel={toggleNovelChapterForm} confirmText={newChapter.id ? "更新" : "创建"} cssClass="mt-15" />
+      <Btns handleCancel={toggleNovelChapterForm} confirmText={newChapter.id ? "更新" : "创建"} cssClass="mt-25" />
     </form>
   </div>
 </div>

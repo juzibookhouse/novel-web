@@ -23,6 +23,7 @@ export interface Chapter {
   published: boolean;
   created_at: string;
   chapter_order: number;
+  quotation?: string;
 }
 
 export interface NewNovel {

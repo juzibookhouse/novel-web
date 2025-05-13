@@ -111,6 +111,7 @@ export const getAuthorNovels = async (user: UserData) => {
             is_free,
             published,
             chapter_order,
+            quotation,
             created_at
           ),
           novel_tags (
@@ -279,6 +280,7 @@ export const upsertChapter = async (newChapter: Chapter) => {
         title: newChapter.title,
         content: newChapter.content,
         is_free: newChapter.is_free,
+        quotation: newChapter.quotation,
         published: newChapter.published,
         updated_at: new Date()
       })
@@ -292,6 +294,7 @@ export const upsertChapter = async (newChapter: Chapter) => {
         title: newChapter.title,
         content: newChapter.content,
         is_free: newChapter.is_free,
+        quotation: newChapter.quotation,
         published: newChapter.published,
         novel_id: newChapter.novel_id,
         chapter_order: newChapter.chapter_order
