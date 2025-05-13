@@ -263,6 +263,17 @@ export const getChapter = async (chapterId: string) => {
     .single();
 }
 
+export const getQuotationChapters = async () => {
+  return await supabase
+    .from('chapters')
+    .select(`
+      id, title, quotation, novel_id
+    `)
+    .neq('quotation',null)
+    .eq('published',true)
+    ;
+}
+
 export const getChapterSilbings = async (novelId: string) => {
   return await supabase
     .from('chapters')

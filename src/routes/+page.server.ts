@@ -1,4 +1,4 @@
-import { getCategories, getNovels } from "$lib/supabaseClient";
+import { getCategories, getNovels, getQuotationChapters } from "$lib/supabaseClient";
 
 export async function load() {
   const { data: novels } = await getNovels({});
@@ -8,9 +8,11 @@ export async function load() {
   const ongoingNovels = novels?.filter((novel)=>novel.status === 'ongoing');
   const finishedNovels = novels?.filter((novel)=>novel.status === 'finished');
 
+  const {data: quotationChapters} = await getQuotationChapters();
+
   let randomNovel = null;
-  if (novels?.length) {
-    randomNovel = novels[Math.floor(Math.random()*novels.length)];
+  if (quotationChapters?.length) {
+    randomNovel = quotationChapters[Math.floor(Math.random()*quotationChapters.length)];
   }
 
   return {

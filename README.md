@@ -30,7 +30,7 @@ You can preview the production build with `npm run preview`.
 - [ ] home page reference https://tyler.com/templates/love-nature/
 - [x] disable home category
 - [x] fix contact form
-- [ ] add feature note and chapter
+- [x] add feature note and chapter
 - [x] add publish to chapter
 - [x] display published chapter only
 - [ ] reading time, filter author time or novel time, only admin time
