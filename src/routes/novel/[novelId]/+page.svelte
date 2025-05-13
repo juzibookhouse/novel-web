@@ -1,8 +1,7 @@
 <script lang="ts">
   import ChapterList from "$lib/components/novels/ChapterList.svelte";
-  import NovelCatTags from "$lib/components/novels/NovelCatTags.svelte";
   import NovelDetail from "$lib/components/novels/NovelDetail.svelte";
-  import { COVER_PLACEHOLDER, WEBSITE_NAME } from "$lib/constants";
+  import { WEBSITE_NAME } from "$lib/constants";
   export let data;
   const { novel } = data;
 </script>

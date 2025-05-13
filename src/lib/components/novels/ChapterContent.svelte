@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { user } from "$lib/stores/authStore";
     import { onMount } from "svelte";
 
   export let chapter;
@@ -21,7 +20,6 @@
 
 </script>
 <!-- Reading Controls -->
-{#if $user}
 <div class="py-4 border-b-2 border-red-100 flex justify-center space-x-4">
   <button
     on:click={() => changeFontSize(-2)}
@@ -36,7 +34,6 @@
     A+
   </button>
 </div>
-{/if}
 <div class="prose prose-lg max-w-none">
   <div
     class="text-gray-800 leading-relaxed"
