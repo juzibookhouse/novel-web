@@ -20,22 +20,23 @@
       <p class="text-2xl text-yellow-100 max-w-2xl mx-auto">
         汇聚华夏文学精粹，传承千年文化瑰宝
       </p>
+      {#if (!$user)}
       <div class="flex gap-6 mt-8">
         <a
-          href="/novels"
+          href="/user/signup"
           class="bg-yellow-100 text-primary px-12 py-4 rounded-full text-lg hover:bg-yellow-200 transition duration-300 shadow-lg hover:shadow-xl"
         >
-          浏览书库
+          注册会员
         </a>
-        {#if (!$user)}
+        
         <a
           href="/author/signup"
           class="border-2 border-yellow-100 text-yellow-100 px-12 py-4 rounded-full text-lg hover:bg-red-700/30 transition duration-300"
         >
           成为作家
         </a>
-        {/if}
       </div>
+      {/if}
     </div>
   </div>
 </section>
