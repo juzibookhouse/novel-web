@@ -27,5 +27,9 @@ You can preview the production build with `npm run preview`.
 - [x] novel creat time and words
 - [x] prevent user copy
 - [x] disable mobile version
-- [ ] show reading total time
 - [ ] home page reference https://tyler.com/templates/love-nature/
+- [ ] disable home category
+- [x] fix contact form
+- [ ] add feature note and chapter
+- [ ] reading time, filter author time or novel time, only admin time
+- [ ] author upload word before approved

@@ -20,7 +20,7 @@
 
   <FeatureNovel {randomNovel} />
 
-  <Categories categories={categories} />
+  <!-- <Categories categories={categories} /> -->
 
   <Novels
     novels={ongoingNovels}

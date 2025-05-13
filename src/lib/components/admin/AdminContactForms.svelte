@@ -6,6 +6,7 @@
 
   onMount(async()=>{
     const {data, error} = await getContactForms();
+    console.log(data);
     forms = data;
   })
 </script>
