@@ -2,6 +2,10 @@
   import type { NewNovel } from "$lib/novel";
   import { user } from "$lib/stores/authStore";
   import { supabase, upsertNovel } from "$lib/supabaseClient";
+    import Btns from "./Btns.svelte";
+    import CheckInput from "./CheckInput.svelte";
+    import SelectInput from "./SelectInput.svelte";
+    import TextInput from "./TextInput.svelte";
 
   export let newNovel: NewNovel = {
     title: "",
@@ -92,39 +96,11 @@
     <form on:submit|preventDefault={handleUpsertNovel} class="px-6 py-4">
       <div class="grid grid-cols-2 gap-2">
         <div class="space-y-2">
-          <div>
-            <label for="title" class="block text-sm font-medium text-gray-700"
-              >作品名称</label
-            >
-            <input
-              type="text"
-              id="title"
-              bind:value={newNovel.title}
-              required
-              class="mt-1 block w-full rounded-md border-2 border-red-200 px-3 py-2 focus:border-red-500 focus:ring-red-500"
-              placeholder="请输入作品名称"
-            />
-          </div>
-          <div class="flex items-center">
-            <label for="is_free" class="block text-sm font-medium text-gray-700">发布</label>
-            <input
-              type="checkbox"
-              id="is_free"
-              bind:checked={newNovel.published}
-              class="form-checkbox h-4 w-4 text-red-600 border-red-300 rounded"
-            />
-          </div>
-          <div class="flex items-center">
-            <label for="is_free" class="block text-sm font-medium text-gray-700"
-              >免费阅读？</label
-            >
-            <input
-              type="checkbox"
-              id="is_free"
-              bind:checked={newNovel.is_free}
-              class="form-checkbox h-4 w-4 text-red-600 border-red-300 rounded"
-            />
-          </div>
+          <TextInput title="作品名称" field="title" object={newNovel} />
+          
+          <CheckInput title="发布" object={newNovel} field="published" />
+          <CheckInput title="免费阅读" object={newNovel} field="is_free" />
+
           <div>
             <label
               for="category"
@@ -202,20 +178,9 @@
           </div>
         </div>
         <div class="space-y-2">
-          <div>
-            <label for="status" class="block text-sm font-medium text-gray-700"
-              >连载状态</label
-            >
-            <select
-              id="status"
-              bind:value={newNovel.status}
-              class="mt-1 block w-full rounded-md border-2 border-red-200 px-3 py-2 focus:border-red-500 focus:ring-red-500"
-            >
-              {#each statusOptions as option}
-                <option value={option.value}>{option.label}</option>
-              {/each}
-            </select>
-          </div>
+          
+          <SelectInput title="连载状态" object={newNovel} field="status" options={statusOptions} />
+
           <div>
             <label for="cover" class="block text-sm font-medium text-gray-700"
               >封面图片</label
@@ -249,36 +214,12 @@
               hover:file:bg-red-100"
             />
           </div>
-          <div>
-            <label
-              for="description"
-              class="block text-sm font-medium text-gray-700">作品简介</label
-            >
-            <textarea
-              id="description"
-              bind:value={newNovel.description}
-              rows="4"
-              class="mt-1 block w-full rounded-md border-2 border-red-200 px-3 py-2 focus:border-red-500 focus:ring-red-500"
-              placeholder="请输入作品简介"
-            ></textarea>
-          </div>
+          <TextInput object={newNovel} title="作品简介" field="description" rows={4} />
         </div>
       </div>
-      <div class="mt-6 flex justify-end gap-3">
-        <button
-          type="button"
-          on:click={() => toggleNovelForm()}
-          class="px-4 py-2 border-2 rounded-md"
-        >
-          取消
-        </button>
-        <button
-          type="submit"
-          class="px-4 py-2 bg-[#FEF9D5] text-white rounded-md hover:bg-red-700"
-        >
-          {newNovel.id ? "更新" : "创建"}
-        </button>
-      </div>
+      
+      <Btns handleCancel={toggleNovelForm} confirmText={newNovel.id ? "更新" : "创建"} />
+
     </form>
   </div>
 </div>

@@ -2,6 +2,9 @@
     import type { Chapter, Novel } from "$lib/novel";
     import { supabase, upsertChapter } from "$lib/supabaseClient";
     import { error } from "@sveltejs/kit";
+    import TextInput from "./TextInput.svelte";
+    import CheckInput from "./CheckInput.svelte";
+    import Btns from "./Btns.svelte";
 
 
   export let fetchNovels:Function;
@@ -35,43 +38,12 @@
     </div>
     <form on:submit|preventDefault={createChapter} class="px-6 py-4">
       <div class="space-y-2">
-        <div>
-          <label
-            for="chapter-title"
-            class="block text-sm font-medium text-gray-700">章节标题</label
-          >
-          <input
-            type="text"
-            id="chapter-title"
-            bind:value={newChapter.title}
-            required
-            class="mt-1 block w-full rounded-md border-2 border-red-200 px-3 py-2 focus:border-red-500 focus:ring-red-500"
-            placeholder="请输入章节标题"
-          />
-        </div>
-        <div class="flex items-center">
-          <label
-            for="chapter-is_free"
-            class="block text-sm font-medium text-gray-700">发布</label>
-          <input
-            type="checkbox"
-            id="chapter-is_free"
-            bind:checked={newChapter.published}
-            class=""
-          />
-        </div>
-        <div class="flex items-center">
-          <label
-            for="chapter-is_free"
-            class="block text-sm font-medium text-gray-700">章节免费</label
-          >
-          <input
-            type="checkbox"
-            id="chapter-is_free"
-            bind:checked={newChapter.is_free}
-            class=""
-          />
-        </div>
+
+        <TextInput title="章节标题" object={newChapter} field="title" />
+
+        <CheckInput title="发布" object={newChapter} field="published" />
+        <CheckInput title="章节免费" object={newChapter} field="is_free" />
+
         <div class="">
           <label for="content" class="block text-sm font-medium text-gray-700"
             >章节内容</label
@@ -82,7 +54,7 @@
               contenteditable
               on:paste={(e) =>
                 {
-                  newChapter.content = document.getElementById('chapterEditor').innerHTML;
+                  newChapter.content = document.getElementById('chapterEditor')?.innerHTML;
                 }
               }
               bind:innerHTML={newChapter.content}
@@ -92,21 +64,8 @@
           </div>
         </div>
       </div>
-      <div class="mt-15 flex justify-end gap-3">
-        <button
-          type="button"
-          on:click={() => toggleNovelChapterForm()}
-          class="px-4 py-2 border-2 border-red-200 rounded-md"
-        >
-          取消
-        </button>
-        <button
-          type="submit"
-          class="px-4 py-2 bg-[#FEF9D5] text-white rounded-md hover:bg-red-700"
-        >
-          创建
-        </button>
-      </div>
+
+      <Btns handleCancel={toggleNovelChapterForm} confirmText={newChapter.id ? "更新" : "创建"} cssClass="mt-15" />
     </form>
   </div>
 </div>
