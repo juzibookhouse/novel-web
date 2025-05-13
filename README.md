@@ -31,6 +31,7 @@ You can preview the production build with `npm run preview`.
 - [x] disable home category
 - [x] fix contact form
 - [ ] add feature note and chapter
-- [ ] add publish to chapter
+- [x] add publish to chapter
+- [ ] display published chapter only
 - [ ] reading time, filter author time or novel time, only admin time
 - [ ] author upload word before approved

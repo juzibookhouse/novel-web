@@ -137,6 +137,8 @@ export const getNovel = async (novelId: string) => {
         id,
         title,
         content,
+        published,
+        is_free,
         created_at,
         chapter_order
       ),
