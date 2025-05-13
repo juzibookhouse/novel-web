@@ -105,7 +105,16 @@
               placeholder="请输入作品名称"
             />
           </div>
-          <div class="inline-flex items-center">
+          <div class="flex items-center">
+            <label for="is_free" class="block text-sm font-medium text-gray-700">发布</label>
+            <input
+              type="checkbox"
+              id="is_free"
+              bind:checked={newNovel.published}
+              class="form-checkbox h-4 w-4 text-red-600 border-red-300 rounded"
+            />
+          </div>
+          <div class="flex items-center">
             <label for="is_free" class="block text-sm font-medium text-gray-700"
               >免费阅读？</label
             >
@@ -113,7 +122,7 @@
               type="checkbox"
               id="is_free"
               bind:checked={newNovel.is_free}
-              class=""
+              class="form-checkbox h-4 w-4 text-red-600 border-red-300 rounded"
             />
           </div>
           <div>

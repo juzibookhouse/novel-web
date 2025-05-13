@@ -20,6 +20,7 @@ export interface Chapter {
   content?: string;
   novel_id: string;
   is_free: boolean;
+  published: boolean;
   created_at: string;
   chapter_order: number;
 }
@@ -34,6 +35,7 @@ export interface NewNovel {
   cover_url?: string;
   cover_file?: File;
   is_free?: boolean;
+  published?: boolean;
 }
 
 export interface Novel {
@@ -46,6 +48,7 @@ export interface Novel {
   category_id?: string;
   cover_url?: string;
   is_free?: boolean;
+  published?: boolean;
   chapters?: Chapter[];
   tags:[];
 }

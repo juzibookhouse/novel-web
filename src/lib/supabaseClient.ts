@@ -78,7 +78,7 @@ export const getNovels = async ({ search, category, status, start, end }: Search
     query = query.range(start, end);
   }
 
-  query = query.eq("chapters.chapter_order", 1);
+  query = query.eq("published",true).eq("chapters.chapter_order", 1);
 
   const {data:novels, error, count} = await query.order("updated_at", { ascending: false });
   // Clean up the novels data to remove the nested structure
@@ -103,11 +103,13 @@ export const getAuthorNovels = async (user: UserData) => {
           created_at,
           category_id,
           cover_url,
+          published,
           chapters (
             id,
             title,
             content,
             is_free,
+            published,
             chapter_order,
             created_at
           ),
@@ -187,6 +189,7 @@ export const upsertNovel = async (user:User, newNovel:NewNovel) => {
         description: newNovel.description,
         status: newNovel.status,
         is_free: newNovel.is_free,
+        published: newNovel.published,
         category_id: newNovel.category_id,
         cover_url,
         user_id: user.id
@@ -206,6 +209,7 @@ export const upsertNovel = async (user:User, newNovel:NewNovel) => {
         category_id: newNovel.category_id,
         status: newNovel.status,
         is_free: newNovel.is_free,
+        published: newNovel.published,
         cover_url,
       })
       .eq('id', novelId);
@@ -273,6 +277,7 @@ export const upsertChapter = async (newChapter: Chapter) => {
         title: newChapter.title,
         content: newChapter.content,
         is_free: newChapter.is_free,
+        published: newChapter.published,
         updated_at: new Date()
       })
       .eq('id', newChapter.id);
@@ -285,6 +290,7 @@ export const upsertChapter = async (newChapter: Chapter) => {
         title: newChapter.title,
         content: newChapter.content,
         is_free: newChapter.is_free,
+        published: newChapter.published,
         novel_id: newChapter.novel_id,
         chapter_order: newChapter.chapter_order
       }])
