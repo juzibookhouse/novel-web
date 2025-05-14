@@ -1,7 +1,7 @@
 <script lang="ts">
   import { WEBSITE_NAME } from "$lib/constants";
   import { onMount } from "svelte";
-  import { supabase } from "$lib/supabaseClient";
+  import { getAdminNovels, supabase } from "$lib/supabaseClient";
   import AdminNovels from "$lib/components/admin/AdminNovels.svelte";
   import AdminCategories from "$lib/components/admin/AdminCategories.svelte";
   import AdminUsers from "$lib/components/admin/AdminUsers.svelte";
@@ -35,18 +35,11 @@
       loading = true;
       error = null;
 
-      // Load novels
-      const { data: novelsData, error: novelsError } = await supabase.from(
-        "novels",
-      ).select(`
-                id,
-                title,
-                status,
-                created_at
-              `);
+      const {data:novelsData, error: novelsError} = await getAdminNovels();
 
       if (novelsError) throw novelsError;
       novels = novelsData;
+      
     } catch (e: any) {
       error = e.message;
     } finally {

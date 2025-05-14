@@ -29,7 +29,7 @@ interface SearchNovelsParams {
   end?: number
 }
 
-export const getUserProfile = async (user_id:string) => {
+export const getUserProfile = async (user_id: string) => {
   return await supabase
     .from("user_profiles")
     .select("user_name")
@@ -78,16 +78,16 @@ export const getNovels = async ({ search, category, status, start, end }: Search
     query = query.range(start, end);
   }
 
-  query = query.eq("published",true).eq("chapters.chapter_order", 1);
+  query = query.eq("published", true).eq("chapters.chapter_order", 1);
 
-  const {data:novels, error, count} = await query.order("updated_at", { ascending: false });
+  const { data: novels, error, count } = await query.order("updated_at", { ascending: false });
   // Clean up the novels data to remove the nested structure
   const cleanedNovels =
     novels?.map((novel) => ({
       ...novel,
       tags: novel.novel_tags.map((nc: any) => nc.tags),
     })) || [];
-  return {data:cleanedNovels,error, count};
+  return { data: cleanedNovels, error, count };
 }
 
 export const getAuthorNovels = async (user: UserData) => {
@@ -126,7 +126,7 @@ export const getAuthorNovels = async (user: UserData) => {
   }
 
   return await query.order('created_at', { ascending: false });
-  
+
 }
 
 export const getNovel = async (novelId: string) => {
@@ -177,7 +177,7 @@ async function uploadCover(file: File): Promise<string> {
 }
 
 
-export const upsertNovel = async (user:User, newNovel:NewNovel) => {
+export const upsertNovel = async (user: User, newNovel: NewNovel) => {
   let cover_url = newNovel.cover_url;
   if (newNovel.cover_file) {
     cover_url = await uploadCover(newNovel.cover_file);
@@ -269,8 +269,8 @@ export const getQuotationChapters = async () => {
     .select(`
       id, title, quotation, novel_id
     `)
-    .neq('quotation',null)
-    .eq('published',true)
+    .neq('quotation', null)
+    .eq('published', true)
     ;
 }
 
@@ -315,14 +315,15 @@ export const upsertChapter = async (newChapter: Chapter) => {
 }
 
 
-export const upsertMembership = async({user, selectedPlan,clientSecret}) => {
+export const upsertMembership = async ({ user, selectedPlan, clientSecret }) => {
   if (user?.membership) {
     // update existing subscription
     return await supabase
       .from('user_memberships')
-      .update({ 
-        status: 'pending', 
-        end_date: getMemberShipEndDate(selectedPlan.duration)}).
+      .update({
+        status: 'pending',
+        end_date: getMemberShipEndDate(selectedPlan.duration)
+      }).
       eq('id', user.membership.id);
   } else {
     return await supabase
@@ -334,8 +335,8 @@ export const upsertMembership = async({user, selectedPlan,clientSecret}) => {
         status: 'pending',
         end_date: getMemberShipEndDate(selectedPlan.duration)
       }]);
-      
-    
+
+
   }
 }
 
@@ -349,11 +350,11 @@ export const getContactForms = async () => {
 export const checkUserNovel = async (user, novelId) => {
   // Check if novel is in bookshelf
   return await supabase
-  .from("bookshelves")
-  .select()
-  .eq("user_id", user.id)
-  .eq("novel_id", novelId)
-  .single();
+    .from("bookshelves")
+    .select()
+    .eq("user_id", user.id)
+    .eq("novel_id", novelId)
+    .single();
 }
 
 export const addUserNovel = async (user, novelId) => {
@@ -369,4 +370,25 @@ export const removeUserNovel = async (user, novelId) => {
     .delete()
     .eq("user_id", user.id)
     .eq("novel_id", novelId);
+}
+
+export const getAdminNovels = async () => {
+  // const {data, error} = await supabase
+  //   .from("reading_records")
+  //   .select(`
+  //     reading_time.max(), novel_id, user_id,
+  //     novels (
+  //       id,title
+  //     )
+  //   `);
+  // Load novels
+  const { data: novelsData, error: novelsError } = await supabase.from(
+    "novels",
+  ).select(`
+    id,
+    title,
+    status,
+    created_at
+  `);
+  return { data: novelsData, error: novelsError };
 }

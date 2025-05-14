@@ -1,10 +1,14 @@
 <script lang="ts">
   import { supabase } from "$lib/supabaseClient";
-    import { getUserDateFormat, getUserMembershipDate, isValidMembership } from "$lib/user";
-    import { onMount } from "svelte";
+  import {
+    getUserDateFormat,
+    getUserMembershipDate,
+    isValidMembership,
+  } from "$lib/user";
+  import { onMount } from "svelte";
   let users: any[] = [];
 
-  onMount(()=>{
+  onMount(() => {
     fetchUsers();
   });
 
@@ -47,10 +51,6 @@
         >
         <th
           class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >邮箱</th
-        >
-        <th
-          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
           >注册时间</th
         >
         <th
@@ -68,9 +68,6 @@
         <tr>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
             >{user.user_name}</td
-          >
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-            >{user.user_id}</td
           >
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
             {getUserDateFormat(user.created_at)}
