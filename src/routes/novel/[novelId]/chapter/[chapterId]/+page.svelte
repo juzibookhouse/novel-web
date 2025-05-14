@@ -1,8 +1,7 @@
 <script lang="ts">
   import { WEBSITE_NAME } from "$lib/constants";
   import { onMount, onDestroy } from "svelte";
-  import { page } from "$app/stores";
-  import { addUserNovel, checkUserNovel, removeUserNovel, supabase } from "$lib/supabaseClient";
+  import { upsertChapterReadingRecords } from "$lib/supabaseClient";
   import { user, setUser } from "$lib/stores/authStore";
   import MembershipPlans from "$lib/components/MembershipPlans.svelte";
   import { getUserDateFormat } from "$lib/user.js";
@@ -17,24 +16,15 @@
   $: ({ chapter, prevChapterId, nextChapterId, novelId } = data);
 
   let showMembershipModal = false;
-  let isApproved = false;
   
   
   let readingStartTime: number | null = null;
   let readingTimer: NodeJS.Timeout;
 
   onMount(async () => {
-    if ($user) {
-      isApproved = $user.isMembership;
-
-      if (!isApproved) {
-      } else {
-        // Start reading timer
-        readingStartTime = Date.now();
-        startReadingTimer();
-      }
-    }
-
+    // Start reading timer
+    readingStartTime = Date.now();
+    startReadingTimer();
     
   });
 
@@ -50,17 +40,12 @@
   }
 
   async function saveReadingTime() {
-    if (!$user || !readingStartTime || !isApproved) return;
+    if (!readingStartTime) return;
 
     const readingTime = Math.floor((Date.now() - readingStartTime) / 1000);
     readingStartTime = Date.now();
 
-    await supabase.from("reading_records").upsert({
-      user_id: $user.id,
-      novel_id: novelId,
-      chapter_id: chapter.id,
-      reading_time: readingTime,
-    });
+    await upsertChapterReadingRecords(chapter, readingTime);
   }
 
   const handleClose = () => {

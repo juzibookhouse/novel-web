@@ -392,3 +392,25 @@ export const getAdminNovels = async () => {
   `);
   return { data: novelsData, error: novelsError };
 }
+
+export const upsertChapterReadingRecords = async(chapter, readingTime) => {
+  const {data:readingRecord,error} = await supabase
+    .from('reading_records')
+    .select('*')
+    .eq('novel_id',chapter.novels.id)
+    .single();
+  
+  if (readingRecord) {
+    await supabase
+      .from('reading_records')
+      .update({
+        'reading_time': readingRecord.reading_time + readingTime
+      })
+      .eq('id', readingRecord.id)
+  } else {
+    await supabase.from("reading_records").insert({
+      novel_id: chapter.novels.id,
+      reading_time: readingTime,
+    });
+  }
+}
