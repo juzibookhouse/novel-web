@@ -85,3 +85,15 @@ export const formatNumberUnit = (num:number, unit = '万', threshold = 10000) =>
         .replace(/\.$/, '')}${unit}`
     : num.toString()
 }
+
+export function formatDuration(seconds: number): string {
+  if (seconds < 60) {
+    return `${seconds}秒`;
+  } else if (seconds < 3600) {
+    const minutes = Math.floor(seconds / 60);
+    return `${minutes}分钟`;
+  } else {
+    const hours = Math.floor(seconds / 3600);
+    return `${hours}小时`;
+  }
+}

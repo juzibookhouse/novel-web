@@ -388,9 +388,21 @@ export const getAdminNovels = async () => {
     id,
     title,
     status,
-    created_at
+    created_at,
+    reading_records (
+      reading_time
+    )
   `);
-  return { data: novelsData, error: novelsError };
+  let adminNovels = [];
+  if (novelsData?.length > 0) {
+    adminNovels = novelsData.map(novel => {
+      return {
+        ...novel,
+        readingTime: novel.reading_records?.length > 0 ? novel.reading_records[0].reading_time : 0
+      }
+    });
+  }
+  return { data: adminNovels, error: novelsError };
 }
 
 export const upsertChapterReadingRecords = async(chapter, readingTime) => {
