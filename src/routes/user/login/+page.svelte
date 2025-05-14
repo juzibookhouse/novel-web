@@ -5,6 +5,7 @@
   import MembershipPlans from '$lib/components/MembershipPlans.svelte';
   import { user } from '$lib/stores/authStore';
   import { onMount } from "svelte";
+  import Btn from '$lib/components/common/Btn.svelte';
 
   onMount(() => {
     if ($user) {
@@ -113,17 +114,9 @@
         </div>
       </div>
 
-      <div>
-        <button
-          type="submit"
-          class="group relative flex w-full justify-center rounded-md bg-[#FEF9D5] py-2.5 px-3 text-sm font-semibold text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:bg-red-300 transition duration-200"
-          disabled={loading}
-        >
-          {loading ? '登录中...' : '登录'}
-        </button>
-      </div>
+      <Btn title={loading ? '登录中...' : '登录'} disabled={loading} type="submit" cssClass="w-full" />
       
-      <div class="text-sm text-center mt-6 pt-4 border-t border-red-100">
+      <div class="text-sm text-center pt-4 border-t border-red-100">
         <a href="/user/signup" class="font-medium text-red-600 hover:text-red-500 transition duration-200">
           还没有账户？立即注册
         </a>

@@ -2,6 +2,7 @@
   import { WEBSITE_NAME } from '$lib/constants';
     import { enhance } from '$app/forms';
     import type { ActionData } from './$types';
+  import Btn from '$lib/components/common/Btn.svelte';
     
     export let form: ActionData;
     
@@ -80,12 +81,7 @@
             </div>
   
             <div>
-              <button
-                type="submit"
-                class="w-full bg-[#FEF9D5] text-white py-3 px-6 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-200"
-              >
-                提交
-              </button>
+              <Btn title='提交' type="submit" cssClass="w-full" />
             </div>
           </div>
         </form>

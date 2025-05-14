@@ -2,6 +2,7 @@
   import { WEBSITE_NAME } from '$lib/constants';
   import { supabase } from '$lib/supabaseClient';
   import { goto } from '$app/navigation';
+  import Btn from './common/Btn.svelte';
   
   export let role = '';
   
@@ -113,13 +114,7 @@
       </div>
   
       <div>
-        <button
-          type="submit"
-          class="group relative flex w-full justify-center rounded-md py-2.5 px-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-200"
-          disabled={loading}
-        >
-          {loading ? '注册中...' : '立即注册'}
-        </button>
+        <Btn title={loading ? '注册中...' : '立即注册'} disabled={loading} type="submit" cssClass="w-full" />
       </div>
       
       <div class="text-sm text-center mt-6 pt-4 border-t border-red-100">
