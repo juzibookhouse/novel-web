@@ -6,32 +6,60 @@
   import MembershipPlans from "$lib/components/MembershipPlans.svelte";
   import { getUserDateFormat } from "$lib/user.js";
   import { getChapterLength } from "$lib/novel.js";
-    import ChapterPagination from "$lib/components/novels/ChapterPagination.svelte";
-    import ChapterContent from "$lib/components/novels/ChapterContent.svelte";
-    import ChapterLoginMsg from "$lib/components/novels/ChapterLoginMsg.svelte";
-    import ChapterMemberSubscriptionMsg from "$lib/components/novels/ChapterMemberSubscriptionMsg.svelte";
-    import FavNovel from "$lib/components/novels/FavNovel.svelte";
+  import ChapterPagination from "$lib/components/novels/ChapterPagination.svelte";
+  import ChapterContent from "$lib/components/novels/ChapterContent.svelte";
+  import ChapterLoginMsg from "$lib/components/novels/ChapterLoginMsg.svelte";
+  import ChapterMemberSubscriptionMsg from "$lib/components/novels/ChapterMemberSubscriptionMsg.svelte";
+  import FavNovel from "$lib/components/novels/FavNovel.svelte";
 
   export let data;
   $: ({ chapter, prevChapterId, nextChapterId, novelId } = data);
 
   let showMembershipModal = false;
-  
-  
   let readingStartTime: number | null = null;
   let readingTimer: NodeJS.Timeout;
+  let isUserActive = false;
+  let inactivityTimer: NodeJS.Timeout;
 
-  onMount(async () => {
-    // Start reading timer
-    readingStartTime = Date.now();
-    startReadingTimer();
+  function handleUserActivity() {
+    if (!isUserActive) {
+      isUserActive = true;
+      readingStartTime = Date.now();
+      startReadingTimer();
+    }
     
+    // Reset inactivity timer
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(() => {
+      isUserActive = false;
+      if (readingTimer) {
+        clearInterval(readingTimer);
+        saveReadingTime();
+      }
+    }, 60000); // Stop tracking after 1 minute of inactivity
+  }
+
+  onMount(() => {
+    // Add event listeners for user activity
+    window.addEventListener('mousemove', handleUserActivity);
+    window.addEventListener('keydown', handleUserActivity);
+    window.addEventListener('scroll', handleUserActivity);
+    window.addEventListener('click', handleUserActivity);
   });
 
   onDestroy(() => {
+    // Clean up event listeners and timers
+    window.removeEventListener('mousemove', handleUserActivity);
+    window.removeEventListener('keydown', handleUserActivity);
+    window.removeEventListener('scroll', handleUserActivity);
+    window.removeEventListener('click', handleUserActivity);
+    
     if (readingTimer) {
       clearInterval(readingTimer);
       saveReadingTime();
+    }
+    if (inactivityTimer) {
+      clearTimeout(inactivityTimer);
     }
   });
 
@@ -40,7 +68,7 @@
   }
 
   async function saveReadingTime() {
-    if (!readingStartTime) return;
+    if (!readingStartTime || !isUserActive) return;
 
     const readingTime = Math.floor((Date.now() - readingStartTime) / 1000);
     readingStartTime = Date.now();
