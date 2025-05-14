@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { supabase } from '$lib/supabaseClient';
+  import { fetchAdminAuthors, supabase } from '$lib/supabaseClient';
   import { getUserDateFormat } from "$lib/user";
     import { formatDuration } from '$lib/novel';
 
@@ -12,40 +12,9 @@
 
  async function fetchAuthors() {
   try {
-    // Load authors from user_profiles
-    const { data: authorsData, error: authorsError } = await supabase
-        .from('user_profiles')
-        .select(`
-          *,
-          novels (
-            id,
-            reading_records (
-              reading_time
-            )
-          )
-        `)
-        .eq('role', 'author');
-
+    const {data,error:authorsError} = await fetchAdminAuthors();
     if (authorsError) throw authorsError;
-    if (authorsData?.length > 0) {
-      authors = authorsData.map(({user_name,created_at,is_approved,novels}) => {
-        return {
-          user_name,
-          created_at,
-          is_approved,
-          novelCount: novels?.length,
-          novelReadingTime: novels.reduce((acc, novel)=>{
-            console.log(acc);
-            if (novel.reading_records.length > 0) {
-              return acc + novel.reading_records[0].reading_time;
-            } else {
-              return acc;
-            }
-          },0)
-        }
-      });
-    }
-
+    authors = data;
   } catch (error) {
     
   }
@@ -98,7 +67,7 @@
             </span>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
-            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+            <span class="px-2 inline-flex text-xs leading-5 rounded-full">
               {formatDuration(author.novelReadingTime)}
             </span>
           </td>

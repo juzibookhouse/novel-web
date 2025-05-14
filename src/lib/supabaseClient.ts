@@ -405,6 +405,46 @@ export const getAdminNovels = async () => {
   return { data: adminNovels, error: novelsError };
 }
 
+export const fetchAdminAuthors = async () => {
+  // Load authors from user_profiles
+  const { data, error } = await supabase
+    .from('user_profiles')
+    .select(`
+      *,
+      novels (
+        id,
+        reading_records (
+          reading_time
+        )
+      )
+    `)
+    .eq('role', 'author');
+
+  if (error) {
+    return {data, error};
+  }
+
+  let authors = [];
+  if (data?.length > 0) {
+    authors = data.map(({user_name,created_at,is_approved,novels}) => {
+      return {
+        user_name,
+        created_at,
+        is_approved,
+        novelCount: novels?.length,
+        novelReadingTime: novels.reduce((acc, novel)=>{
+          if (novel.reading_records.length > 0) {
+            return acc + novel.reading_records[0].reading_time;
+          } else {
+            return acc;
+          }
+        },0)
+      }
+    });
+  }
+  return {data:authors};
+}
+
 export const upsertChapterReadingRecords = async(chapter, readingTime) => {
   const {data:readingRecord,error} = await supabase
     .from('reading_records')
