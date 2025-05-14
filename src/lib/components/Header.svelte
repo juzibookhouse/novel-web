@@ -4,6 +4,7 @@
   import { supabase } from "$lib/supabaseClient";
   import { goto } from "$app/navigation";
   import { onMount } from "svelte";
+  import Btn from "./common/Btn.svelte";
 
   onMount(() => {
     getUserSession()
@@ -81,12 +82,7 @@
         {/each}
 
         {#if $user}
-          <button
-            on:click={handleLogout}
-            class="px-4 py-2 rounded-full transition-colors cursor-pointer"
-          >
-            退出
-          </button>
+          <Btn title="登出" handleClick={handleLogout} />
         {/if}
       </div>
     </div>
