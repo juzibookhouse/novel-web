@@ -4,6 +4,7 @@
   import { user, setUser } from "$lib/stores/authStore";
   import { onMount } from "svelte";
   import { getPlanPrice } from "$lib/membership";
+  import Btn from "../common/Btn.svelte";
 
   let userName = "";
   let membershipPlan: any;
@@ -119,24 +120,14 @@
             状态: {$user.membership?.status === "active" ? "有效" : "待续费"}
           </p>
           {#if !$user.isMembership}
-            <button
-              on:click={() => (showMembershipModal = true)}
-              class="px-4 py-2 rounded-full text-sm hover:bg-red-50 transition-colors"
-            >
-              续费会员
-            </button>
+            <Btn title="续费会员" handleClick={() => (showMembershipModal = true)} />
           {/if}
         </div>
       </div>
     {:else}
       <div class="bg-gray-50 rounded-lg p-6 text-center">
         <p class="text-gray-600 mb-4">您还不是会员</p>
-        <button
-          on:click={() => (showMembershipModal = true)}
-          class="px-6 py-2 rounded-full transition-colors"
-        >
-          立即开通
-        </button>
+        <Btn title="立即开通" handleClick={() => (showMembershipModal = true)} />
       </div>
     {/if}
   </div>
@@ -171,6 +162,8 @@
         />
       </div>
 
+      <Btn title={loading ? "更新中..." : "更新资料"} disabled={loading} handleClick={updateProfile} />
+
       {#if $user?.profile?.role !== 'admin'}
       <div>
         <label class="block text-sm font-medium text-gray-700">作家状态</label>
@@ -181,26 +174,15 @@
             <p class="mt-1 text-yellow-600">作家申请审核中</p>
           {/if}
         {:else}
-          <button
-            on:click={applyForAuthor}
-            disabled={applyingAuthor}
-            class="mt-1 px-4 py-2 bg-yellow-100 text-yellow-800 rounded-md hover:bg-yellow-200 transition-colors"
-          >
-            {applyingAuthor ? '申请中...' : '申请成为作家'}
-          </button>
+          <p class="mt-1 text-red-600">您还不是作家</p>
+          <Btn title={applyingAuthor ? '申请中...' : '申请成为作家'} handleClick={applyForAuthor} disabled={applyingAuthor}/>
         {/if}
       </div>
       {:else}
       <div>你是管理员</div>
       {/if}
-      
-      <button
-        on:click={updateProfile}
-        disabled={loading}
-        class="px-6 py-2 rounded-full transition-colors"
-      >
-        {loading ? "更新中..." : "更新资料"}
-      </button>
+
+
     </div>
   </div>
 </div>
