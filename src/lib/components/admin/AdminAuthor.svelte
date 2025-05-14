@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { supabase } from '$lib/supabaseClient';
   import { getUserDateFormat } from "$lib/user";
+    import { formatDuration } from '$lib/novel';
 
   let authors:any[] = [];
 
@@ -14,11 +15,37 @@
     // Load authors from user_profiles
     const { data: authorsData, error: authorsError } = await supabase
         .from('user_profiles')
-        .select('*')
+        .select(`
+          *,
+          novels (
+            id,
+            reading_records (
+              reading_time
+            )
+          )
+        `)
         .eq('role', 'author');
 
     if (authorsError) throw authorsError;
-    authors = authorsData;
+    if (authorsData?.length > 0) {
+      authors = authorsData.map(({user_name,created_at,is_approved,novels}) => {
+        return {
+          user_name,
+          created_at,
+          is_approved,
+          novelCount: novels?.length,
+          novelReadingTime: novels.reduce((acc, novel)=>{
+            console.log(acc);
+            if (novel.reading_records.length > 0) {
+              return acc + novel.reading_records[0].reading_time;
+            } else {
+              return acc;
+            }
+          },0)
+        }
+      });
+    }
+
   } catch (error) {
     
   }
@@ -39,27 +66,16 @@
     }
   }
 
+  const TITLES = ['作家名','注册时间','状态','作品阅读时间','操作'];
+
 </script>
 <div class="p-6">
   <table class="min-w-full divide-y divide-red-100">
     <thead>
       <tr>
-        <th
-          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >作家名</th
-        >
-        <th
-          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >注册时间</th
-        >
-        <th
-          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >状态</th
-        >
-        <th
-          class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >操作</th
-        >
+        {#each TITLES as title }
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{title}</th>
+        {/each}
       </tr>
     </thead>
     <tbody class="divide-y divide-red-100">
@@ -79,6 +95,11 @@
                 : 'bg-red-100 text-primary'}"
             >
               {author.is_approved ? "已审核" : "未审核"}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+              {formatDuration(author.novelReadingTime)}
             </span>
           </td>
           <td
