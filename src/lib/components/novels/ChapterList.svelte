@@ -19,7 +19,7 @@
         >
           {chapter.title}
         </h3>
-        {#if chapter.is_free}
+        {#if novel.is_free || chapter.is_free}
           <span class="absolute top-2 right-2 bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
             免费
           </span>
