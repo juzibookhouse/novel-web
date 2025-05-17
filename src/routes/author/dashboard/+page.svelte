@@ -5,8 +5,14 @@
   import { COVER_PLACEHOLDER, WEBSITE_NAME } from '$lib/constants';
   import Quill from 'quill';
   import { type Category, type Tag, type NewNovel, type Novel, type Chapter, getSortedChapters } from '$lib/novel';
-    import NovelForm from '$lib/components/author/NovelForm.svelte';
-    import NovelChapterForm from '$lib/components/author/NovelChapterForm.svelte';
+  import NovelForm from '$lib/components/author/NovelForm.svelte';
+  import NovelChapterForm from '$lib/components/author/NovelChapterForm.svelte';
+  import DashboardHeader from '$lib/components/author/dashboard/DashboardHeader.svelte';
+  import NovelCard from '$lib/components/author/dashboard/NovelCard.svelte';
+  import ChapterList from '$lib/components/author/dashboard/ChapterList.svelte';
+  import EmptyState from '$lib/components/author/dashboard/EmptyState.svelte';
+  import LoadingIndicator from '$lib/components/author/dashboard/LoadingIndicator.svelte';
+  import ErrorDisplay from '$lib/components/author/dashboard/ErrorDisplay.svelte';
   
   const EMPTY_NOVEL:NewNovel = {
     title: '',
@@ -142,10 +148,7 @@
 
 <div class="min-h-screen bg-red-50 py-8 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
 <div class="max-w-7xl mx-auto">
-  <div class="text-center mb-12">
-    <h1 class="font-['Ma_Shan_Zheng'] text-5xl text-primary mb-4">作家专区</h1>
-    <p class="text-lg text-red-700">笔墨生花，妙手著文</p>
-  </div>
+  <DashboardHeader websiteName={WEBSITE_NAME} />
 
   {#if ($user?.profile?.role === 'author') && ($user?.profile.is_approved === false)}
   <h2 class="text-3xl text-center my-10">等待管理员通过作者审核</h2>
@@ -160,103 +163,39 @@
   </div>
 
   {#if error}
-    <div class="bg-red-50 border-2 border-red-200 rounded-lg p-4 mb-6">
-      <p class="text-sm text-primary">{error}</p>
-    </div>
+    <ErrorDisplay error={error} onRetry={fetchNovels} />
   {/if}
 
   {#if loading}
-    <div class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-12 w-12 border-4 border-red-800 border-t-transparent"></div>
-    </div>
+    <LoadingIndicator />
   {:else if novels.length === 0}
-    <div class="text-center py-12 bg-white/80 backdrop-blur-sm rounded-lg border-2 border-red-100">
-      <h3 class="text-xl font-medium text-gray-900 mb-2">暂无作品</h3>
-      <p class="text-gray-600">开始创作您的第一部作品吧</p>
-    </div>
+    <EmptyState 
+      message="暂无作品" 
+      actionText="创建新小说" 
+      action={toggleNovelForm} 
+    />
   {:else}
     <div class="grid grid-cols-1 gap-6">
       {#each novels as novel}
-        <div class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-red-100 shadow-lg overflow-hidden">
-          <div class="p-6">
-            <div class="flex items-start gap-6">
-              <div class="w-32 h-44 flex-shrink-0">
-                <a href="/novel/{novel.id}">
-                  <img
-                    src={novel.cover_url || COVER_PLACEHOLDER}
-                    alt={novel.title}
-                    class="w-full h-full object-cover rounded-lg"
-                  />
-                </a>
-              </div>
-              <div class="flex-grow">
-                <div class="flex justify-between items-center">
-                  <h3 class="text-2xl font-medium text-gray-900 mb-2">{novel.title}</h3>
-                  <button
-                    on:click={() => startEditNovel(novel)}
-                    class="bg-yellow-100 cursor-pointer hover:bg-yellow-200 text-yellow-800 px-4 py-2 rounded-full text-sm transition duration-200"
-                  >
-                    编辑小说
-                  </button>
-                </div>
-                
-                <div class="flex items-center gap-4 text-sm text-gray-600 mb-4">
-                  <div class="flex flex-wrap gap-2">
-                    {#each novel.categories || [] as category}
-                      <span class="bg-red-100 text-primary px-2 py-1 rounded-full">
-                        {category.name}
-                      </span>
-                    {/each}
-                  </div>
-                  <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                    {novel.status === 'ongoing' ? '连载中' : '已完结'}
-                  </span>
-                  <span>章节：{novel.chapters?.length || 0}</span>
-                </div>
-                <p class="text-gray-700">{novel.description}</p>
-                <div class="mt-4">
-                  <button
-                    on:click={() => startAddChapter(novel)}
-                    class="px-4 py-2 rounded-full text-sm"
-                  >
-                    添加新章节
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+        <NovelCard 
+          novel={novel} 
+          isSelected={selectedNovel?.id === novel.id}
+          onEdit={() => startEditNovel(novel)}
+          onAddChapter={() => startAddChapter(novel)}
+        />
           {#if novel.chapters && novel.chapters.length > 0}
-            <div class="border-t-2 border-red-100 px-6 py-4">
-              <h4 class="text-lg font-medium text-gray-900 mb-4">章节列表</h4>
-              <div class="grid grid-cols-3 gap-4">
-                {#each novel.chapters as chapter}
-                  <div class="group p-3 rounded-lg border-2 border-red-100 hover:border-red-300 hover:bg-red-50 transition-all duration-200">
-                    <div class="flex justify-between items-center">
-                      <a
-                        href={`/novel/${novel.id}/chapter/${chapter.id}`}
-                        class="text-gray-900 group-hover:text-primary transition-colors duration-200"
-                      >
-                        <h5>{chapter.title}</h5>
-                      </a>
-                      <button
-                        on:click={() => {
-                          selectedNovel = novel;
-                          newChapter = chapter;
-                          newChapter.novel_id = novel.id;
-                          toggleNovelChapterForm();
-                          initialChapterEditor();
-                        }}
-                        class="px-3 py-1 text-sm bg-yellow-100 text-yellow-800 rounded-full hover:bg-yellow-200"
-                      >
-                        编辑
-                      </button>
-                    </div>
-                  </div>
-                {/each}
-              </div>
-            </div>
+            <ChapterList 
+              chapters={novel.chapters} 
+              selectedNovelId={novel.id}
+              onEdit={(chapter) => {
+                selectedNovel = novel;
+                newChapter = chapter;
+                newChapter.novel_id = novel.id;
+                toggleNovelChapterForm();
+                initialChapterEditor();
+              }}
+            />
           {/if}
-        </div>
       {/each}
     </div>
   {/if}
