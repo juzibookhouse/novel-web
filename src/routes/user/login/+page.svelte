@@ -114,7 +114,7 @@
         </div>
       </div>
 
-      <Btn title={loading ? '登录中...' : '登录'} disabled={loading} type="submit" cssClass="w-full" />
+      <Btn title={loading ? '登录中...' : '登录'} disabled={loading} type="submit" />
       
       <div class="text-sm text-center pt-4 border-t border-red-100">
         <a href="/user/signup" class="font-medium text-red-600 hover:text-red-500 transition duration-200">

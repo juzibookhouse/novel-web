@@ -1,6 +1,7 @@
 <script lang="ts">
   import { supabase } from "$lib/supabaseClient";
   import { WEBSITE_NAME } from '$lib/constants';
+  import Btn from "$lib/components/common/Btn.svelte";
 
   let email = "";
   let loading = false;
@@ -87,13 +88,7 @@
         </div>
 
         <div>
-          <button
-            type="submit"
-            class="group relative flex w-full justify-center rounded-md bg-[#FEF9D5] py-2.5 px-3 text-sm font-semibold text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:bg-red-300 transition duration-200"
-            disabled={loading}
-          >
-            {loading ? "发送中..." : "发送重置链接"}
-          </button>
+          <Btn type="submit" disabled={loading} title={loading ? "发送中..." : "发送重置链接"} />
         </div>
 
         <div class="text-sm text-center mt-6 pt-4 border-t border-red-100">

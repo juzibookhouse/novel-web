@@ -54,15 +54,15 @@
   }
 </script>
 
-<nav class="text-primary shadow-lg fixed w-full top-0 z-50 bg-red-50">
+<nav class="text-[var(--text-color)] shadow-lg fixed w-full top-0 z-50 bg-[var(--bg-color)] backdrop-blur-sm bg-opacity-95 border-b border-gray-200">
   <div class="container mx-auto px-4 py-3">
     <div class="flex items-center justify-between">
       <a
         href="/"
-        class="font-['Ma_Shan_Zheng'] text-3xl flex items-center gap-2"
+        class="font-['Ma_Shan_Zheng'] text-3xl flex items-center gap-2 text-[var(--primary-color)] hover:text-[var(--accent-color)] transition-colors duration-300"
       >
-        <img src="/logo.jpg" alt={WEBSITE_NAME} class="w-10 h-10 rounded-full object-cover" />
-        <span>{WEBSITE_NAME}</span>
+        <img src="/logo.jpg" alt={WEBSITE_NAME} class="w-10 h-10 rounded-full object-cover shadow-md hover:shadow-lg transition-all duration-300" />
+        <span class="hover-lift">{WEBSITE_NAME}</span>
       </a>
 
       <div class="flex space-x-6 items-center">
@@ -70,21 +70,44 @@
           {#if item.href === "/user/signup" && !$user}
             <a
               href={item.href}
-              class="px-4 py-2 rounded-full transition-colors"
+              class="btn-primary"
+            >
+              {item.label}
+            </a>
+          {:else if item.href === "/user/login" && !$user}
+            <a
+              href={item.href}
+              class="btn-secondary"
             >
               {item.label}
             </a>
           {:else}
-            <a href={item.href} class="transition">
-              {item.label}
+            <a 
+              href={item.href} 
+              class="relative px-2 py-1 transition-all duration-300 hover:text-[var(--primary-color)]"
+            >
+              <span>{item.label}</span>
+              <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--primary-color)] transition-all duration-300 group-hover:w-full"></span>
             </a>
           {/if}
         {/each}
 
         {#if $user}
-          <Btn title="登出" handleClick={handleLogout} />
+          <button 
+            on:click={handleLogout}
+            class="btn-secondary"
+          >
+            登出
+          </button>
         {/if}
       </div>
+      
+      <!-- 移动端菜单按钮 -->
+      <!-- <button class="md:hidden flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button> -->
     </div>
   </div>
 </nav>
