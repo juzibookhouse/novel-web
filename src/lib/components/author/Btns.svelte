@@ -1,18 +1,18 @@
 <script lang="ts">
+  import Btn from "../common/Btn.svelte";
+
   export let handleCancel,confirmText,cssClass="mt-6";
 </script>
 <div class="{cssClass} flex justify-end gap-3">
-  <button
+  <Btn
     type="button"
-    on:click={() => handleCancel()}
-    class="px-4 py-2 border-2 rounded-md"
-  >
-    取消
-  </button>
-  <button
+    handleClick={() => handleCancel()}
+    cssClass="border-2"
+    title="取消"
+  />
+  <Btn
     type="submit"
-    class="px-4 py-2 bg-[#FEF9D5] text-white rounded-md hover:bg-red-700"
-  >
-    {confirmText}
-  </button>
+    cssClass="bg-(--primary-color) text-white"
+    title={confirmText}
+  />
 </div>

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Btn from '$lib/components/common/Btn.svelte';
+  
   export let chapters: Array<{
     id: string;
     title: string;
@@ -23,12 +25,11 @@
           >
             <h5>第{chapter.number}章: {chapter.title}</h5>
           </a>
-          <button
-            on:click={() => onEdit(chapter)}
-            class="px-3 py-1 text-sm bg-yellow-100 text-yellow-800 rounded-full hover:bg-yellow-200"
-          >
-            编辑
-          </button>
+          <Btn 
+            handleClick={() => onEdit(chapter)}
+            title="编辑"
+            cssClass="px-3 py-1 text-sm bg-yellow-100 text-yellow-800 rounded-full hover:bg-yellow-200"
+          />
         </div>
       </div>
     {/each}
