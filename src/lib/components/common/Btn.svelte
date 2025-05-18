@@ -4,7 +4,7 @@
     title,
     type: 'button' | 'submit' | 'reset' = 'button',
     disabled=false,
-    cssClass='bg-(--text-color) text-white w-full';
+    cssClass='bg-(--text-color) text-white';
 </script>
 <button
   disabled={disabled}

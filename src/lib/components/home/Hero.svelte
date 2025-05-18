@@ -37,15 +37,15 @@
       <div 
         class="flex items-center justify-center gap-4 transition-all duration-1000 transform {visible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}"
       >
-        <h1 class="font-['Ma_Shan_Zheng'] text-5xl md:text-7xl text-white drop-shadow-lg">
+        <h1 class="font-['Ma_Shan_Zheng'] text-7xl text-white drop-shadow-lg">
           {WEBSITE_NAME}
         </h1>
       </div>
       
       <p 
-        class="text-xl md:text-2xl text-[var(--accent-color)] max-w-2xl mx-auto font-medium transition-all duration-1000 delay-300 transform {visible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}"
+        class="text-3xl text-[var(--accent-color)] max-w-2xl mx-auto font-medium transition-all duration-1000 delay-300 transform {visible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}"
       >
-        汇聚华夏文学精粹，传承千年文化瑰宝
+      让我们在这里撒点野
       </p>
       
       {#if (!$user)}
@@ -54,14 +54,14 @@
       >
         <a
           href="/user/signup"
-          class="bg-[var(--accent-color)] text-[var(--primary-color)] px-8 md:px-12 py-3 md:py-4 rounded-lg text-lg font-medium hover:bg-white transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+          class="bg-[var(--accent-color)] text-[var(--primary-color)] px-5 py-2 rounded-lg text-lg font-medium hover:bg-white transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
         >
           注册会员
         </a>
         
         <a
           href="/author/signup"
-          class="border-2 border-[var(--accent-color)] text-[var(--accent-color)] px-8 md:px-12 py-3 md:py-4 rounded-lg text-lg font-medium hover:bg-[var(--accent-color)] hover:text-white transition duration-300 transform hover:-translate-y-1"
+          class="border-2 border-[var(--accent-color)] text-[var(--accent-color)] px-5 py-2 rounded-lg text-lg font-medium hover:bg-[var(--accent-color)] hover:text-white transition duration-300 transform hover:-translate-y-1"
         >
           成为作家
         </a>
