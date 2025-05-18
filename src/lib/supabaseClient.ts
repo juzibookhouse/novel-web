@@ -426,8 +426,9 @@ export const fetchAdminAuthors = async () => {
 
   let authors = [];
   if (data?.length > 0) {
-    authors = data.map(({user_name,created_at,is_approved,novels}) => {
+    authors = data.map(({id,user_name,created_at,is_approved,novels}) => {
       return {
+        id,
         user_name,
         created_at,
         is_approved,

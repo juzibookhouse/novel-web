@@ -76,7 +76,7 @@
           >
             <button
               on:click={() => toggleApproval(author.id, author.is_approved)}
-              class="text-red-600 hover:text-primary"
+              class="text-red-600 hover:text-primary cursor-pointer"
             >
               {author.is_approved ? "取消审核" : "通过审核"}
             </button>
