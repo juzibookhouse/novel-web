@@ -1,6 +1,6 @@
 <script lang="ts">
   import { WEBSITE_NAME } from '$lib/constants';
-  import { supabase } from '$lib/supabaseClient';
+  import { supabase, getUserProfile, updateUserProfile } from '$lib/supabaseClient';
   import { goto } from '$app/navigation';
   import MembershipPlans from '$lib/components/MembershipPlans.svelte';
   import { user } from '$lib/stores/authStore';
@@ -30,6 +30,24 @@
       });
 
       if (loginError) throw loginError;
+
+      // 获取用户资料并检查email
+      if (data.user) {
+        const { data: profileData, error: profileError } = await getUserProfile(data.user.id);
+        
+        if (profileError) {
+          console.error("获取用户资料失败:", profileError);
+        } else if (profileData && !profileData.email) {
+          // 如果用户资料中没有email，则更新
+          const { error: updateError } = await updateUserProfile(data.user.id, { email });
+          
+          if (updateError) {
+            console.error("更新用户email失败:", updateError);
+          } else {
+            console.log("用户email已更新");
+          }
+        }
+      }
 
       if ($user?.profile?.role == 'author') {
         goto('/author/dashboard');

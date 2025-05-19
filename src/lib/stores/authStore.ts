@@ -9,6 +9,7 @@ interface UserProfile {
   role: string;
   is_approved: boolean;
   created_at: string;
+  email?: string;
 }
 
 interface UserMembership {

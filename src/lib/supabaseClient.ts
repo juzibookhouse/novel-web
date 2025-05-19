@@ -32,9 +32,16 @@ interface SearchNovelsParams {
 export const getUserProfile = async (user_id: string) => {
   return await supabase
     .from("user_profiles")
-    .select("user_name")
+    .select("*")
     .eq("user_id", user_id)
     .single();
+}
+
+export const updateUserProfile = async (user_id: string, updates: { email?: string }) => {
+  return await supabase
+    .from("user_profiles")
+    .update(updates)
+    .eq("user_id", user_id);
 }
 
 export const getNovels = async ({ search, category, status, start, end }: SearchNovelsParams) => {

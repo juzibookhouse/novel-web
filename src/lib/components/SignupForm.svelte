@@ -30,6 +30,7 @@
         .from('user_profiles')
         .insert({
           user_name: username,
+          email,
           role,
           user_id: userId
         });
