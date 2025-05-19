@@ -171,7 +171,7 @@
   class="fixed inset-0 top-0 bg-black/50 left-0 w-full h-full flex items-center justify-center z-50 p-4"
 >
   <div
-    class="bg-white rounded-lg max-w-5xl w-full max-h-[90vh] overflow-y-auto"
+    class="bg-white rounded-lg max-w-7xl w-full max-h-[90vh] overflow-y-auto"
   >
     <div class="p-6 border-b border-red-100">
       <div class="flex justify-between items-center">
@@ -184,7 +184,7 @@
         </a>
       </div>
 
-      <div class="mt-4">
+      <div class="mt-4 text-2xl">
         会员权益：成为会员后，畅读全平台所有已上线小说，不再另外收费。<br />
 
         加入会员须知：本平台内容为原创文学作品，包括成人向题材，会员必须年满18周岁。<br
@@ -250,7 +250,7 @@
                     >
                   </p>
                   <p class="text-2xl font-bold text-primary mt-2">
-                    {getPlanPrice(selectedPlan)}
+                    {getPlanPrice(selectedPlan, selectedPaymentMethod)}
                   </p>
                 </div>
 

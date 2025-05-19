@@ -41,10 +41,12 @@
 
   onMount(() => {
     // Add event listeners for user activity
-    window.addEventListener('mousemove', handleUserActivity);
-    window.addEventListener('keydown', handleUserActivity);
-    window.addEventListener('scroll', handleUserActivity);
-    window.addEventListener('click', handleUserActivity);
+    if (window) {
+      window.addEventListener('mousemove', handleUserActivity);
+      window.addEventListener('keydown', handleUserActivity);
+      window.addEventListener('scroll', handleUserActivity);
+      window.addEventListener('click', handleUserActivity);
+    }
   });
 
   onDestroy(() => {
