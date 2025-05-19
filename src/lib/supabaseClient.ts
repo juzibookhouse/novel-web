@@ -267,7 +267,10 @@ export const getQuotationChapters = async () => {
   return await supabase
     .from('chapters')
     .select(`
-      id, title, quotation, novel_id
+      id, title, quotation, novel_id,
+      novels (
+        id, title
+      )
     `)
     .neq('quotation', null)
     .eq('published', true)

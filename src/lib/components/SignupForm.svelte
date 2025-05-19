@@ -114,7 +114,7 @@
       </div>
   
       <div>
-        <Btn title={loading ? '注册中...' : '立即注册'} disabled={loading} type="submit" cssClass="w-full" />
+        <Btn title={loading ? '注册中...' : '立即注册'} disabled={loading} type="submit" />
       </div>
       
       <div class="text-sm text-center mt-6 pt-4 border-t border-red-100">

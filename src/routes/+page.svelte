@@ -6,7 +6,7 @@
   import Novels from "$lib/components/home/Novels.svelte";
   import { WEBSITE_NAME } from "$lib/constants";
   export let data;
-  const { ongoingNovels, finishedNovels, randomNovel, categories } = data;
+  const { ongoingNovels, finishedNovels, quotationChapters, categories } = data;
 </script>
 
 <svelte:head>
@@ -18,7 +18,7 @@
 >
   <Hero />
 
-  <FeatureNovel {randomNovel} />
+  <FeatureNovel {quotationChapters} />
 
   <!-- <Categories categories={categories} /> -->
 
