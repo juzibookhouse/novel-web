@@ -29,7 +29,7 @@
         
         <div class="flex items-center">
           <span class="text-gray-600">作者：</span>
-          <span class="ml-2 text-gray-900">{novel.author?.user_name || '佚名'}</span>
+          <span class="ml-2 text-gray-900">{novel.pen_name || novel.author?.user_name || '佚名'}</span>
         </div>
         
         <div class="flex items-center">

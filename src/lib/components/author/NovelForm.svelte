@@ -13,6 +13,7 @@
     category_id: "",
     tags: [],
     status: "ongoing",
+    pen_name: ""
   };
   export let categories;
   export let tags;
@@ -97,6 +98,13 @@
       <div class="grid grid-cols-2 gap-2">
         <div class="space-y-2">
           <TextInput title="作品名称" field="title" object={newNovel} />
+          
+          <TextInput 
+            title="笔名" 
+            field="pen_name" 
+            object={newNovel}
+            bind:value={newNovel.pen_name}
+          />
           
           <CheckInput title="发布" object={newNovel} field="published" />
           <CheckInput title="免费阅读" object={newNovel} field="is_free" />

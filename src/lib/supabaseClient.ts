@@ -101,25 +101,9 @@ export const getAuthorNovels = async (user: UserData) => {
   let query = supabase
     .from('novels')
     .select(`
-          id,
-          title,
-          description,
-          status,
-          user_id,
-          is_free,
-          created_at,
-          category_id,
-          cover_url,
-          published,
+          *,
           chapters (
-            id,
-            title,
-            content,
-            is_free,
-            published,
-            chapter_order,
-            quotation,
-            created_at
+            *
           ),
           novel_tags (
             tags (
@@ -202,7 +186,8 @@ export const upsertNovel = async (user: User, newNovel: NewNovel) => {
         published: newNovel.published,
         category_id: newNovel.category_id,
         cover_url,
-        user_id: user.id
+        user_id: user.id,
+        pen_name: newNovel.pen_name || null
       }])
       .select()
       .single();
@@ -221,6 +206,7 @@ export const upsertNovel = async (user: User, newNovel: NewNovel) => {
         is_free: newNovel.is_free,
         published: newNovel.published,
         cover_url,
+        pen_name: newNovel.pen_name || null
       })
       .eq('id', novelId);
 

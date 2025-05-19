@@ -37,6 +37,7 @@ export interface NewNovel {
   cover_file?: File;
   is_free?: boolean;
   published?: boolean;
+  pen_name?: string;
 }
 
 export interface Novel {
