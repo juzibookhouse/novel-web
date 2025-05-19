@@ -3,6 +3,7 @@
   import { supabase } from '$lib/supabaseClient';
   import { goto } from '$app/navigation';
   import Btn from './common/Btn.svelte';
+  import { getUserIp } from '$lib/helpers';
   
   export let role = '';
   
@@ -26,16 +27,35 @@
       const userId = data?.user?.id;
 
       if (userId) {
-        const {data:userProfile, error:userProfileError} = await supabase
-        .from('user_profiles')
-        .insert({
-          user_name: username,
-          email,
-          role,
-          user_id: userId
-        });
+        try {
+          // 获取用户IP地址
+          const userIp = await getUserIp();
 
-        if (userProfileError) throw userProfileError
+          const {data:userProfile, error:userProfileError} = await supabase
+          .from('user_profiles')
+          .insert({
+            user_name: username,
+            email,
+            role,
+            user_id: userId,
+            ip: userIp
+          });
+
+          if (userProfileError) throw userProfileError;
+        } catch (ipError) {
+          console.error("获取IP地址失败:", ipError.message);
+          // 即使获取IP失败，也继续创建用户资料
+          const {data:userProfile, error:userProfileError} = await supabase
+          .from('user_profiles')
+          .insert({
+            user_name: username,
+            email,
+            role,
+            user_id: userId
+          });
+
+          if (userProfileError) throw userProfileError;
+        }
       }
 
       // Redirect to email confirmation page if signup is successful

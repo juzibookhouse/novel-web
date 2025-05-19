@@ -1,6 +1,7 @@
 <script lang="ts">
   import { WEBSITE_NAME } from '$lib/constants';
   import { supabase, getUserProfile, updateUserProfile } from '$lib/supabaseClient';
+  import { getUserIp } from '$lib/helpers';
   import { goto } from '$app/navigation';
   import MembershipPlans from '$lib/components/MembershipPlans.svelte';
   import { user } from '$lib/stores/authStore';
@@ -31,20 +32,33 @@
 
       if (loginError) throw loginError;
 
-      // 获取用户资料并检查email
+      // 获取用户资料并更新email和ip
       if (data.user) {
         const { data: profileData, error: profileError } = await getUserProfile(data.user.id);
         
         if (profileError) {
           console.error("获取用户资料失败:", profileError);
-        } else if (profileData && !profileData.email) {
-          // 如果用户资料中没有email，则更新
-          const { error: updateError } = await updateUserProfile(data.user.id, { email });
+        } else if (profileData) {
+          try {
+            // 获取用户IP地址
+            const userIp = await getUserIp();
+
+            // 准备更新数据
+            const updates: { email?: string; ip?: string } = { ip: userIp };
+            if (!profileData.email) {
+              updates.email = email;
+            }
+
+            // 更新用户资料
+            const { error: updateError } = await updateUserProfile(data.user.id, updates);
           
-          if (updateError) {
-            console.error("更新用户email失败:", updateError);
-          } else {
-            console.log("用户email已更新");
+            if (updateError) {
+              console.error("更新用户资料失败:", updateError);
+            } else {
+              console.log("用户资料已更新");
+            }
+          } catch (error) {
+            console.error("获取IP地址失败:", error.message);
           }
         }
       }

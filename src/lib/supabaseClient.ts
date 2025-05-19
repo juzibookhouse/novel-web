@@ -37,7 +37,7 @@ export const getUserProfile = async (user_id: string) => {
     .single();
 }
 
-export const updateUserProfile = async (user_id: string, updates: { email?: string }) => {
+export const updateUserProfile = async (user_id: string, updates: { email?: string, ip?: string }) => {
   return await supabase
     .from("user_profiles")
     .update(updates)
