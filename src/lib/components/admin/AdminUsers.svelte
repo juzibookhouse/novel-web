@@ -24,6 +24,8 @@
           role,
           created_at,
           user_name,
+          ip,
+          email,
           user_memberships (
             id,
             status,
@@ -51,6 +53,14 @@
         >
         <th
           class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >IP地址</th
+        >
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >电子邮箱</th
+        >
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
           >注册时间</th
         >
         <th
@@ -68,6 +78,12 @@
         <tr>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
             >{user.user_name}</td
+          >
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+            >{user.ip || '未记录'}</td
+          >
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+            >{user.email || '未记录'}</td
           >
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
             {getUserDateFormat(user.created_at)}

@@ -436,12 +436,14 @@ export const fetchAdminAuthors = async () => {
 
   let authors = [];
   if (data?.length > 0) {
-    authors = data.map(({id,user_name,created_at,is_approved,novels}) => {
+    authors = data.map(({id,user_name,created_at,is_approved,novels,email,ip}) => {
       return {
         id,
         user_name,
         created_at,
         is_approved,
+        email,
+        ip,
         novelCount: novels?.length,
         novelReadingTime: novels.reduce((acc, novel)=>{
           if (novel.reading_records.length > 0) {

@@ -35,7 +35,7 @@
     }
   }
 
-  const TITLES = ['作家名','注册时间','状态','作品阅读时间','操作'];
+  const TITLES = ['作家名','电子邮箱','IP地址','注册时间','状态','作品阅读时间','操作'];
 
 </script>
 <div class="p-6">
@@ -53,6 +53,12 @@
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
             >{author.user_name}</td
           >
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            {author.email || '未记录'}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            {author.ip || '未记录'}
+          </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
             {getUserDateFormat(author.created_at)}
           </td>
