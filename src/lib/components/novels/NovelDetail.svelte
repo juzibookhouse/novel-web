@@ -17,7 +17,7 @@
       />
     </div>
     <div class="w-2/3">
-      <h1 class="font-['Ma_Shan_Zheng'] text-4xl text-primary mb-4">
+      <h1 class=" text-4xl text-primary mb-4">
         {novel.title}
       </h1>
       <div class="space-y-4">

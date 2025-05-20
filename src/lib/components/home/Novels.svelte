@@ -10,7 +10,7 @@
 <!-- Ongoing Novels Section -->
 <section class="py-24 px-4 {bg}">
   <div class="max-w-7xl mx-auto">
-    <h2 class="font-['Ma_Shan_Zheng'] text-5xl text-primary text-center mb-16 flex justify-between items-center">
+    <h2 class=" text-5xl text-primary text-center mb-16 flex justify-between items-center">
       <span></span>
       <a href="/novels?status={status}">{title}</a>
       <a href="/novels?status={status}" class="text-3xl">更多</a>

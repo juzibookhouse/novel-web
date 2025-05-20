@@ -59,7 +59,7 @@
     <div class="flex items-center justify-between">
       <a
         href="/"
-        class="font-['Ma_Shan_Zheng'] text-3xl flex items-center gap-2 text-[var(--primary-color)] hover:text-[var(--accent-color)] transition-colors duration-300"
+        class=" text-3xl flex items-center gap-2 text-[var(--primary-color)] hover:text-[var(--accent-color)] transition-colors duration-300"
       >
         <img src="/logo.jpg" alt={WEBSITE_NAME} class="w-10 h-10 rounded-full object-cover shadow-md hover:shadow-lg transition-all duration-300" />
         <span class="hover-lift">{WEBSITE_NAME}</span>

@@ -13,9 +13,6 @@
   <title>{WEBSITE_NAME} - 汇聚华夏文学精粹</title>
 </svelte:head>
 
-<div
-  class="bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]"
->
   <Hero />
 
   <FeatureNovel {quotationChapters} />
@@ -37,4 +34,3 @@
   />
 
   <About />
-</div>

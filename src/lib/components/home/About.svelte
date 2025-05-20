@@ -8,7 +8,7 @@
   <div class="max-w-7xl mx-auto">
     <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-12 shadow-xl">
       <div class="max-w-3xl mx-auto text-center">
-        <h2 class="font-['Ma_Shan_Zheng'] text-5xl text-primary mb-8">
+        <h2 class=" text-5xl text-primary mb-8">
           关于{WEBSITE_NAME}
         </h2>
         <div class="prose prose-lg mx-auto">

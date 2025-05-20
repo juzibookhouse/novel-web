@@ -92,7 +92,7 @@
 <div class="min-h-screen bg-red-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
   <div class="w-full max-w-md space-y-8">
     <div class="text-center">
-      <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-primary mb-2">
+      <h2 class=" text-4xl text-primary mb-2">
         {WEBSITE_NAME}
       </h2>
       <p class="text-lg text-red-700">登录您的账户</p>

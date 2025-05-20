@@ -4,7 +4,7 @@
 <!-- Categories Section -->
 <section class="py-24 px-4 bg-white/80">
   <div class="max-w-7xl mx-auto">
-    <h2 class="font-['Ma_Shan_Zheng'] text-5xl text-primary text-center mb-16">
+    <h2 class=" text-5xl text-primary text-center mb-16">
       精选分类
     </h2>
     <div class="grid grid-cols-4 gap-8">

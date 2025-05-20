@@ -40,7 +40,7 @@
 >
   <div class="w-full max-w-md space-y-8">
     <div class="text-center">
-      <h2 class="font-['Ma_Shan_Zheng'] text-4xl text-primary mb-2">
+      <h2 class=" text-4xl text-primary mb-2">
         {WEBSITE_NAME}
       </h2>
       <p class="text-lg text-red-700">重置您的密码</p>

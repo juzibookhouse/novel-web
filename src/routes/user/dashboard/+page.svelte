@@ -53,7 +53,7 @@
  <div class="min-h-screen bg-red-50 py-8 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
    <div class="max-w-7xl mx-auto">
      <div class="text-center mb-12">
-       <h1 class="font-['Ma_Shan_Zheng'] text-5xl text-primary mb-4">个人中心</h1>
+       <h1 class=" text-5xl text-primary mb-4">个人中心</h1>
        <p class="text-lg text-red-700">管理您的账户和阅读记录</p>
      </div>
 

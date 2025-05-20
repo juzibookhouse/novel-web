@@ -56,7 +56,7 @@
   <div class="py-12 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
     <div class="max-w-3xl mx-auto">
       <div class="text-center mb-12">
-        <h1 class="font-['Ma_Shan_Zheng'] text-5xl text-primary mb-4">联系我们</h1>
+        <h1 class=" text-5xl text-primary mb-4">联系我们</h1>
         <p class="text-lg text-red-700">您的建议是我们进步的动力</p>
       </div>
   

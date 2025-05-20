@@ -117,7 +117,7 @@
     href={`/novel/${chapter.novel_id}`}
     class="text-red-700 hover:text-primary transition-colors duration-200 mb-4 block"
   >
-    <h1 class="font-['Ma_Shan_Zheng'] text-2xl text-primary">
+    <h1 class=" text-2xl text-primary">
       ← {chapter.novels.title}
     </h1>
   </a>

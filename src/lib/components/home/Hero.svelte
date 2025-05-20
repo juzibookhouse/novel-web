@@ -13,31 +13,18 @@
 </script>
 
 <!-- Hero Section -->
-<section
-  class="relative flex items-center justify-center py-32 px-4 overflow-hidden"
-  style="background-image: url('/images/chinese-pattern.png'); background-size: 200px; background-repeat: repeat;"
->
+<section class="relative flex items-center justify-center py-32 px-4 overflow-hidden">
   <!-- 背景渐变 -->
   <div
     class="absolute inset-0 bg-gradient-to-r from-[var(--primary-color)] to-[var(--highlight-color)] opacity-90"
   ></div>
-  
-  <!-- 装饰元素 - 左侧 -->
-  <div class="absolute left-0 top-0 h-full w-24 opacity-20">
-    <div class="h-full w-full bg-white" style="mask-image: url('/images/chinese-border.png'); mask-size: contain; mask-repeat: repeat-y;"></div>
-  </div>
-  
-  <!-- 装饰元素 - 右侧 -->
-  <div class="absolute right-0 top-0 h-full w-24 opacity-20">
-    <div class="h-full w-full bg-white" style="mask-image: url('/images/chinese-border.png'); mask-size: contain; mask-repeat: repeat-y; transform: scaleX(-1);"></div>
-  </div>
   
   <div class="relative max-w-7xl mx-auto text-center z-10">
     <div class="flex flex-col items-center justify-center space-y-8">
       <div 
         class="flex items-center justify-center gap-4 transition-all duration-1000 transform {visible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}"
       >
-        <h1 class="font-['Ma_Shan_Zheng'] text-7xl text-white drop-shadow-lg">
+        <h1 class=" text-7xl text-white drop-shadow-lg">
           {WEBSITE_NAME}
         </h1>
       </div>

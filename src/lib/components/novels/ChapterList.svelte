@@ -7,7 +7,7 @@
 
 <!-- Chapter List -->
 <div class="p-8">
-  <h2 class="font-['Ma_Shan_Zheng'] text-2xl text-primary mb-6">目录</h2>
+  <h2 class=" text-2xl text-primary mb-6">目录</h2>
   <div class="grid grid-cols-2 gap-4">
     {#each publishedChapters as chapter}
       <a

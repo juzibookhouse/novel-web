@@ -57,7 +57,7 @@
 >
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-12">
-      <h1 class="font-['Ma_Shan_Zheng'] text-5xl text-primary mb-4">
+      <h1 class=" text-5xl text-primary mb-4">
         管理后台
       </h1>
       <p class="text-lg text-red-700">运筹帷幄，决胜千里</p>

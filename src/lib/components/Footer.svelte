@@ -11,7 +11,7 @@
       <div class="mb-4 md:mb-0">
         <div class="flex items-center gap-2">
           <img src="/logo.jpg" alt={WEBSITE_NAME} class="w-8 h-8 rounded-full object-cover shadow-sm" />
-          <h3 class="text-xl font-bold font-['Ma_Shan_Zheng'] text-[var(--primary-color)]">{WEBSITE_NAME}</h3>
+          <h3 class="text-xl font-bold  text-[var(--primary-color)]">{WEBSITE_NAME}</h3>
         </div>
         <p class="text-sm mt-2 text-[var(--text-light)]">© {currentYear} {WEBSITE_NAME}. 保留所有权利。</p>
       </div>
