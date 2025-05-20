@@ -38,7 +38,7 @@
   <title>更新密码 - {WEBSITE_NAME}</title>
 </svelte:head>
 
-<div class="min-h-screen bg-red-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
+<div class="min-h-screen  flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
   <div class="w-full max-w-md space-y-8">
     <div class="text-center">
       <h2 class=" text-4xl text-primary mb-2">
@@ -48,7 +48,7 @@
     </div>
 
     {#if error}
-      <div class="rounded-md bg-red-50 border-2 border-red-200 p-4">
+      <div class="rounded-md  border-2 border-red-200 p-4">
         <div class="flex">
           <div class="ml-3">
             <h3 class="text-sm font-medium text-primary">{error}</h3>

@@ -198,7 +198,7 @@
     </div>
 
     {#if error}
-      <div class="p-4 bg-red-50 border-b border-gray-400">
+      <div class="p-4  border-b border-gray-400">
         <p class="text-sm text-primary">{error}</p>
       </div>
     {/if}
@@ -226,8 +226,8 @@
                   <button
                     class="flex items-center p-4 border-2 rounded-lg {selectedPaymentMethod ===
                     method.id
-                      ? 'border-red-500 bg-red-50'
-                      : 'border-gray-200'} hover:border-red-300 transition-all"
+                      ? 'border-red-500 '
+                      : 'border-gray-200'} hover:border-gray300 transition-all"
                     on:click={() => selectPaymentMethod(method.id)}
                   >
                     <span class="text-2xl mr-3">{method.icon}</span>
@@ -256,7 +256,7 @@
 
                 {#if paymentError}
                   <div
-                    class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg"
+                    class="mb-4 p-4  border border-red-200 rounded-lg"
                   >
                     <p class="text-sm text-primary">{paymentError}</p>
                   </div>

@@ -147,7 +147,7 @@
       {#if message && showPasswordModal}
         <div class={messageType === "success" 
           ? "bg-green-50 p-4 rounded-md text-green-700 mb-4" 
-          : "bg-red-50 p-4 rounded-md text-red-700 mb-4"}>
+          : " p-4 rounded-md text-red-700 mb-4"}>
           {message}
         </div>
       {/if}
@@ -236,7 +236,7 @@
       {#if message}
         <div class={messageType === "success" 
           ? "bg-green-50 p-4 rounded-md text-green-700" 
-          : "bg-red-50 p-4 rounded-md text-red-700"}>
+          : " p-4 rounded-md text-red-700"}>
           {message}
         </div>
       {/if}

@@ -146,7 +146,7 @@
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 </svelte:head>
 
-<div class="min-h-screen bg-red-50 py-8 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
+<div class="min-h-screen  py-8 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
 <div class="max-w-7xl mx-auto">
   <DashboardHeader websiteName={WEBSITE_NAME} />
 

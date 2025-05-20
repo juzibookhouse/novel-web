@@ -50,7 +50,7 @@
    <title>个人中心 - {WEBSITE_NAME}</title>
  </svelte:head>
 
- <div class="min-h-screen bg-red-50 py-8 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
+ <div class="min-h-screen  py-8 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">
    <div class="max-w-7xl mx-auto">
      <div class="text-center mb-12">
        <h1 class=" text-5xl text-primary mb-4">个人中心</h1>

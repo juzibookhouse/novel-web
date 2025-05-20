@@ -23,7 +23,7 @@
     novels={ongoingNovels}
     title={"连载作品"}
     status={"ongoing"}
-    bg={"bg-red-50/50"}
+    bg={"/50"}
   />
 
   <Novels

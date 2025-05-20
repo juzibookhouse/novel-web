@@ -53,7 +53,7 @@
 </svelte:head>
 
 <div
-  class="min-h-screen bg-red-50 py-8 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]"
+  class="min-h-screen  py-8 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]"
 >
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-12">
@@ -64,7 +64,7 @@
     </div>
 
     {#if error}
-      <div class="bg-red-50 border-2 border-red-200 rounded-lg p-4 mb-6">
+      <div class=" border-2 border-red-200 rounded-lg p-4 mb-6">
         <p class="text-sm text-primary">{error}</p>
       </div>
     {/if}

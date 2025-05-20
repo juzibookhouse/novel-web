@@ -112,14 +112,12 @@
   />
 {/if}
 <div class="max-w-3xl mx-auto relative">
-  <div class="fixed top-1/2 right-[calc(50%-32rem)] transform -translate-y-1/2 z-50 bg-white p-3 rounded shadow-xl">
+  <div class="fixed top-1/2 right-[calc(50%-32rem)] transform -translate-y-1/2 z-10 bg-white p-3 rounded shadow-xl">
     <a
     href={`/novel/${chapter.novel_id}`}
     class="text-red-700 hover:text-primary transition-colors duration-200 mb-4 block"
   >
-    <h1 class=" text-2xl text-primary">
-      ← {chapter.novels.title}
-    </h1>
+    返回目录
   </a>
     <FavNovel novelId={novelId} />
   </div>
