@@ -13,6 +13,13 @@
   let loading = false;
   let error: string | null = null;
   
+  // 新增字段
+  let publishedWebsite = '';
+  let publishedPenName = '';
+  let publishedWorkTitle = '';
+  let plannedWorkDescription = '';
+  let workDraftFile: File | null = null;
+  
   async function handleSignup() {
     try {
       loading = true;
@@ -31,15 +38,37 @@
           // 获取用户IP地址
           const userIp = await getUserIp();
 
-          const {data:userProfile, error:userProfileError} = await supabase
-          .from('user_profiles')
-          .insert({
+          const userProfileData = {
             user_name: username,
             email,
             role,
             user_id: userId,
-            ip: userIp
-          });
+            ip: userIp,
+            published_website: publishedWebsite,
+            published_pen_name: publishedPenName,
+            published_work_title: publishedWorkTitle,
+            planned_work_description: plannedWorkDescription
+          };
+
+          const {data:userProfile, error:userProfileError} = await supabase
+          .from('user_profiles')
+          .insert(userProfileData);
+
+          // 如果有上传文件，保存到存储
+          if (workDraftFile) {
+            const filePath = `user_uploads/${userId}/draft_${Date.now()}.${workDraftFile.name.split('.').pop()}`;
+            const { error: uploadError } = await supabase
+              .storage
+              .from('user-documents')
+              .upload(filePath, workDraftFile);
+
+            if (!uploadError) {
+              await supabase
+                .from('user_profiles')
+                .update({ draft_file_path: filePath })
+                .eq('user_id', userId);
+            }
+          }
 
           if (userProfileError) throw userProfileError;
         } catch (ipError) {
@@ -93,6 +122,18 @@
     
     <form class="mt-8 space-y-6 bg-white/80 backdrop-blur-sm p-8 rounded-lg border-2 border-red-100 shadow-xl" on:submit|preventDefault={handleSignup}>
       <div class="space-y-4">
+        <div class="prose text-gray-700 mb-4">
+          <h3 class="text-lg font-medium">欢迎加入我们</h3>
+          <p class="text-sm">
+            这里没有KPI，没有各类排行榜，没有全勤，也不需要水字数，更不需要"天下无敌，天上来敌；天上无敌，天外来敌"这种同质化的堆砌，需要的只是对于文字的尊重和喜爱。
+          </p>
+          <p class="text-sm">
+            希望这里能成为一个志趣相投的同仁社区。
+          </p>
+          <p class="text-sm">
+            网站会员对于你作品的有效阅读是你的绩效的唯一衡量指标。
+          </p>
+        </div>
         <div>
           <label for="user_name" class="block text-sm font-medium text-gray-700">呢称</label>
           <input
@@ -132,8 +173,69 @@
             placeholder="请输入密码（至少6位）"
           />
         </div>
+
+        <!-- 已发表作品字段组 -->
+        <div class="space-y-4 border-t pt-4 mt-4">
+          <h4 class="text-sm font-medium text-gray-700">已发表的作品（选填）</h4>
+          <div class="space-y-2">
+            <div>
+              <label for="publishedWebsite" class="block text-sm font-medium text-gray-700">网站</label>
+              <input
+                type="text"
+                id="publishedWebsite"
+                bind:value={publishedWebsite}
+                class="mt-1 block w-full rounded-md border-2 py-2 px-3"
+                placeholder="如：起点中文网"
+              />
+            </div>
+            <div>
+              <label for="publishedPenName" class="block text-sm font-medium text-gray-700">笔名</label>
+              <input
+                type="text"
+                id="publishedPenName"
+                bind:value={publishedPenName}
+                class="mt-1 block w-full rounded-md border-2 py-2 px-3"
+                placeholder="您在其他平台的笔名"
+              />
+            </div>
+            <div>
+              <label for="publishedWorkTitle" class="block text-sm font-medium text-gray-700">作品名称</label>
+              <input
+                type="text"
+                id="publishedWorkTitle"
+                bind:value={publishedWorkTitle}
+                class="mt-1 block w-full rounded-md border-2 py-2 px-3"
+                placeholder="您发表过的作品名称"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- 计划发表作品简介 -->
+        <div>
+          <label for="plannedWorkDescription" class="block text-sm font-medium text-gray-700">
+            计划在本网站发表的作品简介
+          </label>
+          <textarea
+            id="plannedWorkDescription"
+            bind:value={plannedWorkDescription}
+            rows={4}
+            class="mt-1 block w-full rounded-md border-2 py-2 px-3"
+            placeholder="作品简纲或者前两章存稿（可选）"
+          ></textarea>
+        </div>
+
+        <!-- 文件上传 -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700">上传作品文件（可选）</label>
+          <input
+            type="file"
+            on:change={(e) => workDraftFile = e.target.files?.[0] || null}
+            class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100"
+          />
+        </div>
       </div>
-  
+
       <div>
         <Btn title={loading ? '注册中...' : '立即注册'} disabled={loading} type="submit" />
       </div>

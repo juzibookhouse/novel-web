@@ -36,10 +36,48 @@
   }
 
   const TITLES = ['作家名','电子邮箱','IP地址','注册时间','状态','作品阅读时间','操作'];
+  let selectedAuthor: any = null;
 
 </script>
 <div class="p-6">
-  <table class="min-w-full divide-y divide-red-100">
+  {#if selectedAuthor}
+    <div class="mb-6 p-4 bg-white rounded-lg shadow">
+      <h3 class="text-lg font-medium mb-4">作家详情</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <p class="text-sm text-gray-500">笔名</p>
+          <p class="text-gray-900">{selectedAuthor.published_pen_name || '未设置'}</p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-500">网站</p>
+          <p class="text-gray-900">
+            {#if selectedAuthor.published_website}
+              <a href={selectedAuthor.published_website} target="_blank" class="text-primary hover:underline">
+                {selectedAuthor.published_website}
+              </a>
+            {:else}
+              未设置
+            {/if}
+          </p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-500">已发布作品</p>
+          <p class="text-gray-900">{selectedAuthor.published_work_title || '未设置'}</p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-500">计划创作</p>
+          <p class="text-gray-900">{selectedAuthor.planned_work_description || '未设置'}</p>
+        </div>
+      </div>
+      <button 
+        on:click={() => selectedAuthor = null}
+        class="mt-4 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded text-sm"
+      >
+        返回列表
+      </button>
+    </div>
+  {:else}
+    <table class="min-w-full divide-y divide-red-100">
     <thead>
       <tr>
         {#each TITLES as title }
@@ -50,9 +88,21 @@
     <tbody class="divide-y divide-red-100">
       {#each authors as author}
         <tr>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-            >{author.user_name}</td
-          >
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+            <button 
+              on:click={() => selectedAuthor = author}
+              class="cursor-pointer flex items-center"
+            >
+              <span class:font-bold={author.published_pen_name || author.published_website || author.published_work_title}>
+                {author.user_name}
+              </span>
+              {#if author.published_pen_name || author.published_website || author.published_work_title}
+                <span class="ml-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                  有发布的作品
+                </span>
+              {/if}
+            </button>
+          </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
             {author.email || '未记录'}
           </td>
@@ -91,4 +141,5 @@
       {/each}
     </tbody>
   </table>
+  {/if}
 </div>
