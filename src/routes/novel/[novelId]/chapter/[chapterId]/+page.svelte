@@ -11,6 +11,7 @@
   import ChapterLoginMsg from "$lib/components/novels/ChapterLoginMsg.svelte";
   import ChapterMemberSubscriptionMsg from "$lib/components/novels/ChapterMemberSubscriptionMsg.svelte";
   import ChapterHeader from "$lib/components/novels/ChapterHeader.svelte";
+  import FavNovel from "$lib/components/novels/FavNovel.svelte";
 
   export let data;
   $: ({ chapter, prevChapterId, nextChapterId, novelId } = data);
@@ -110,8 +111,19 @@
     redirectUrl={`/novel/${novelId}/chapter/${chapter.id}`}
   />
 {/if}
-
-<div class="min-h-screen py-8 max-w-3xl mx-auto bg-white/80 backdrop-blur-sm rounded-lg shadow-xl">
+<div class="max-w-3xl mx-auto relative">
+  <div class="fixed top-1/2 right-[calc(50%-32rem)] transform -translate-y-1/2 z-50 bg-white p-3 rounded shadow-xl">
+    <a
+    href={`/novel/${chapter.novel_id}`}
+    class="text-red-700 hover:text-primary transition-colors duration-200 mb-4 block"
+  >
+    <h1 class="font-['Ma_Shan_Zheng'] text-2xl text-primary">
+      ← {chapter.novels.title}
+    </h1>
+  </a>
+    <FavNovel novelId={novelId} />
+  </div>
+<div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-xl">
     <!-- Chapter Navigation -->
   <ChapterHeader chapter={chapter} />
 
@@ -134,6 +146,7 @@
 
   <ChapterPagination novelId={novelId} prevChapterId={prevChapterId} nextChapterId={nextChapterId} />
     
+</div>
 </div>
 
 <style>

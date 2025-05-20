@@ -1,6 +1,4 @@
 <script lang="ts">
-  import FavNovel from "$lib/components/novels/FavNovel.svelte";
-
   export let chapter;
 </script>
 
@@ -13,6 +11,4 @@
       ← {chapter.novels.title}
     </h1>
   </a>
-
-  <FavNovel novelId={chapter?.novel_id} />
 </div>

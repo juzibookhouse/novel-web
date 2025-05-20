@@ -10,7 +10,7 @@
 </svelte:head>
 
 <Header />
-<main class="flex-grow mt-14">
+<main class="flex-grow mt-18">
   <slot />
 </main>
 <Footer />
