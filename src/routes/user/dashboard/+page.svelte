@@ -57,8 +57,8 @@
        <p class="text-lg text-red-700">管理您的账户和阅读记录</p>
      </div>
 
-     <div class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-red-100 shadow-xl">
-       <div class="border-b border-red-100">
+     <div class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-gray-400 shadow-xl">
+       <div class="border-b border-gray-400">
          <nav class="flex -mb-px" aria-label="Tabs">
            {#each [
              { id: 'profile', name: '个人资料' },

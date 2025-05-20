@@ -108,7 +108,7 @@
       </div>
     {/if}
     
-    <form class="mt-8 space-y-6 bg-white/80 backdrop-blur-sm p-8 rounded-lg border-2 border-red-100 shadow-xl" on:submit|preventDefault={handleLogin}>
+    <form class="mt-8 space-y-6 bg-white/80 backdrop-blur-sm p-8 rounded-lg border-2 border-gray-400 shadow-xl" on:submit|preventDefault={handleLogin}>
       <div class="space-y-4">
         <div>
           <label for="email-address" class="block text-sm font-medium text-gray-700">电子邮箱</label>
@@ -148,7 +148,7 @@
 
       <Btn title={loading ? '登录中...' : '登录'} disabled={loading} type="submit" />
       
-      <div class="text-sm text-center pt-4 border-t border-red-100">
+      <div class="text-sm text-center pt-4 border-t border-gray-400">
         <a href="/user/signup" class="font-medium text-red-600 hover:text-red-500 transition duration-200">
           还没有账户？立即注册
         </a>

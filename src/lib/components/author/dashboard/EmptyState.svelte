@@ -6,7 +6,7 @@
   export let action: () => void;
 </script>
 
-<div class="text-center py-12 bg-white/80 backdrop-blur-sm rounded-lg border-2 border-red-100">
+<div class="text-center py-12 bg-white/80 backdrop-blur-sm rounded-lg border-2 border-gray-400">
   <h3 class="text-xl font-medium text-gray-900 mb-2">暂无作品</h3>
   <p class="text-gray-600">{message}</p>
   <Btn 

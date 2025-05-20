@@ -173,7 +173,7 @@
   <div
     class="bg-white rounded-lg max-w-7xl w-full max-h-[90vh] overflow-y-auto"
   >
-    <div class="p-6 border-b border-red-100">
+    <div class="p-6 border-b border-gray-400">
       <div class="flex justify-between items-center">
         <h2 class="text-2xl font-semibold text-gray-900">选择会员计划</h2>
         <a
@@ -198,7 +198,7 @@
     </div>
 
     {#if error}
-      <div class="p-4 bg-red-50 border-b border-red-100">
+      <div class="p-4 bg-red-50 border-b border-gray-400">
         <p class="text-sm text-primary">{error}</p>
       </div>
     {/if}
@@ -239,7 +239,7 @@
 
             <!-- Payment Form -->
             {#if selectedPaymentMethod}
-              <div class="border-2 border-red-100 rounded-lg p-6">
+              <div class="border-2 border-gray-400 rounded-lg p-6">
                 <h3 class="text-xl font-semibold text-gray-900 mb-4">
                   支付信息
                 </h3>

@@ -31,7 +31,7 @@
   <div
     class="bg-white rounded-lg overflow-hidden shadow-xl max-w-4xl w-full mx-4"
   >
-    <div class="px-6 py-4 border-b-2 border-red-100">
+    <div class="px-6 py-4 border-b-2 border-gray-400">
       <h3 class="text-xl font-medium text-gray-900">
         添加新章节 - {selectedNovel.title}
       </h3>

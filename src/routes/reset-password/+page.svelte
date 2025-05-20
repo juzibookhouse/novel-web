@@ -67,7 +67,7 @@
       {/if}
 
       <form
-        class="mt-8 space-y-6 bg-white/80 backdrop-blur-sm p-8 rounded-lg border-2 border-red-100 shadow-xl"
+        class="mt-8 space-y-6 bg-white/80 backdrop-blur-sm p-8 rounded-lg border-2 border-gray-400 shadow-xl"
         on:submit|preventDefault={handleResetPassword}
       >
         <div>
@@ -91,7 +91,7 @@
           <Btn type="submit" disabled={loading} title={loading ? "发送中..." : "发送重置链接"} />
         </div>
 
-        <div class="text-sm text-center mt-6 pt-4 border-t border-red-100">
+        <div class="text-sm text-center mt-6 pt-4 border-t border-gray-400">
           <a
             href="/user/login"
             class="font-medium text-red-600 hover:text-red-500 transition duration-200"

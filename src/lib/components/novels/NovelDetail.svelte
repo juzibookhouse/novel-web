@@ -7,7 +7,7 @@
 
 </script>
 <!-- Novel Header -->
-<div class="p-8 border-b-2 border-red-100">
+<div class="p-8 border-b-2 border-gray-400">
   <div class="flex gap-8">
     <div class="w-1/3">
       <img

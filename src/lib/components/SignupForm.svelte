@@ -120,7 +120,7 @@
       </div>
     {/if}
     
-    <form class="mt-8 space-y-6 bg-white/80 backdrop-blur-sm p-8 rounded-lg border-2 border-red-100 shadow-xl" on:submit|preventDefault={handleSignup}>
+    <form class="mt-8 space-y-6 bg-white/80 backdrop-blur-sm p-8 rounded-lg border-2 border-gray-400 shadow-xl" on:submit|preventDefault={handleSignup}>
       <div class="space-y-4">
         <div class="prose text-gray-700 mb-4">
           <h3 class="text-lg font-medium">欢迎加入我们</h3>
@@ -240,7 +240,7 @@
         <Btn title={loading ? '注册中...' : '立即注册'} disabled={loading} type="submit" />
       </div>
       
-      <div class="text-sm text-center mt-6 pt-4 border-t border-red-100">
+      <div class="text-sm text-center mt-6 pt-4 border-t border-gray-400">
         <a href="/user/login" class="font-medium text-red-600 hover:text-red-500 transition duration-200">
           已有账户？立即登录
         </a>

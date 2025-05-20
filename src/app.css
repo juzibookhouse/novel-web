@@ -13,7 +13,7 @@
 
 /* 基础样式 */
 body {
-  @apply text-[var(--text-color)];
+  @apply text-[var(--text-color)] min-h-screen bg-[#e0e0e0];
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   min-width: 1024px;
   overflow-x: auto;

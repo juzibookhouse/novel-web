@@ -71,9 +71,9 @@
 
     <!-- Tabs -->
     <div
-      class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-red-100 shadow-xl mb-8"
+      class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-gray-400 shadow-xl mb-8"
     >
-      <div class="border-b border-red-100">
+      <div class="border-b border-gray-400">
         <nav class="flex -mb-px" aria-label="Tabs">
           {#each [{ id: "users", name: "读者管理" }, { id: "authors", name: "作家管理" }, { id: "novels", name: "作品管理" }, { id: "categories", name: "分类管理" }, { id: "tags", name: "标签管理" }, { id: "forms", name: "表单管理" }] as tab}
             <button
@@ -92,7 +92,7 @@
 
     <!-- Content -->
     <div
-      class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-red-100 shadow-xl"
+      class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-gray-400 shadow-xl"
     >
       {#if loading}
         <div class="flex justify-center py-12">

@@ -23,7 +23,7 @@
       class="px-4 py-2 rounded-lg {data.currentPage === i + 1
         ? 'bg-[#FEF9D5] text-white shadow-md'
         : 'bg-white text-primary hover:bg-red-50'} 
-        border-2 border-red-100 transition-all duration-200 hover:shadow-md"
+        border-2 border-gray-400 transition-all duration-200 hover:shadow-md"
       on:click={() => goToPage(i + 1)}
     >
       {i + 1}

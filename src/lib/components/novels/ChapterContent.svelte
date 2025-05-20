@@ -20,21 +20,21 @@
 
 </script>
 <!-- Reading Controls -->
-<div class="py-4 border-b-2 border-red-100 flex justify-center space-x-4">
+<div class="py-4 border-b-2 border-gray-400 flex justify-center space-x-4">
   <button
     on:click={() => changeFontSize(-2)}
-    class="px-3 py-1 rounded-full"
+    class="px-3 py-1 rounded-full cursor-pointer border"
   >
     A-
   </button>
   <button
     on:click={() => changeFontSize(2)}
-    class="px-3 py-1 rounded-full"
+    class="px-3 py-1 rounded-full cursor-pointer border"
   >
     A+
   </button>
 </div>
-<div class="prose prose-lg max-w-none">
+<div class="p-4">
   <div
     class="text-gray-800 leading-relaxed"
     style="font-size: {fontSize}px"

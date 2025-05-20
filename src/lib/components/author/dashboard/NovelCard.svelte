@@ -19,7 +19,7 @@
 </script>
 
 <div
-  class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-red-100 shadow-lg overflow-hidden"
+  class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-gray-400 shadow-lg overflow-hidden"
 >
   <div class="p-6">
     <div class="flex items-start gap-6">

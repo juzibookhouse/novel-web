@@ -41,20 +41,36 @@
 
   onMount(() => {
     // Add event listeners for user activity
-    if (window) {
-      window.addEventListener('mousemove', handleUserActivity);
-      window.addEventListener('keydown', handleUserActivity);
-      window.addEventListener('scroll', handleUserActivity);
-      window.addEventListener('click', handleUserActivity);
-    }
+    window.addEventListener('mousemove', handleUserActivity);
+    window.addEventListener('keydown', handleUserActivity);
+    window.addEventListener('scroll', handleUserActivity);
+    window.addEventListener('click', handleUserActivity);
+
+    // Add copy protection and context menu prevention
+    const preventCopy = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === "c" || e.key === "C")) {
+        e.preventDefault();
+      }
+    };
+    const preventContextMenu = (e: Event) => e.preventDefault();
+    
+    window.addEventListener('keydown', preventCopy);
+    window.addEventListener('contextmenu', preventContextMenu);
+
+    return () => {
+      window.removeEventListener('keydown', preventCopy);
+      window.removeEventListener('contextmenu', preventContextMenu);
+    };
   });
 
   onDestroy(() => {
     // Clean up event listeners and timers
-    window.removeEventListener('mousemove', handleUserActivity);
-    window.removeEventListener('keydown', handleUserActivity);
-    window.removeEventListener('scroll', handleUserActivity);
-    window.removeEventListener('click', handleUserActivity);
+    if (typeof window !== "undefined") {
+      window.removeEventListener('mousemove', handleUserActivity);
+      window.removeEventListener('keydown', handleUserActivity);
+      window.removeEventListener('scroll', handleUserActivity);
+      window.removeEventListener('click', handleUserActivity);
+    }
     
     if (readingTimer) {
       clearInterval(readingTimer);
@@ -95,41 +111,30 @@
   />
 {/if}
 
-<div class="min-h-screen py-8 px-4">
-  <div class="max-w-3xl mx-auto bg-white/80 backdrop-blur-sm rounded-lg shadow-xl">
+<div class="min-h-screen py-8 max-w-3xl mx-auto bg-white/80 backdrop-blur-sm rounded-lg shadow-xl">
     <!-- Chapter Navigation -->
-    <ChapterHeader chapter={chapter} />
+  <ChapterHeader chapter={chapter} />
 
-    <!-- Chapter Content -->
-    <div class="p-8">
-      <h2 class="text-3xl text-gray-900 mb-4 text-center">{chapter.title}</h2>
-      <div class="text-gray-600 text-center mb-2">
-        <p>字数: {getChapterLength(chapter)}</p>
-        <p>更新时间: {getUserDateFormat(chapter.updated_at)}</p>
-      </div>
-
-      {#if chapter.novels.user_id === $user?.id || chapter.is_free || chapter.novels.is_free || $user?.isMembership}
-        <ChapterContent chapter={chapter} />
-      {:else if !$user}
-        <ChapterLoginMsg />
-      {:else if !$user?.isMembership}
-        <ChapterMemberSubscriptionMsg handleMembershipModal={()=>showMembershipModal=true} />
-      {/if}
+  <!-- Chapter Content -->
+  <div class="py-8">
+    <h2 class="text-3xl text-gray-900 mb-4 text-center">{chapter.title}</h2>
+    <div class="text-gray-600 text-center mb-2">
+      <p>字数: {getChapterLength(chapter)}</p>
+      <p>更新时间: {getUserDateFormat(chapter.updated_at)}</p>
     </div>
 
-    <ChapterPagination novelId={novelId} prevChapterId={prevChapterId} nextChapterId={nextChapterId} />
-    
+    {#if chapter.novels.user_id === $user?.id || chapter.is_free || chapter.novels.is_free || $user?.isMembership}
+      <ChapterContent chapter={chapter} />
+    {:else if !$user}
+      <ChapterLoginMsg />
+    {:else if !$user?.isMembership}
+      <ChapterMemberSubscriptionMsg handleMembershipModal={()=>showMembershipModal=true} />
+    {/if}
   </div>
-</div>
 
-<svelte:window
-  on:keydown={(e) => {
-    if ((e.ctrlKey || e.metaKey) && (e.key === "c" || e.key === "C")) {
-      e.preventDefault();
-    }
-  }}
-  on:contextmenu={(e) => e.preventDefault()}
-/>
+  <ChapterPagination novelId={novelId} prevChapterId={prevChapterId} nextChapterId={nextChapterId} />
+    
+</div>
 
 <style>
   :global(body) {

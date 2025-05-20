@@ -68,7 +68,7 @@
       {:else}
         <form
           on:submit={handleSubmit}
-          class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-red-100 shadow-xl p-8"
+          class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-gray-400 shadow-xl p-8"
         >
           {#if error}
             <div class="bg-red-50 border-2 border-red-200 rounded-lg p-4 mb-6">

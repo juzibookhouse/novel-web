@@ -9,10 +9,8 @@
   <meta name="viewport" content="width=1024">
 </svelte:head>
 
-<div class="flex flex-col min-h-screen bg-[#e0e0e0]">
-  <Header />
-  <main class="flex-grow mt-14">
-    <slot />
-  </main>
-  <Footer />
-</div>
+<Header />
+<main class="flex-grow mt-14">
+  <slot />
+</main>
+<Footer />

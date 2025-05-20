@@ -25,7 +25,7 @@
 </script>
 <!-- Search and Filter Section -->
 <div class="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg mb-8 overflow-hidden">
-  <div class="p-6 border-b border-red-100">
+  <div class="p-6 border-b border-gray-400">
     <div class="relative">
       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
         <span class="text-gray-500">🔍</span>
@@ -48,7 +48,7 @@
           id="category"
           bind:value={selectedCategory}
           on:change={handleSearch}
-          class="w-full pl-4 pr-10 py-2.5 bg-white rounded-lg border-2 border-red-100 focus:border-red-500 focus:ring-red-500 appearance-none transition-all duration-200"
+          class="w-full pl-4 pr-10 py-2.5 bg-white rounded-lg border-2 border-gray-400 focus:border-red-500 focus:ring-red-500 appearance-none transition-all duration-200"
         >
           <option value="">全部类别</option>
           {#each data.categories as category}
@@ -68,7 +68,7 @@
           id="status"
           bind:value={selectedStatus}
           on:change={handleSearch}
-          class="w-full pl-4 pr-10 py-2.5 bg-white rounded-lg border-2 border-red-100 focus:border-red-500 focus:ring-red-500 appearance-none transition-all duration-200"
+          class="w-full pl-4 pr-10 py-2.5 bg-white rounded-lg border-2 border-gray-400 focus:border-red-500 focus:ring-red-500 appearance-none transition-all duration-200"
         >
           {#each statusOptions as option}
             <option value={option.value}>{option.label}</option>
