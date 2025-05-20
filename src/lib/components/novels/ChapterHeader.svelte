@@ -9,11 +9,10 @@
     href={`/novel/${chapter.novel_id}`}
     class="text-red-700 hover:text-primary transition-colors duration-200"
   >
-    ← 返回目录
+    <h1 class="font-['Ma_Shan_Zheng'] text-2xl text-primary">
+      ← {chapter.novels.title}
+    </h1>
   </a>
-  <h1 class="font-['Ma_Shan_Zheng'] text-2xl text-primary">
-    {chapter.novels.title}
-  </h1>
 
   <FavNovel novelId={chapter?.novel_id} />
 </div>

@@ -95,12 +95,8 @@
   />
 {/if}
 
-<div
-  class="min-h-screen bg-red-50 py-8 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]"
->
-  <div
-    class="max-w-3xl mx-auto bg-white/80 backdrop-blur-sm rounded-lg border-2 border-red-100 shadow-xl"
-  >
+<div class="min-h-screen py-8 px-4">
+  <div class="max-w-3xl mx-auto bg-white/80 backdrop-blur-sm rounded-lg shadow-xl">
     <!-- Chapter Navigation -->
     <ChapterHeader chapter={chapter} />
 

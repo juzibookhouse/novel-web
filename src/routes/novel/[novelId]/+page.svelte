@@ -11,10 +11,10 @@
 </svelte:head>
 
 <div
-  class="min-h-screen bg-red-50 py-8 px-4 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]"
+  class="min-h-screen py-8 px-4"
 >
   <div
-    class="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm rounded-lg border-2 border-red-100 shadow-xl overflow-hidden"
+    class="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden"
   >
     <NovelDetail {novel} />
 
