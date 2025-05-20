@@ -245,6 +245,7 @@ export const getChapter = async (chapterId: string) => {
     content,
     is_free,
     updated_at,
+    novel_id,
     novels (
       id,
       title,

@@ -88,15 +88,20 @@ export const getUserSession = async () => {
 
 getUserSession();
 
+import { browser } from '$app/environment';
+
 // Subscribe to auth changes
 const PATHS_TO_REDIRECT = ["/user/login", "/user/signup", "author/signup"];
-supabase.auth.onAuthStateChange(async (event, session) => {
-  if (session) {
-    setUser(session.user);
-    if (PATHS_TO_REDIRECT.includes(window.location.pathname)) {
-      window.location.href = "/";
+
+if (browser) {
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    if (session) {
+      setUser(session.user);
+      if (PATHS_TO_REDIRECT.includes(window.location.pathname)) {
+        window.location.href = "/";
+      }
+    } else {
+      setUser(null);
     }
-  } else {
-    setUser(null);
-  }
-});
+  });
+}

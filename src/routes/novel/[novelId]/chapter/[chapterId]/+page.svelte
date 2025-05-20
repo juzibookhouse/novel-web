@@ -10,7 +10,7 @@
   import ChapterContent from "$lib/components/novels/ChapterContent.svelte";
   import ChapterLoginMsg from "$lib/components/novels/ChapterLoginMsg.svelte";
   import ChapterMemberSubscriptionMsg from "$lib/components/novels/ChapterMemberSubscriptionMsg.svelte";
-  import FavNovel from "$lib/components/novels/FavNovel.svelte";
+  import ChapterHeader from "$lib/components/novels/ChapterHeader.svelte";
 
   export let data;
   $: ({ chapter, prevChapterId, nextChapterId, novelId } = data);
@@ -102,21 +102,7 @@
     class="max-w-3xl mx-auto bg-white/80 backdrop-blur-sm rounded-lg border-2 border-red-100 shadow-xl"
   >
     <!-- Chapter Navigation -->
-    <div
-      class="p-6 border-b-2 border-red-100 flex items-center justify-between"
-    >
-      <a
-        href={`/novel/${novelId}`}
-        class="text-red-700 hover:text-primary transition-colors duration-200"
-      >
-        ← 返回目录
-      </a>
-      <h1 class="font-['Ma_Shan_Zheng'] text-2xl text-primary">
-        {chapter.novels.title}
-      </h1>
-
-      <FavNovel novelId={novelId} />
-    </div>
+    <ChapterHeader chapter={chapter} />
 
     <!-- Chapter Content -->
     <div class="p-8">

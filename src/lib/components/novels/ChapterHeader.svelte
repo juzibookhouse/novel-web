@@ -1,0 +1,19 @@
+<script lang="ts">
+  import FavNovel from "$lib/components/novels/FavNovel.svelte";
+
+  export let chapter;
+</script>
+
+<div class="p-6 border-b-2 border-red-100 flex items-center justify-between">
+  <a
+    href={`/novel/${chapter.novel_id}`}
+    class="text-red-700 hover:text-primary transition-colors duration-200"
+  >
+    ← 返回目录
+  </a>
+  <h1 class="font-['Ma_Shan_Zheng'] text-2xl text-primary">
+    {chapter.novels.title}
+  </h1>
+
+  <FavNovel novelId={chapter?.novel_id} />
+</div>
