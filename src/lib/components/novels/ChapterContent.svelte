@@ -34,11 +34,9 @@
     A+
   </button>
 </div>
-<div class="p-4">
-  <div
-    class="text-gray-800 leading-relaxed"
-    style="font-size: {fontSize}px"
-  >
-    {@html chapter.content || "本章节暂无内容"}
-  </div>
+<div
+  class="text-gray-800 leading-relaxed p-4 space-y-2"
+  style="font-size: {fontSize}px"
+>
+  {@html chapter.content || "本章节暂无内容"}
 </div>
