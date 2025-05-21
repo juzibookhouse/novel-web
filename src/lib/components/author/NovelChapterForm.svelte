@@ -15,6 +15,12 @@
   async function createChapter() {
     try {
       if (!selectedNovel?.id) throw new Error('请选择小说');
+      
+      const chapterHTMLContent = document.querySelector('.ql-editor');
+      //only inclue ql-editor content without the father element
+      if (chapterHTMLContent) {
+        newChapter.content = chapterHTMLContent.innerHTML;
+      }
       const {data,error} = await upsertChapter(newChapter);
       if (error) throw error;
       
