@@ -4,6 +4,7 @@
   import { goto } from '$app/navigation';
   import Btn from './common/Btn.svelte';
   import { getUserIp } from '$lib/helpers';
+  import ErrorMessage from './common/ErrorMessage.svelte';
   
   export let role = '';
   
@@ -11,7 +12,7 @@
   let password = '';
   let username = '';
   let loading = false;
-  let error: string | null = null;
+  let error: null = null;
   
   // 新增字段
   let publishedWebsite = '';
@@ -92,7 +93,7 @@
         goto('/email-confirmation');
       }
     } catch (e: any) {
-      error = e.message;
+      error = e;
     } finally {
       loading = false;
     }
@@ -111,13 +112,7 @@
     </div>
     
     {#if error}
-      <div class="rounded-md  border-2 border-red-200 p-4">
-        <div class="flex">
-          <div class="ml-3">
-            <h3 class="text-sm font-medium text-primary">{error}</h3>
-          </div>
-        </div>
-      </div>
+      <ErrorMessage error={error} />
     {/if}
     
     <form class="mt-8 space-y-6 bg-white/80 backdrop-blur-sm p-8 rounded-lg border-2 border-gray-400 shadow-xl" on:submit|preventDefault={handleSignup}>
