@@ -169,6 +169,7 @@
           />
         </div>
 
+        {#if role === 'author'}
         <!-- 已发表作品字段组 -->
         <div class="space-y-4 border-t pt-4 mt-4">
           <h4 class="text-sm font-medium text-gray-700">已发表的作品（选填）</h4>
@@ -207,9 +208,9 @@
         </div>
 
         <!-- 计划发表作品简介 -->
-        <div>
+        <div class="border-t pt-4">
           <label for="plannedWorkDescription" class="block text-sm font-medium text-gray-700">
-            计划在本网站发表的作品简介
+            已发表作品
           </label>
           <textarea
             id="plannedWorkDescription"
@@ -229,6 +230,7 @@
             class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file: file:text-red-700 hover:file:bg-red-100"
           />
         </div>
+        {/if}
       </div>
 
       <div>
