@@ -35,8 +35,9 @@
   </button>
 </div>
 <div
-  class="text-gray-800 leading-relaxed p-4 space-y-2"
+  class="text-gray-800 leading-6 p-4"
   style="font-size: {fontSize}px"
+  id="chapter_content"
 >
   {@html chapter.content || "本章节暂无内容"}
 </div>

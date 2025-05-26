@@ -99,3 +99,8 @@ input, textarea {
 ::selection {
   @apply bg-[var(--primary-color)] text-white;
 }
+
+#chapter_content p {
+  line-height: 38px;
+  margin-bottom: 1.5rem;
+}

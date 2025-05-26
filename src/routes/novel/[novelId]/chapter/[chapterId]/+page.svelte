@@ -121,7 +121,7 @@
   </a>
     <FavNovel novelId={novelId} />
   </div>
-<div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-xl">
+<div class="bg-[#f2f2f2] backdrop-blur-sm rounded-lg shadow-xl">
     <!-- Chapter Navigation -->
   <ChapterHeader chapter={chapter} />
 
