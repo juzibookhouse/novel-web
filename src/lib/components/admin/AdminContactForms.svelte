@@ -98,6 +98,25 @@
                     </div>
                   </div>
                   
+                  {#if form.upload_file}
+                    <div>
+                      <h4 class="text-sm font-medium text-gray-500">附件</h4>
+                      <div class="mt-2">
+                        <a 
+                          href={form.upload_file} 
+                          download
+                          class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                          on:click|stopPropagation
+                        >
+                          <svg class="mr-2 -ml-1 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                          </svg>
+                          下载附件
+                        </a>
+                      </div>
+                    </div>
+                  {/if}
+                  
                   <div class="flex justify-end">
                     <button 
                       class="text-sm text-gray-500 hover:text-red-500 transition-colors"
