@@ -2,6 +2,7 @@
   import { WEBSITE_NAME } from '$lib/constants';
   import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
   import Btn from '$lib/components/common/Btn.svelte';
+  import {user} from '$lib/stores/authStore';
   
   let loading = false;
   let error: string | null = null;
@@ -79,12 +80,13 @@
           <div class="space-y-6">
             <div>
               <label for="user_name" class="block text-sm font-medium text-gray-700">
-                您的姓名
+                呢称
               </label>
               <input
                 type="text"
                 name="user_name"
                 id="user_name"
+                value={$user?.profile?.user_name}
                 required
                 class="mt-1 block w-full rounded-md border-red-200 border-2 py-2 px-3 text-gray-900 placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500 sm:text-sm transition duration-200"
                 placeholder="请输入您的姓名"
@@ -99,6 +101,7 @@
                 type="email"
                 name="email"
                 id="email"
+                value={$user?.email}
                 required
                 class="mt-1 block w-full rounded-md border-red-200 border-2 py-2 px-3 text-gray-900 placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500 sm:text-sm transition duration-200"
                 placeholder="请输入您的邮箱地址"
