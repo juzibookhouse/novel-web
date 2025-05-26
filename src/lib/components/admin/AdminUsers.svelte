@@ -26,7 +26,7 @@
           user_name,
           ip,
           email,
-          user_memberships (
+          user_memberships!inner (
             id,
             status,
             plan_id,
