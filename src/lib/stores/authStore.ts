@@ -11,6 +11,7 @@ interface UserProfile {
   created_at: string;
   email?: string;
   ip?: string;
+  draft_file_path?: string;
 }
 
 interface UserMembership {

@@ -68,6 +68,21 @@
           <p class="text-sm text-gray-500">计划创作</p>
           <p class="text-gray-900">{selectedAuthor.planned_work_description || '未设置'}</p>
         </div>
+        <div>
+          <p class="text-sm text-gray-500">草稿文件</p>
+          <p class="text-gray-900">
+            {#if selectedAuthor.draft_file_path}
+              <a href={selectedAuthor.draft_file_path} target="_blank" download class="text-primary hover:underline flex items-center">
+                <span>下载草稿文件</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+              </a>
+            {:else}
+              未上传
+            {/if}
+          </p>
+        </div>
       </div>
       <button 
         on:click={() => selectedAuthor = null}
@@ -93,10 +108,10 @@
               on:click={() => selectedAuthor = author}
               class="cursor-pointer flex items-center"
             >
-              <span class:font-bold={author.published_pen_name || author.published_website || author.published_work_title}>
+              <span class:font-bold={author.published_pen_name || author.published_website || author.published_work_title || author.draft_file_path}>
                 {author.user_name}
               </span>
-              {#if author.published_pen_name || author.published_website || author.published_work_title}
+              {#if author.published_pen_name || author.published_website || author.published_work_title || author.draft_file_path}
                 <span class="ml-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
                   有发布的作品
                 </span>

@@ -64,9 +64,18 @@
               .upload(filePath, workDraftFile);
 
             if (!uploadError) {
+              // 获取文件的公共URL
+              const { data: publicUrlData } = supabase
+                .storage
+                .from('user-documents')
+                .getPublicUrl(filePath);
+              
+              // 保存完整的文件URL到draft_file_path
+              const fileUrl = publicUrlData?.publicUrl || '';
+              
               await supabase
                 .from('user_profiles')
-                .update({ draft_file_path: filePath })
+                .update({ draft_file_path: fileUrl })
                 .eq('user_id', userId);
             }
           }

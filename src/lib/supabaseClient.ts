@@ -417,7 +417,8 @@ export const fetchAdminAuthors = async () => {
       published_website,
       published_pen_name,
       published_work_title,
-      planned_work_description
+      planned_work_description,
+      draft_file_path
     `)
     .eq('role', 'author');
 
@@ -427,7 +428,7 @@ export const fetchAdminAuthors = async () => {
 
   let authors = [];
   if (data?.length > 0) {
-    authors = data.map(({id,user_name,created_at,is_approved,novels,email,ip,published_website,published_pen_name,published_work_title,planned_work_description}) => {
+    authors = data.map(({id,user_name,created_at,is_approved,novels,email,ip,published_website,published_pen_name,published_work_title,planned_work_description,draft_file_path}) => {
       return {
         id,
         user_name,
@@ -439,6 +440,7 @@ export const fetchAdminAuthors = async () => {
         published_pen_name,
         published_work_title,
         planned_work_description,
+        draft_file_path,
         novelCount: novels?.length,
         novelReadingTime: novels.reduce((acc, novel)=>{
           if (novel.reading_records.length > 0) {
