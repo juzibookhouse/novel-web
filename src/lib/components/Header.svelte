@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { WEBSITE_NAME } from "$lib/constants";
+  import { WEBSITE_NAME, WEBSITE_URL } from "$lib/constants";
   import { user, getUserSession } from "$lib/stores/authStore";
   import { supabase } from "$lib/supabaseClient";
   import { goto } from "$app/navigation";
@@ -60,10 +60,12 @@
     <div class="flex items-center justify-between">
       <a
         href="/"
-        class=" text-3xl flex items-center gap-2 text-[var(--primary-color)] hover:text-[var(--accent-color)] transition-colors duration-300"
+        class=" text-3xl flex items-center flex-col text-[var(--primary-color)] hover:text-[var(--accent-color)] transition-colors duration-300"
       >
-        <img src="/logo.jpg" alt={WEBSITE_NAME} class="w-10 h-10 rounded-full object-cover shadow-md hover:shadow-lg transition-all duration-300" />
-        <span class="hover-lift">{WEBSITE_NAME}</span>
+        <!-- <img src="/logo.jpg" alt={WEBSITE_NAME} class="w-10 h-10 rounded-full object-cover shadow-md hover:shadow-lg transition-all duration-300" />
+        <span class="hover-lift">{WEBSITE_NAME}</span> -->
+        <span class="font-jianhao text-3xl font-bold text-[var(--primary-color)]">{WEBSITE_NAME}</span>
+        <span class="text-sm">{WEBSITE_URL}</span>
       </a>
 
       <div class="flex space-x-6 items-center">

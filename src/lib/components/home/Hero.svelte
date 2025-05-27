@@ -24,7 +24,7 @@
       <div 
         class="flex items-center justify-center gap-4 transition-all duration-1000 transform {visible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}"
       >
-        <h1 class=" text-7xl text-white drop-shadow-lg">
+        <h1 class="font-jianhao text-8xl text-white drop-shadow-lg">
           {WEBSITE_NAME}
         </h1>
       </div>
@@ -37,7 +37,7 @@
       
       {#if (!$user)}
       <div 
-        class="flex flex-col md:flex-row gap-4 md:gap-6 mt-8 transition-all duration-1000 delay-500 transform {visible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}"
+        class="flex flex-col md:flex-row gap-4 md:gap-6 transition-all duration-1000 delay-500 transform {visible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}"
       >
         <a
           href="/user/signup"
@@ -55,12 +55,6 @@
       </div>
       {/if}
       
-      <!-- 装饰元素 - 底部波浪 -->
-      <div class="absolute bottom-0 left-0 w-full">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" class="w-full h-auto">
-          <path fill="var(--bg-color)" fill-opacity="1" d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,58.7C960,64,1056,64,1152,56C1248,48,1344,32,1392,24L1440,16L1440,100L1392,100C1344,100,1248,100,1152,100C1056,100,960,100,864,100C768,100,672,100,576,100C480,100,384,100,288,100C192,100,96,100,48,100L0,100Z"></path>
-        </svg>
-      </div>
     </div>
   </div>
 </section>
