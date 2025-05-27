@@ -3,6 +3,7 @@
   import { user, getUserSession } from "$lib/stores/authStore";
   import { supabase } from "$lib/supabaseClient";
   import { goto } from "$app/navigation";
+  import { page } from '$app/stores';
   import { onMount } from "svelte";
   import Btn from "./common/Btn.svelte";
 
@@ -84,10 +85,10 @@
           {:else}
             <a 
               href={item.href} 
-              class="relative px-2 py-1 transition-all duration-300 hover:text-[var(--primary-color)]"
+              class="relative px-2 py-1 transition-all duration-300 hover:text-[var(--primary-color)] {$page.url.pathname === item.href ? 'text-[var(--primary-color)] font-medium' : ''}"
             >
               <span>{item.label}</span>
-              <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--primary-color)] transition-all duration-300 group-hover:w-full"></span>
+              <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--primary-color)] transition-all duration-300 {$page.url.pathname === item.href ? 'w-full' : 'group-hover:w-full'}"></span>
             </a>
           {/if}
         {/each}

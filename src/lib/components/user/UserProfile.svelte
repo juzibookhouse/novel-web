@@ -214,10 +214,10 @@
         </div>
         <div class="flex justify-between items-center">
           <p class="text-red-100">
-            状态: {$user.membership?.status === "active" ? "有效" : "待续费"}
+            状态: {$user.membership?.status === "active" ? "有效" : "待缴费"}
           </p>
           {#if !$user.isMembership}
-            <Btn title="续费会员" handleClick={() => (showMembershipModal = true)} />
+            <Btn title="缴费" handleClick={() => (showMembershipModal = true)} />
           {/if}
         </div>
       </div>
