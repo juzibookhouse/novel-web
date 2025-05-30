@@ -219,7 +219,7 @@
         <!-- 计划发表作品简介 -->
         <div class="border-t pt-4">
           <label for="plannedWorkDescription" class="block text-sm font-medium text-gray-700">
-            已发表作品
+            计划在本网站发表作品简介
           </label>
           <textarea
             id="plannedWorkDescription"
