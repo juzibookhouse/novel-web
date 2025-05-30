@@ -148,6 +148,23 @@
 
       if (subscribeError) throw subscribeError;
 
+      // Send confirmation email
+      try {
+        await fetch('/api/send-payment-confirmation', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user: $user,
+            plan: selectedPlan,
+            amount: selectedPaymentMethod === 'card' ? `$${selectedPlan.price}` : `¥${selectedPlan.price_cn}`
+          })
+        });
+      } catch (emailError) {
+        console.error('Failed to send confirmation email:', emailError);
+      }
+
       onClose();
     } catch (e: any) {
       paymentError = e.message;
