@@ -48,11 +48,11 @@
              out:fade={{ duration: 300 }}>
           <a href="/novel/{novel_id}" class="block">
             <span class="text-9xl font-bold text-gray-600">“</span>
-            <p class="text-xl italic text-gray-800 mb-8 text-center relative z-10">
+            <p class="text-3xl italic text-gray-800 mb-8 text-center relative z-10">
               {quotation}
             </p>
-            <h2 class="text-3xl font-bold mb-2">{novelTitle}</h2>
-            <h3 class="text-2xl font-bold text-primary mb-6">
+            <h2 class="text-2xl font-bold mb-2">{novelTitle}</h2>
+            <h3 class="text-xl font-bold text-primary mb-6">
               {title}
             </h3>
           </a>

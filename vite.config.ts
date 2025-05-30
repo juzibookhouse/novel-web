@@ -7,7 +7,7 @@ export default defineConfig({
 	server: {
 		allowedHosts: [
 			"5173-09liweis-novelweb-w919270jw5c.ws-us120.gitpod.io",
-			"c5c840fd-c911-47b5-a397-b9fc1a5a0eaa-00-2rdoxvrphof70.kirk.replit.dev",
+			"641ad0fa-cc90-43aa-9f32-9432321f99f5-00-12ffk0ze4fl22.kirk.replit.dev",
 		],
 	},
 });

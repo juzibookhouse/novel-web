@@ -36,7 +36,7 @@ You can preview the production build with `npm run preview`.
 - [ ] reading time, filter author time or novel time, only admin time
 - [x] author upload word before approved
 - [ ] reset password style and login issue
-- [ ] update user signup text
+- [x] update user signup text
 - [ ] edit novel 引文
-- [ ] 引文homepage style update
+- [x] 引文homepage style update
 - [ ] send email to user after payment

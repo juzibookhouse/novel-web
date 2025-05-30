@@ -1,6 +1,7 @@
 <script lang="ts">
   import { supabase } from '$lib/supabaseClient';
   import { WEBSITE_NAME } from '$lib/constants';
+  import Btn from '$lib/components/common/Btn.svelte';
   import { goto } from '$app/navigation';
   
   let password = '';
@@ -89,13 +90,7 @@
       </div>
 
       <div>
-        <button
-          type="submit"
-          class="group relative flex w-full justify-center rounded-md bg-[#FEF9D5] py-2.5 px-3 text-sm font-semibold text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:bg-red-300 transition duration-200"
-          disabled={loading}
-        >
-          {loading ? '更新中...' : '更新密码'}
-        </button>
+        <Btn title={loading ? '更新中...' : '更新密码'} disabled={loading} type="submit" />
       </div>
     </form>
   </div>

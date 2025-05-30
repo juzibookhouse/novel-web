@@ -126,6 +126,7 @@
     
     <form class="mt-8 space-y-6 bg-white/80 backdrop-blur-sm p-8 rounded-lg border-2 border-gray-400 shadow-xl" on:submit|preventDefault={handleSignup}>
       <div class="space-y-4">
+        {#if role === 'author'}
         <div class="prose text-gray-700 mb-4">
           <h3 class="text-lg font-medium">欢迎加入我们</h3>
           <p class="text-sm">
@@ -138,6 +139,7 @@
             网站会员对于你作品的有效阅读是你的绩效的唯一衡量指标。
           </p>
         </div>
+          {/if}
         <div>
           <label for="user_name" class="block text-sm font-medium text-gray-700">呢称</label>
           <input

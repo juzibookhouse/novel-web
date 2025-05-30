@@ -7,6 +7,7 @@
   import { user } from '$lib/stores/authStore';
   import { onMount } from "svelte";
   import Btn from '$lib/components/common/Btn.svelte';
+  import InputField from '$lib/components/common/InputField.svelte';
   import ErrorMessage from '$lib/components/common/ErrorMessage.svelte';
 
   onMount(() => {
@@ -105,32 +106,8 @@
     
     <form class="mt-8 space-y-6 bg-white/80 backdrop-blur-sm p-8 rounded-lg border-2 border-gray-400 shadow-xl" on:submit|preventDefault={handleLogin}>
       <div class="space-y-4">
-        <div>
-          <label for="email-address" class="block text-sm font-medium text-gray-700">电子邮箱</label>
-          <input
-            id="email-address"
-            name="email"
-            type="email"
-            autocomplete="email"
-            required
-            bind:value={email}
-            class="mt-1 block w-full rounded-md border-red-200 border-2 py-2 px-3 text-gray-900 placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500 sm:text-sm transition duration-200"
-            placeholder="请输入邮箱地址"
-          />
-        </div>
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-700">密码</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autocomplete="current-password"
-            required
-            bind:value={password}
-            class="mt-1 block w-full rounded-md border-red-200 border-2 py-2 px-3 text-gray-900 placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500 sm:text-sm transition duration-200"
-            placeholder="请输入密码"
-          />
-        </div>
+        <InputField field="email" label="电子邮箱" type="email" placeholder="请输入邮箱地址" bind:value={email} required />
+        <InputField field="password" label="密码" type="password" placeholder="请输入密码" bind:value={password} required />
       </div>
 
       <div class="flex items-center justify-between">
