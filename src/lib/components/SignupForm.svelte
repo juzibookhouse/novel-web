@@ -3,6 +3,7 @@
   import { supabase } from '$lib/supabaseClient';
   import { goto } from '$app/navigation';
   import Btn from './common/Btn.svelte';
+  import InputField from './common/InputField.svelte';
   import { getUserIp } from '$lib/helpers';
   import ErrorMessage from './common/ErrorMessage.svelte';
   
@@ -140,96 +141,24 @@
           </p>
         </div>
           {/if}
-        <div>
-          <label for="user_name" class="block text-sm font-medium text-gray-700">呢称</label>
-          <input
-            id="user_name"
-            name="user_name"
-            type="text"
-            required
-            bind:value={username}
-            class="mt-1 block w-full rounded-md border-red-200 border-2 py-2 px-3 text-gray-900 placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500 sm:text-sm transition duration-200"
-            placeholder="请输入名字"
-          />
-        </div>
-        <div>
-          <label for="email-address" class="block text-sm font-medium text-gray-700">电子邮箱</label>
-          <input
-            id="email-address"
-            name="email"
-            type="email"
-            autocomplete="email"
-            required
-            bind:value={email}
-            class="mt-1 block w-full rounded-md border-red-200 border-2 py-2 px-3 text-gray-900 placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500 sm:text-sm transition duration-200"
-            placeholder="请输入邮箱地址"
-          />
-        </div>
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-700">密码</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autocomplete="new-password"
-            required
-            bind:value={password}
-            minlength="6"
-            class="mt-1 block w-full rounded-md border-2 py-2 px-3"
-            placeholder="请输入密码（至少6位）"
-          />
-        </div>
-
+        <InputField field="user_name" label="呢称" type="text" placeholder="请输入名字" bind:value={username} required />
+        <InputField field="email" label="电子邮箱" type="email" placeholder="请输入邮箱地址" bind:value={email} required />
+        <InputField field="password" label="密码" type="password" placeholder="请输入密码（至少6位）" bind:value={password} required minlength={6} />
+        
         {#if role === 'author'}
         <!-- 已发表作品字段组 -->
         <div class="space-y-4 border-t pt-4 mt-4">
           <h4 class="text-sm font-medium text-gray-700">已发表的作品（选填）</h4>
           <div class="space-y-2">
-            <div>
-              <label for="publishedWebsite" class="block text-sm font-medium text-gray-700">网站</label>
-              <input
-                type="text"
-                id="publishedWebsite"
-                bind:value={publishedWebsite}
-                class="mt-1 block w-full rounded-md border-2 py-2 px-3"
-                placeholder="如：起点中文网"
-              />
-            </div>
-            <div>
-              <label for="publishedPenName" class="block text-sm font-medium text-gray-700">笔名</label>
-              <input
-                type="text"
-                id="publishedPenName"
-                bind:value={publishedPenName}
-                class="mt-1 block w-full rounded-md border-2 py-2 px-3"
-                placeholder="您在其他平台的笔名"
-              />
-            </div>
-            <div>
-              <label for="publishedWorkTitle" class="block text-sm font-medium text-gray-700">作品名称</label>
-              <input
-                type="text"
-                id="publishedWorkTitle"
-                bind:value={publishedWorkTitle}
-                class="mt-1 block w-full rounded-md border-2 py-2 px-3"
-                placeholder="您发表过的作品名称"
-              />
-            </div>
+            <InputField field="publishedWebsite" label="网站" type="text" placeholder="如：起点中文网" bind:value={publishedWebsite} />
+            <InputField field="publishedPenName" label="笔名" type="text" placeholder="您在其他平台的笔名" bind:value={publishedPenName} />
+            <InputField field="publishedWorkTitle" label="作品名称" type="text" placeholder="您发表过的作品名称" bind:value={publishedWorkTitle} />
           </div>
         </div>
 
         <!-- 计划发表作品简介 -->
         <div class="border-t pt-4">
-          <label for="plannedWorkDescription" class="block text-sm font-medium text-gray-700">
-            计划在本网站发表作品简介
-          </label>
-          <textarea
-            id="plannedWorkDescription"
-            bind:value={plannedWorkDescription}
-            rows={4}
-            class="mt-1 block w-full rounded-md border-2 py-2 px-3"
-            placeholder="作品简纲或者前两章存稿（可选）"
-          ></textarea>
+          <InputField field="plannedWorkDescription" label="计划在本网站发表作品简介" bind:value={plannedWorkDescription} type="textarea" placeholder="作品简纲或者前两章存稿（可选）"/>
         </div>
 
         <!-- 文件上传 -->
