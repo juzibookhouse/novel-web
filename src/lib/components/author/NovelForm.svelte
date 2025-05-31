@@ -91,12 +91,12 @@
   <div
     class="bg-white rounded-lg overflow-hidden shadow-xl max-w-4xl w-full mx-4"
   >
-    <div class="px-6 py-4 border-b-2 border-gray-400">
+    <div class="p-4 border-b-2 border-gray-400">
       <h3 class="text-xl font-medium text-gray-900">创作新作品</h3>
     </div>
-    <form on:submit|preventDefault={handleUpsertNovel} class="px-6 py-4">
-      <div class="grid grid-cols-2 gap-2">
-        <div class="space-y-2">
+    <form on:submit|preventDefault={handleUpsertNovel} class="p-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="space-y-4">
           <TextInput title="作品名称" field="title" object={newNovel} />
           
           <TextInput 
@@ -185,7 +185,7 @@
             </div>
           </div>
         </div>
-        <div class="space-y-2">
+        <div class="space-y-4">
           
           <SelectInput title="连载状态" object={newNovel} field="status" options={statusOptions} />
 

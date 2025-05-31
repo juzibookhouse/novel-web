@@ -39,4 +39,4 @@ You can preview the production build with `npm run preview`.
 - [x] update user signup text
 - [ ] edit novel 引文
 - [x] 引文homepage style update
-- [ ] send email to user after payment
+- [x] send email to user after payment
