@@ -41,11 +41,13 @@
   }
 
   onMount(() => {
-    // Add event listeners for user activity
-    window.addEventListener('mousemove', handleUserActivity);
-    window.addEventListener('keydown', handleUserActivity);
-    window.addEventListener('scroll', handleUserActivity);
-    window.addEventListener('click', handleUserActivity);
+    if ($user) {
+      // Add event listeners for user activity
+      window.addEventListener('mousemove', handleUserActivity);
+      window.addEventListener('keydown', handleUserActivity);
+      window.addEventListener('scroll', handleUserActivity);
+      window.addEventListener('click', handleUserActivity);
+    }
 
     // Add copy protection and context menu prevention
     const preventCopy = (e: KeyboardEvent) => {
@@ -92,7 +94,7 @@
     const readingTime = Math.floor((Date.now() - readingStartTime) / 1000);
     readingStartTime = Date.now();
 
-    await upsertChapterReadingRecords(chapter, readingTime);
+    await upsertChapterReadingRecords(chapter, readingTime, $user);
   }
 
   const handleClose = () => {

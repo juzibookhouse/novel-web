@@ -455,11 +455,19 @@ export const fetchAdminAuthors = async () => {
   return {data:authors};
 }
 
-export const upsertChapterReadingRecords = async(chapter, readingTime) => {
+export const upsertChapterReadingRecords = async(chapter, readingTime, user) => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const curDate = `${year}-${(month < 10 ? '0'+month : month)}`;
+  console.log(curDate);
+  
   const {data:readingRecord,error} = await supabase
     .from('reading_records')
     .select('*')
     .eq('novel_id',chapter.novels.id)
+    .eq('user_id',user.id)
+    .eq('date',curDate)
     .single();
   
   if (readingRecord) {
@@ -473,6 +481,8 @@ export const upsertChapterReadingRecords = async(chapter, readingTime) => {
     await supabase.from("reading_records").insert({
       novel_id: chapter.novels.id,
       reading_time: readingTime,
+      user_id: user.id,
+      date: curDate
     });
   }
 }
