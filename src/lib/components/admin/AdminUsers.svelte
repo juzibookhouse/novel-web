@@ -3,7 +3,7 @@
   import {
     getUserDateFormat,
     getUserMembershipDate,
-    isValidMembership,
+    getUserMembership,
   } from "$lib/user";
   import { onMount } from "svelte";
   let users: any[] = [];
@@ -26,7 +26,7 @@
           user_name,
           ip,
           email,
-          user_memberships!inner (
+          user_memberships (
             id,
             status,
             plan_id,
@@ -34,8 +34,7 @@
           )
         `,
         )
-        .gte("user_memberships.end_date", new Date().toISOString())
-        .eq("user_memberships.status", "active");
+        .gte("user_memberships.end_date", new Date().toISOString());
 
       if (usersError) throw usersError;
       users = usersData;
@@ -91,11 +90,11 @@
           <td class="px-6 py-4 whitespace-nowrap">
             <span
               class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-              {isValidMembership(user)
+              {getUserMembership(user) !== '游客'
                 ? 'bg-green-100 text-green-800'
                 : 'bg-red-100 text-primary'}"
             >
-              {isValidMembership(user) ? "会员" : "非会员"}
+              {getUserMembership(user)}
             </span>
           </td>
           <td

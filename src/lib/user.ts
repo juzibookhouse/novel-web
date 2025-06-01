@@ -10,8 +10,10 @@ interface User {
 }
 
 
-export const isValidMembership = (user:User) => {
-  return user.user_memberships.length > 0;
+export const getUserMembership = (user:User) => {
+  const userMemberships = user?.user_memberships;
+  if (!userMemberships || userMemberships.length === 0) return '游客';
+  return (userMemberships[0].status === 'active') ? 'VIP': '会员';
 }
 
 export const getUserDateFormat = (date:string) => {

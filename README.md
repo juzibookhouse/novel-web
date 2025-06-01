@@ -34,6 +34,7 @@ You can preview the production build with `npm run preview`.
 - [x] add publish to chapter
 - [x] display published chapter only
 - [ ] reading time, filter author time or novel time, only admin time
+- [x] user status
 - [x] author upload word before approved
 - [ ] reset password style and login issue
 - [x] update user signup text
