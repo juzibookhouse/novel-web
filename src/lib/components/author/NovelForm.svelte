@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NewNovel } from "$lib/novel";
+  import type { Chapter, NewNovel } from "$lib/novel";
   import { user } from "$lib/stores/authStore";
   import { supabase, upsertNovel } from "$lib/supabaseClient";
     import Btns from "./Btns.svelte";
@@ -24,6 +24,20 @@
   let newTagName = "";
   let authorTag = null;
   let loading = false;
+
+  let chapterOptions = [];
+  if (newNovel?.chapters?.length) {
+    chapterOptions = newNovel.chapters.map((chapter:Chapter)=>{
+      if (chapter?.quotation) {
+        newNovel.quotation = chapter.quotation;
+        newNovel.quotation_chapter_id = chapter.id;
+      }
+      return {
+        value: chapter.id,
+        label: chapter.title
+      }
+    });
+  }
 
   const statusOptions = [
     { value: "ongoing", label: "连载中" },
@@ -98,6 +112,10 @@
       <div class="grid grid-cols-2 gap-4">
         <div class="space-y-4">
           <TextInput title="作品名称" field="title" object={newNovel} />
+          {#if newNovel?.chapters?.length > 0}
+          <TextInput title="引文" field="quotation" object={newNovel} rows={3} />
+          <SelectInput title="引文章节" object={newNovel} field="quotation_chapter_id" options={chapterOptions} />
+          {/if}
           
           <TextInput 
             title="笔名" 

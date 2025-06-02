@@ -193,7 +193,6 @@ export const upsertNovel = async (user: User, newNovel: NewNovel) => {
       .single();
 
     if (novelError) throw novelError;
-    novelId = novel.id;
   } else {
     // Update existing novel
     const { error: updateError } = await supabase
@@ -211,6 +210,25 @@ export const upsertNovel = async (user: User, newNovel: NewNovel) => {
       .eq('id', novelId);
 
     if (updateError) throw updateError;
+
+    //clear all chapter quotation
+    await supabase
+      .from('chapters')
+      .update({
+        quotation: null
+      })
+      .eq('novel_id',newNovel.id);
+
+    const quotation = newNovel?.quotation?.trim();
+    const quotation_chapter_id = newNovel?.quotation_chapter_id;
+    if (quotation && quotation_chapter_id) {
+      await supabase
+      .from('chapters')
+      .update({
+        quotation
+      })
+      .eq('id',quotation_chapter_id);
+    }
   }
 
   // Delete existing tags

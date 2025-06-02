@@ -38,6 +38,9 @@ export interface NewNovel {
   is_free?: boolean;
   published?: boolean;
   pen_name?: string;
+  chapters?: [];
+  quotation?: string;
+  quotation_chapter_id?: string;
 }
 
 export interface Novel {

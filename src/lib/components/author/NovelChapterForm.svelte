@@ -50,7 +50,7 @@
   
           <CheckInput title="发布" object={newChapter} field="published" />
           <CheckInput title="章节免费" object={newChapter} field="is_free" />
-          <TextInput title="引文(用于随机显示在首页)" object={newChapter} field="quotation" rows={3} />
+          <!-- <TextInput title="引文(用于随机显示在首页)" object={newChapter} field="quotation" rows={3} /> -->
         </div>
 
         <div class="">
