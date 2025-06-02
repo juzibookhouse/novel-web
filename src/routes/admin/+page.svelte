@@ -8,16 +8,18 @@
   import AdminAuthor from "$lib/components/admin/AdminAuthor.svelte";
   import AdminTags from "$lib/components/admin/AdminTags.svelte";
   import AdminContactForms from "$lib/components/admin/AdminContactForms.svelte";
+  import AdminReadingTime from "$lib/components/admin/AdminReadingTime.svelte";
   import { user } from "$lib/stores/authStore";
   import { goto } from "$app/navigation";
 
   let activeTab:
-    | "users"
-    | "authors"
-    | "novels"
-    | "categories"
-    | "tags"
-    | "forms" = "users";
+      | "users"
+      | "authors"
+      | "novels"
+      | "categories"
+      | "tags"
+      | "forms"
+      | "reading-time" = "users";
 
   let novels: any[] = [];
   let loading = true;
@@ -75,7 +77,7 @@
     >
       <div class="border-b border-gray-400">
         <nav class="flex -mb-px" aria-label="Tabs">
-          {#each [{ id: "users", name: "读者管理" }, { id: "authors", name: "作家管理" }, { id: "novels", name: "作品管理" }, { id: "categories", name: "分类管理" }, { id: "tags", name: "标签管理" }, { id: "forms", name: "表单管理" }] as tab}
+          {#each [{ id: "users", name: "读者管理" }, { id: "authors", name: "作家管理" }, { id: "novels", name: "作品管理" }, { id: "categories", name: "分类管理" }, { id: "tags", name: "标签管理" }, { id: "forms", name: "表单管理" }, { id: "reading-time", name: "阅读时间" }] as tab}
             <button
               class="w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm
                 {activeTab === tab.id
@@ -128,6 +130,10 @@
 
         {#if activeTab === "forms"}
           <AdminContactForms />
+        {/if}
+
+        {#if activeTab === "reading-time"}
+          <AdminReadingTime />
         {/if}
       {/if}
     </div>

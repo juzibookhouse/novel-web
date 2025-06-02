@@ -83,7 +83,7 @@ a:hover {
 }
 
 /* 输入框样式 */
-input, textarea {
+input,select,textarea {
   @apply border border-gray-300 rounded-lg px-4 py-2
          focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent
          outline-none transition-all duration-200;
