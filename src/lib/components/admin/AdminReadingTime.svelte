@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { formatDuration } from "$lib/novel";
   import { supabase } from "$lib/supabaseClient";
   import { onMount } from "svelte";
 
@@ -48,13 +49,11 @@
           aggregatedData.set(key, {
             name: key,
             totalTime: 0,
-            count: 0
           });
         }
 
         const entry = aggregatedData.get(key);
         entry.totalTime += record.reading_time;
-        entry.count += 1;
       });
 
       readingData = Array.from(aggregatedData.values())
@@ -72,12 +71,6 @@
     if (selectedMonth && selectedFilter) {
       fetchReadingData();
     }
-  }
-
-  function formatTime(seconds: number): string {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}分钟${secs}秒`;
   }
 </script>
 
@@ -123,12 +116,9 @@
             <div class="flex items-center justify-between">
               <div class="flex-1">
                 <p class="text-sm font-medium text-gray-900">{data.name}</p>
-                <p class="text-sm text-gray-500">
-                  总阅读时间：{formatTime(data.totalTime)}
-                </p>
               </div>
               <div class="text-sm text-gray-500">
-                阅读次数：{data.count}次
+                阅读时间：{formatDuration(data.totalTime)}
               </div>
             </div>
           </li>

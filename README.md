@@ -33,11 +33,11 @@ You can preview the production build with `npm run preview`.
 - [x] add feature note and chapter
 - [x] add publish to chapter
 - [x] display published chapter only
-- [ ] reading time, filter author time or novel time, only admin time
+- [x] reading time, filter author time or novel time, only admin time
 - [x] user status
 - [x] author upload word before approved
-- [ ] reset password style and login issue
+- [x] reset password style and login issue
 - [x] update user signup text
-- [ ] edit novel 引文
+- [x] edit novel 引文
 - [x] 引文homepage style update
 - [x] send email to user after payment
