@@ -4,7 +4,7 @@
   import { onMount } from "svelte";
 
   let selectedMonth = new Date().toISOString().slice(0, 7); // 默认选择当前月份
-  let selectedFilter = "user"; // 'user' or 'novel'
+  let selectedFilter = "author"; // 'author' or 'novel'
   let readingData: any[] = [];
   let loading = false;
   let error: string | null = null;
@@ -28,7 +28,12 @@
           ),
           novels (
             id,
-            title
+            title,
+            user_id,
+            user_profiles (
+              id,
+              user_name
+            )
           )
         `)
         .eq('date', selectedMonth);
@@ -41,13 +46,22 @@
       const aggregatedData = new Map();
 
       data.forEach((record: any) => {
-        const key = selectedFilter === 'user'
-          ? record.user_profiles.user_name
-          : record.novels.title;
+        let key, displayName;
+        
+        if (selectedFilter === 'user') {
+          key = record.user_profiles.id;
+          displayName = record.user_profiles.user_name;
+        } else if (selectedFilter === 'novel') {
+          key = record.novels.id;
+          displayName = record.novels.title;
+        } else if (selectedFilter === 'author') {
+          key = record.novels.user_id;
+          displayName = record.novels.user_profiles.pen_name || record.novels.user_profiles.user_name;
+        }
         
         if (!aggregatedData.has(key)) {
           aggregatedData.set(key, {
-            name: key,
+            name: displayName,
             totalTime: 0,
           });
         }
@@ -94,6 +108,7 @@
       >
         <option value="user">按用户统计</option>
         <option value="novel">按小说统计</option>
+        <option value="author">按作家统计</option>
       </select>
     </div>
   </div>
