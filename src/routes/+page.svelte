@@ -15,7 +15,9 @@
 
   <Hero />
 
+  {#if quotationChapters?.length > 0}
   <FeatureNovel {quotationChapters} />
+  {/if}
 
   <!-- <Categories categories={categories} /> -->
 
