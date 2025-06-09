@@ -3,6 +3,7 @@
   import { user } from "$lib/stores/authStore";
   import { supabase } from "$lib/supabaseClient";
   import { onMount } from "svelte";
+  import Btn from "../common/Btn.svelte";
   let tags: Tag[] = [];
 
   // New category form
@@ -75,7 +76,7 @@
 </script>
 
 <div class="p-6">
-  <!-- <div class="mb-6">
+  <div class="mb-6">
     <h3 class="text-lg font-medium text-gray-900 mb-4">添加新标签</h3>
     <div class="flex gap-4">
       <input
@@ -84,15 +85,16 @@
         placeholder="输入分类名称"
         class="flex-1 rounded-md border-2 border-red-200 px-3 py-2 focus:border-red-500 focus:ring-red-500"
       />
-      <button
+      <!-- <button
         on:click={addTag}
         disabled={addingTag || !newTagName.trim()}
         class="px-6 py-2 rounded-md disabled:opacity-50"
       >
         {addingTag ? "添加中..." : "添加"}
-      </button>
+      </button> -->
+      <Btn handleClick={addTag} disabled={addingTag || !newTagName.trim()} title={addingTag ? "添加中..." : "添加"} />
     </div>
-  </div> -->
+  </div>
 
   <table class="min-w-full divide-y divide-red-100">
     <thead>

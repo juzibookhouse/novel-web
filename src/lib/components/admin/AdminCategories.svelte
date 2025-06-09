@@ -2,6 +2,7 @@
     import type { Category } from '$lib/novel';
   import { supabase } from '$lib/supabaseClient';
     import { onMount } from 'svelte';
+  import Btn from '../common/Btn.svelte';
   let categories: Category[] = [];
 
   // New category form
@@ -73,13 +74,14 @@
         placeholder="输入分类名称"
         class="flex-1 rounded-md border-2 border-red-200 px-3 py-2 focus:border-red-500 focus:ring-red-500"
       />
-      <button
+      <Btn handleClick={addCategory} disabled={addingCategory || !newCategoryName.trim()} title={addingCategory ? "添加中..." : "添加"} />
+      <!-- <button
         on:click={addCategory}
         disabled={addingCategory || !newCategoryName.trim()}
         class="px-6 py-2 rounded-md disabled:opacity-50"
       >
         {addingCategory ? "添加中..." : "添加"}
-      </button>
+      </button> -->
     </div>
   </div>
 
@@ -107,7 +109,7 @@
           >
             <button
               on:click={() => deleteCategory(category.id)}
-              class="text-red-600 hover:text-primary"
+              class="text-red-600 hover:text-primary cursor-pointer"
             >
               删除
             </button>
