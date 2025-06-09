@@ -131,6 +131,8 @@
           {#if newNovel?.chapters?.length > 0}
           <TextInput title="引文" field="quotation" object={newNovel} rows={3} />
           <SelectInput title="引文章节" object={newNovel} field="quotation_chapter_id" options={chapterOptions} />
+          {:else}
+          <p>引文至少需要一个创建至少一个章节后编辑</p>
           {/if}
           
           <TextInput 
