@@ -240,6 +240,9 @@
           {message}
         </div>
       {/if}
+      {#if ($user?.profile?.role === 'author') && ($user?.profile?.is_approved)}
+        <p class="mt-1 text-green-600">已是认证作家</p>
+      {/if}
       <div>
         <label for="email" class="block text-sm font-medium text-gray-700"
           >邮件</label
