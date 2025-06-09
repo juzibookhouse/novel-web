@@ -265,7 +265,7 @@
 
       <Btn title={loading ? "更新中..." : "更新资料"} disabled={loading} handleClick={updateProfile} />
 
-      {#if $user?.profile?.role !== 'admin'}
+      <!-- {#if $user?.profile?.role !== 'admin'}
       <div>
         <label class="block text-sm font-medium text-gray-700">作家状态</label>
         {#if $user?.profile?.role === 'author'}
@@ -281,7 +281,7 @@
       </div>
       {:else}
       <div>你是管理员</div>
-      {/if}
+      {/if} -->
 
 
     </div>
