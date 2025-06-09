@@ -31,7 +31,7 @@
 
   const readerMenuItems = [
     ...commonMenuItems,
-    { href: "/user/dashboard", label: "注册成为作家" },
+    { href: "/author/signup", label: "注册成为作家" },
     { href: "/user/dashboard", label: "个人中心" }
   ];
 
