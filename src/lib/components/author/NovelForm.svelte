@@ -7,6 +7,8 @@
     import SelectInput from "./SelectInput.svelte";
     import TextInput from "./TextInput.svelte";
 
+  let error = "";
+
   export let newNovel: NewNovel = {
     title: "",
     description: "",
@@ -88,15 +90,29 @@
   }
 
   async function handleUpsertNovel() {
+    error = "";
+    loading = true;
+    
     try {
       if (!$user?.id) throw new Error("请先登录");
+      
+      // 验证必填字段
+      if (!newNovel.title || newNovel.title.trim() === "") {
+        throw new Error("作品名称不能为空");
+      }
+      
+      if (!newNovel.category_id) {
+        throw new Error("请选择作品类别");
+      }
 
       await upsertNovel($user, newNovel);
 
       fetchNovels();
       toggleNovelForm();
     } catch (e: any) {
-      // error = e.message;
+      error = e.message;
+    } finally {
+      loading = false;
     }
   }
 </script>
@@ -111,7 +127,7 @@
     <form on:submit|preventDefault={handleUpsertNovel} class="p-4">
       <div class="grid grid-cols-2 gap-4">
         <div class="space-y-4">
-          <TextInput title="作品名称" field="title" object={newNovel} />
+          <TextInput title="作品名称" field="title" object={newNovel} required={true} />
           {#if newNovel?.chapters?.length > 0}
           <TextInput title="引文" field="quotation" object={newNovel} rows={3} />
           <SelectInput title="引文章节" object={newNovel} field="quotation_chapter_id" options={chapterOptions} />
@@ -137,7 +153,7 @@
                 <label class="inline-flex items-center mr-4">
                   <input
                     id="category"
-                    type="checkbox"
+                    type="radio"
                     value={category.id}
                     checked={newNovel.category_id === category?.id}
                     on:change={(e) => {
