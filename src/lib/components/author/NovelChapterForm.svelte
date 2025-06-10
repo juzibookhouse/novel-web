@@ -1,10 +1,11 @@
 <script lang="ts">
-    import type { Chapter, Novel } from "$lib/novel";
+    import { FREE_OPTIONS, type Chapter, type Novel } from "$lib/novel";
     import { supabase, upsertChapter } from "$lib/supabaseClient";
     import { error } from "@sveltejs/kit";
     import TextInput from "./TextInput.svelte";
     import CheckInput from "./CheckInput.svelte";
     import Btns from "./Btns.svelte";
+  import SelectInput from "./SelectInput.svelte";
 
 
   export let fetchNovels:Function;
@@ -49,7 +50,7 @@
           <TextInput title="章节标题" object={newChapter} field="title" />
   
           <CheckInput title="发布" object={newChapter} field="published" />
-          <CheckInput title="章节免费" object={newChapter} field="is_free" />
+          <SelectInput title="章节免费" object={newChapter} field="is_free" options={FREE_OPTIONS} />
           <!-- <TextInput title="引文(用于随机显示在首页)" object={newChapter} field="quotation" rows={3} /> -->
         </div>
 

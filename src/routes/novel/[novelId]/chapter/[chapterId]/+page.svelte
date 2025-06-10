@@ -15,6 +15,12 @@
 
   export let data;
   $: ({ chapter, prevChapterId, nextChapterId, novelId } = data);
+  
+  $: chapterReadingStatus = data.chapter?.is_free || data.chapter?.novels?.is_free;
+  
+  $: canReadChapter = (chapterReadingStatus === 'public') || 
+                      (chapterReadingStatus === 'private' && $user) || 
+                      (chapterReadingStatus === 'vip' && $user?.isMembership);
 
   let showMembershipModal = false;
   let readingStartTime: number | null = null;
@@ -135,7 +141,7 @@
       <p>更新时间: {getUserDateFormat(chapter.updated_at)}</p>
     </div>
 
-    {#if chapter.novels.user_id === $user?.id || chapter.is_free || chapter.novels.is_free || $user?.isMembership}
+    {#if chapter.novels.user_id === $user?.id || canReadChapter}
       <ChapterContent chapter={chapter} />
     {:else if !$user}
       <ChapterLoginMsg />

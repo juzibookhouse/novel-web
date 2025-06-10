@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Chapter, NewNovel } from "$lib/novel";
+  import { FREE_OPTIONS, type Chapter, type NewNovel } from "$lib/novel";
   import { user } from "$lib/stores/authStore";
   import { supabase, upsertNovel } from "$lib/supabaseClient";
     import Btns from "./Btns.svelte";
@@ -27,7 +27,7 @@
   let authorTag = null;
   let loading = false;
 
-  let chapterOptions = [];
+  let chapterOptions:any[] = [];
   if (newNovel?.chapters?.length) {
     chapterOptions = newNovel.chapters.map((chapter:Chapter)=>{
       if (chapter?.quotation) {
@@ -143,7 +143,7 @@
           />
           
           <CheckInput title="发布" object={newNovel} field="published" />
-          <CheckInput title="免费阅读" object={newNovel} field="is_free" />
+          <SelectInput title="免费阅读" object={newNovel} field="is_free" options={FREE_OPTIONS} />
 
           <div>
             <label

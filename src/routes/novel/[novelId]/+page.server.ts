@@ -1,4 +1,4 @@
-import { getSortedChapters, type Tag } from "$lib/novel";
+import { FREE_OPTIONS_MAP, getSortedChapters, type Chapter, type Tag } from "$lib/novel";
 import { getNovel, getUserProfile } from "$lib/supabaseClient";
 import { error } from '@sveltejs/kit';
 
@@ -10,6 +10,10 @@ export async function load({ params }: { params: { novelId: string } }) {
   novel.tags = novel.novel_tags.map(({tags}:{tags:Tag})=>tags);
 
   novel.chapters = getSortedChapters(novel.chapters);
+  novel.chapters = novel.chapters.map((c:Chapter)=>{
+    c.is_free = FREE_OPTIONS_MAP[c.is_free || novel.is_free]
+    return c;
+  });
   novel.author = userProfile;
 
   if (novelError) {

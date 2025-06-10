@@ -3,6 +3,19 @@ const NOVEL_STATUS:{[key:string]:string} = {
   finished: '完结'
 }
 
+export const FREE_OPTIONS = [
+  {value: '', label: '不设定状态'},
+  {value: "public", label:"完全开放阅读"},
+  {value: "private", label:"仅对注册用户阅读"},
+  {value: "vip", label:"仅对开通会员开发阅读"}
+]
+
+export const FREE_OPTIONS_MAP = {
+  public: '完全开放阅读',
+  private: '仅对注册用户阅读',
+  vip: '仅对开通会员开发阅读'
+}
+
 export interface Category {
   id: string;
   name: string;
@@ -19,7 +32,7 @@ export interface Chapter {
   title: string;
   content?: string;
   novel_id: string;
-  is_free: boolean;
+  is_free: string;
   published: boolean;
   created_at: string;
   chapter_order: number;
@@ -35,7 +48,7 @@ export interface NewNovel {
   status: string;
   cover_url?: string;
   cover_file?: File;
-  is_free?: boolean;
+  is_free?: string;
   published?: boolean;
   pen_name?: string;
   chapters?: [];
@@ -52,7 +65,7 @@ export interface Novel {
   created_at: string;
   category_id?: string;
   cover_url?: string;
-  is_free?: boolean;
+  is_free?: string;
   published?: boolean;
   chapters?: Chapter[];
   tags:[];
