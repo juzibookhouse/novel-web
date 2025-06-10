@@ -35,7 +35,7 @@
   </button>
 </div>
 <div
-  class="text-gray-800 leading-6 p-4"
+  class="text-gray-800 leading-6 p-12"
   style="font-size: {fontSize}px"
   id="chapter_content"
 >

@@ -113,7 +113,7 @@
     redirectUrl={`/novel/${novelId}/chapter/${chapter.id}`}
   />
 {/if}
-<div class="max-w-3xl mx-auto relative">
+<div class="max-w-4xl mx-auto relative">
   <div class="fixed top-1/2 right-[calc(50%-32rem)] transform -translate-y-1/2 z-10 bg-white p-3 rounded shadow-xl">
     <a
     href={`/novel/${chapter.novel_id}`}
