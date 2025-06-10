@@ -12,7 +12,7 @@ interface User {
 
 export const getUserMembership = (user:User) => {
   const userMemberships = user?.user_memberships;
-  if (!userMemberships || userMemberships.length === 0) return '游客';
+  if (!userMemberships || userMemberships.length === 0) return '会员';
   return (userMemberships[0].status === 'active') ? 'VIP': '会员';
 }
 

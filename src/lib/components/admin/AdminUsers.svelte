@@ -90,7 +90,7 @@
           <td class="px-6 py-4 whitespace-nowrap">
             <span
               class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-              {getUserMembership(user) !== '游客'
+              {getUserMembership(user) !== '会员'
                 ? 'bg-green-100 text-green-800'
                 : 'bg-red-100 text-primary'}"
             >
