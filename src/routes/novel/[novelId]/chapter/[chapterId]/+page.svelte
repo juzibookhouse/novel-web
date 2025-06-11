@@ -143,12 +143,26 @@
       <p>更新时间: {getUserDateFormat(chapter.updated_at)}</p>
     </div>
 
-    {#if chapter.novels.user_id === $user?.id || canReadChapter}
+    {#if chapter.is_published && chapter.novels.is_published}
+      {#if chapter.novels.user_id === $user?.id || canReadChapter}
+        <ChapterContent chapter={chapter} />
+      {:else if !$user}
+        <ChapterLoginMsg />
+      {:else if !$user?.isMembership}
+        <ChapterMemberSubscriptionMsg handleMembershipModal={()=>showMembershipModal=true} />
+      {/if}
+    {:else if chapter.novels.user_id === $user?.id}
+      <!-- 作者可以看到未发布的章节 -->
+      <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4 mx-4">
+        <p class="font-medium">编辑状态</p>
+        <p>这个章节或小说目前正在编辑中，尚未发布。只有作者可以查看。</p>
+      </div>
       <ChapterContent chapter={chapter} />
-    {:else if !$user}
-      <ChapterLoginMsg />
-    {:else if !$user?.isMembership}
-      <ChapterMemberSubscriptionMsg handleMembershipModal={()=>showMembershipModal=true} />
+    {:else}
+      <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4 mx-4">
+        <p class="font-medium">章节未发布</p>
+        <p>这个章节或小说目前正在编辑中，尚未发布。请稍后再来查看。</p>
+      </div>
     {/if}
   </div>
 
