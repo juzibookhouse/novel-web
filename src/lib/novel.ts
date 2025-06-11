@@ -4,7 +4,6 @@ const NOVEL_STATUS:{[key:string]:string} = {
 }
 
 export const FREE_OPTIONS = [
-  {value: '', label: '默认设定'},
   {value: "public", label:"完全开放阅读"},
   {value: "private", label:"仅对注册用户阅读"},
   {value: "vip", label:"仅对开通会员开发阅读"}

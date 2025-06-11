@@ -19,7 +19,9 @@
     description: '',
     category_id:'',
     tags:[],
-    status: 'ongoing'
+    status: 'ongoing',
+    is_free: 'vip',
+    published: true
   };
   
   let novels: Novel[] = [];
@@ -53,7 +55,8 @@
     content: '',
     novel_id: '',
     created_at: '',
-    is_free: false,
+    is_free: 'vip',
+    published: true,
     chapter_order: 0
   };
   let newChapter = EMPTY_CHAPTER;
