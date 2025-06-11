@@ -116,7 +116,7 @@ export const getAuthorNovels = async (user: UserData) => {
     query = query.eq('user_id', user?.id);
   }
 
-  return await query.order('created_at', { ascending: false });
+  return await query.order('updated_at', { ascending: false });
 
 }
 
