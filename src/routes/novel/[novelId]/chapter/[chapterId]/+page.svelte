@@ -18,9 +18,11 @@
   
   $: chapterReadingStatus = data.chapter?.is_free || data.chapter?.novels?.is_free;
   
-  $: canReadChapter = (chapterReadingStatus === 'public') || 
-                      (chapterReadingStatus === 'private' && $user) || 
-                      (chapterReadingStatus === 'vip' && $user?.isMembership);
+  $: canReadChapter = 
+      ($user?.profile?.role === 'admin') || 
+      (chapterReadingStatus === 'public') || 
+      (chapterReadingStatus === 'private' && $user) || 
+      (chapterReadingStatus === 'vip' && $user?.isMembership);
 
   let showMembershipModal = false;
   let readingStartTime: number | null = null;
