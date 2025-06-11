@@ -187,7 +187,8 @@ export const upsertNovel = async (user: User, newNovel: NewNovel) => {
         category_id: newNovel.category_id,
         cover_url,
         user_id: user.id,
-        pen_name: newNovel.pen_name || null
+        pen_name: newNovel.pen_name || null,
+        updated_at: new Date()
       }])
       .select()
       .single();
@@ -205,7 +206,8 @@ export const upsertNovel = async (user: User, newNovel: NewNovel) => {
         is_free: newNovel.is_free,
         published: newNovel.published,
         cover_url,
-        pen_name: newNovel.pen_name || null
+        pen_name: newNovel.pen_name || null,
+        updated_at: new Date()
       })
       .eq('id', novelId);
 
