@@ -148,6 +148,8 @@
 
       if (subscribeError) throw subscribeError;
 
+      setUser($user);
+
       // Send confirmation email
       try {
         await fetch('/api/send-payment-confirmation', {
