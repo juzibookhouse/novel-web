@@ -7,6 +7,7 @@
   import { onMount } from "svelte";
   import UserMembershipPlans from "./user/UserMembershipPlans.svelte";
   import { getMemberShipEndDate, getPlanPrice } from "$lib/membership";
+  import { adminEmail } from "$lib/api/adminEmail";
 
   export let onClose = () => {};
   export let redirectUrl;
@@ -166,6 +167,8 @@
       } catch (emailError) {
         console.error('Failed to send confirmation email:', emailError);
       }
+
+      await adminEmail.newSubscription($user.email);
 
       onClose();
     } catch (e: any) {
