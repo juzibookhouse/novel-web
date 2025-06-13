@@ -4,6 +4,7 @@
   import { createClient } from '@supabase/supabase-js';
   import Btn from '$lib/components/common/Btn.svelte';
   import {user} from '$lib/stores/authStore';
+  import { adminEmail } from '$lib/api/adminEmail';
 
   const supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
   
@@ -72,6 +73,13 @@
       }
       
       success = true;
+      // 发送管理员通知邮件
+      try {
+        await adminEmail.newContactForm(formData.get('title'));
+      } catch (emailError) {
+        console.error("发送管理员通知失败:", emailError);
+      }
+
       form.reset();
     } catch (e) {
       error = e instanceof Error ? e.message : '提交失败，请稍后重试';
@@ -186,7 +194,6 @@
                 title={loading ? '提交中...' : '提交'} 
                 type="submit" 
                 disabled={loading}
-                cssClass={loading ? 'opacity-70 cursor-not-allowed' : ''}
               />
             </div>
           </div>

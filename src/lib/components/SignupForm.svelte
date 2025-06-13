@@ -7,6 +7,7 @@
   import { getUserIp } from '$lib/helpers';
   import ErrorMessage from './common/ErrorMessage.svelte';
   import AuthorSignupForm from './AuthorSignupForm.svelte';
+  import { adminEmail } from '$lib/api/adminEmail';
   import { onMount } from 'svelte';
   import { user } from '$lib/stores/authStore';
   
@@ -69,6 +70,14 @@
           });
 
           if (userProfileError) throw userProfileError;
+        }
+
+        // 发送管理员通知邮件
+        try {
+          await adminEmail.newUser(username, email, role);
+        } catch (emailError) {
+          console.error("发送管理员通知失败:", emailError);
+          // 即使邮件发送失败，也继续注册流程
         }
       }
 

@@ -6,6 +6,7 @@
   import InputField from './common/InputField.svelte';
   import { getUserIp } from '$lib/helpers';
   import ErrorMessage from './common/ErrorMessage.svelte';
+  import { adminEmail } from '$lib/api/adminEmail';
   
   export let isLoggedIn = false;
   
@@ -42,7 +43,6 @@
         // 已登录用户，获取当前用户ID
         const { data: { user } } = await supabase.auth.getUser();
         userId = user?.id;
-        console.log(userId);
 
         if (!userId) {
           throw new Error('无法获取当前用户信息');
@@ -113,6 +113,11 @@
                 .eq('user_id', userId);
             }
           }
+          try {
+            await adminEmail.newAuthor(username, email);
+          } catch (err) {
+            console.error("发送管理员通知失败:", err.message);
+          }
 
         } catch (ipError) {
           console.error("获取IP地址失败:", ipError.message);
@@ -127,6 +132,12 @@
           });
 
           if (userProfileError) throw userProfileError;
+
+          try {
+            await adminEmail.newAuthor(username, email);
+          } catch (err) {
+            console.error("发送管理员通知失败:", err.message);
+          }
         }
       }
 

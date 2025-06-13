@@ -41,3 +41,7 @@ You can preview the production build with `npm run preview`.
 - [x] edit novel 引文
 - [x] 引文homepage style update
 - [x] send email to user after payment
+- [x] notify admin when new user signup
+- [x] notify admin when new contact form
+- [x] notify admin when apply for author
+- [ ] notify admin when user subscribe
