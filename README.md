@@ -44,4 +44,5 @@ You can preview the production build with `npm run preview`.
 - [x] notify admin when new user signup
 - [x] notify admin when new contact form
 - [x] notify admin when apply for author
-- [ ] notify admin when user subscribe
+- [x] notify admin when user subscribe
+- [x] author can delete chapter and novel

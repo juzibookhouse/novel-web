@@ -306,6 +306,33 @@ export const deleteChapter = async (chapterId: string) => {
     .eq('id', chapterId);
 }
 
+export const deleteNovel = async (novelId: string) => {
+  // First delete all chapters related to this novel
+  const { error: chaptersError } = await supabase
+    .from('chapters')
+    .delete()
+    .eq('novel_id', novelId);
+
+  if (chaptersError) {
+    throw chaptersError;
+  }
+
+  const {error: ReadingError } = await supabase
+    .from('reading_records')
+    .delete()
+    .eq('novel_id', novelId);
+
+  if (ReadingError) {
+    throw ReadingError;
+  }
+
+  // Then delete the novel itself
+  return await supabase
+    .from('novels')
+    .delete()
+    .eq('id', novelId);
+}
+
 export const upsertChapter = async (newChapter: Chapter) => {
   if (newChapter.id) {
     // Update existing chapter

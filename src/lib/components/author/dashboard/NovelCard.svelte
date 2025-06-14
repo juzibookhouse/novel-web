@@ -1,6 +1,7 @@
 <script lang="ts">
   import { COVER_PLACEHOLDER } from "$lib/constants";
   import Btn from "$lib/components/common/Btn.svelte";
+  import { deleteNovel } from "$lib/supabaseClient";
 
   export let novel: {
     id: string;
@@ -16,6 +17,28 @@
   export let isSelected: boolean;
   export let onEdit: () => void;
   export let onAddChapter: () => void;
+  export let fetchNovels: () => void;
+
+  let showDeleteConfirm = false;
+  let isDeleting = false;
+  let deleteError = "";
+
+  async function handleDelete() {
+    try {
+      isDeleting = true;
+      deleteError = "";
+      const { error } = await deleteNovel(novel.id);
+      
+      if (error) throw error;
+      
+      fetchNovels();
+      showDeleteConfirm = false;
+    } catch (e: any) {
+      deleteError = e.message || "删除失败，请重试";
+    } finally {
+      isDeleting = false;
+    }
+  }
 </script>
 
 <div
@@ -35,11 +58,18 @@
       <div class="flex-grow">
         <div class="flex justify-between items-center">
           <h3 class="text-2xl font-medium text-gray-900 mb-2">{novel.title}</h3>
-          <Btn
-            handleClick={onEdit}
-            title="编辑小说"
-            cssClass="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 px-4 py-2 rounded-full text-sm transition duration-200"
-          />
+          <div class="flex gap-2">
+            <Btn
+              handleClick={onEdit}
+              title="编辑小说"
+              cssClass="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 px-4 py-2 rounded-full text-sm transition duration-200"
+            />
+            <Btn
+              handleClick={() => showDeleteConfirm = true}
+              title="删除小说"
+              cssClass="bg-red-100 hover:bg-red-200 text-red-800 px-4 py-2 rounded-full text-sm transition duration-200"
+            />
+          </div>
         </div>
 
         <div class="flex items-center gap-4 text-sm text-gray-600 mb-4">
@@ -67,3 +97,35 @@
     </div>
   </div>
 </div>
+
+{#if showDeleteConfirm}
+  <div class="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+      <h3 class="text-xl font-medium text-gray-900 mb-4">确认删除</h3>
+      <p class="text-gray-600 mb-6">
+        您确定要删除《{novel.title}》吗？此操作将同时删除所有相关章节，且不可恢复。
+      </p>
+      {#if deleteError}
+        <p class="text-red-600 mb-4">{deleteError}</p>
+      {/if}
+      <div class="flex justify-end gap-4">
+        <button
+          type="button"
+          class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition duration-200"
+          on:click={() => showDeleteConfirm = false}
+          disabled={isDeleting}
+        >
+          取消
+        </button>
+        <button
+          type="button"
+          class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-200 disabled:opacity-50"
+          on:click={handleDelete}
+          disabled={isDeleting}
+        >
+          {isDeleting ? "删除中..." : "确认删除"}
+        </button>
+      </div>
+    </div>
+  </div>
+{/if}

@@ -185,6 +185,7 @@
           isSelected={selectedNovel?.id === novel.id}
           onEdit={() => startEditNovel(novel)}
           onAddChapter={() => startAddChapter(novel)}
+          {fetchNovels}
         />
           {#if novel.chapters && novel.chapters.length > 0}
             <ChapterList 
