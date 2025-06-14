@@ -1,6 +1,6 @@
 <script lang="ts">
     import { FREE_OPTIONS, type Chapter, type Novel } from "$lib/novel";
-    import { supabase, upsertChapter } from "$lib/supabaseClient";
+    import { supabase, upsertChapter, deleteChapter } from "$lib/supabaseClient";
     import { error } from "@sveltejs/kit";
     import TextInput from "./TextInput.svelte";
     import CheckInput from "./CheckInput.svelte";
@@ -29,6 +29,24 @@
       toggleNovelChapterForm()
     } catch (e: any) {
       // error = e.message;
+    }
+  }
+
+  async function deleteChapterHandler() {
+    if (!newChapter.id) return;
+    
+    if (!confirm('确定要删除这个章节吗？此操作不可撤销。')) {
+      return;
+    }
+    
+    try {
+      const {error: err} = await deleteChapter(newChapter.id);
+      if (err) throw err;
+      
+      fetchNovels();
+      toggleNovelChapterForm();
+    } catch (e: any) {
+      console.error(e.message);
     }
   }
 </script>
@@ -76,7 +94,20 @@
 
       </div>
 
-      <Btns handleCancel={toggleNovelChapterForm} confirmText={newChapter.id ? "更新" : "创建"} cssClass="mt-25" />
+      <div class="flex justify-between items-center mt-25">
+        <div>
+          {#if newChapter.id }
+            <button 
+              type="button" 
+              on:click={deleteChapterHandler}
+              class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            >
+              删除章节
+            </button>
+          {/if}
+        </div>
+        <Btns handleCancel={toggleNovelChapterForm} confirmText={newChapter.id ? "更新" : "创建"} />
+      </div>
     </form>
   </div>
 </div>

@@ -299,6 +299,13 @@ export const getChapterSilbings = async (novelId: string) => {
     .order('chapter_order');
 }
 
+export const deleteChapter = async (chapterId: string) => {
+  return await supabase
+    .from('chapters')
+    .delete()
+    .eq('id', chapterId);
+}
+
 export const upsertChapter = async (newChapter: Chapter) => {
   if (newChapter.id) {
     // Update existing chapter
