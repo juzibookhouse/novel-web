@@ -26,7 +26,8 @@ interface SearchNovelsParams {
   category?: string,
   status?: string,
   start?: number,
-  end?: number
+  end?: number,
+  limit?: number,
 }
 
 export const getUserProfile = async (user_id: string) => {
@@ -44,7 +45,7 @@ export const updateUserProfile = async (user_id: string, updates: { email?: stri
     .eq("user_id", user_id);
 }
 
-export const getNovels = async ({ search, category, status, start, end }: SearchNovelsParams) => {
+export const getNovels = async ({ search, category, status, start, end, limit }: SearchNovelsParams) => {
   let query = supabase.from("novels").select(
     `
       id,
@@ -83,6 +84,10 @@ export const getNovels = async ({ search, category, status, start, end }: Search
 
   if (start && end) {
     query = query.range(start, end);
+  }
+
+  if (limit) {
+    query = query.limit(limit);
   }
 
   query = query.eq("published", true).eq("chapters.chapter_order", 1);
