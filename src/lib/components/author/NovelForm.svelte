@@ -16,7 +16,7 @@
     tags: [],
     status: "ongoing",
     pen_name: "",
-    is_free: 'vip'
+    is_free: ''
   };
   export let categories;
   export let tags;

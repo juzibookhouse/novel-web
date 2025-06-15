@@ -4,6 +4,14 @@ const NOVEL_STATUS:{[key:string]:string} = {
 }
 
 export const FREE_OPTIONS = [
+  {value: "", label:"取决于章节"},
+  {value: "public", label:"完全开放阅读"},
+  {value: "private", label:"仅对注册用户阅读"},
+  {value: "vip", label:"仅对开通会员开发阅读"}
+]
+
+export const CHAPTER_FREE_OPTIONS = [
+  {value: "", label:"取决于小说"},
   {value: "public", label:"完全开放阅读"},
   {value: "private", label:"仅对注册用户阅读"},
   {value: "vip", label:"仅对开通会员开发阅读"}

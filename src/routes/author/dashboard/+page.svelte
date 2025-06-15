@@ -20,7 +20,7 @@
     category_id:'',
     tags:[],
     status: 'ongoing',
-    is_free: 'vip',
+    is_free: '',
     published: true
   };
   
@@ -55,7 +55,7 @@
     content: '',
     novel_id: '',
     created_at: '',
-    is_free: 'vip',
+    is_free: '',
     published: true,
     chapter_order: 0
   };
