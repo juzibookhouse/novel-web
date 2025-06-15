@@ -24,16 +24,17 @@
       <div 
         class="flex items-center justify-center gap-4 transition-all duration-1000 transform {visible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}"
       >
-        <h1 class="font-jianhao text-8xl text-white drop-shadow-lg">
+        <img src="/home_title.png" class="w-full max-w-2xl" alt="">
+        <!-- <h1 class="font-jianhao text-8xl text-white drop-shadow-lg">
           {WEBSITE_NAME}
-        </h1>
+        </h1> -->
       </div>
       
-      <p 
+      <!-- <p 
         class="text-3xl text-[var(--accent-color)] max-w-2xl mx-auto font-medium transition-all duration-1000 delay-300 transform {visible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}"
       >
       让我们在这里撒点野
-      </p>
+      </p> -->
       
       {#if (!$user)}
       <div 
