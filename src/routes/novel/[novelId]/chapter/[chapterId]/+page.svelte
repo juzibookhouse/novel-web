@@ -143,7 +143,7 @@
       <p>更新时间: {getUserDateFormat(chapter.updated_at)}</p>
     </div>
 
-    {#if chapter.is_published && chapter.novels.is_published}
+    {#if chapter.published && chapter.novels.published}
       {#if chapter.novels.user_id === $user?.id || canReadChapter}
         <ChapterContent chapter={chapter} />
       {:else if !$user}

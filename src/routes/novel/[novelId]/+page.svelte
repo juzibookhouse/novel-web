@@ -16,7 +16,7 @@
   <div
     class="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden"
   >
-    {#if !novel.is_published}
+    {#if !novel.published}
       <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
         <p class="font-medium">编辑状态</p>
         <p>这部小说目前正在编辑中，尚未发布。</p>

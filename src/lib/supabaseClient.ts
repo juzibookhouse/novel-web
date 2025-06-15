@@ -271,11 +271,13 @@ export const getChapter = async (chapterId: string) => {
     is_free,
     updated_at,
     novel_id,
+    published,
     novels (
       id,
       title,
       is_free,
-      user_id
+      user_id,
+      published
     )
   `)
     .eq('id', chapterId)
