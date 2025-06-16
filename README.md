@@ -46,3 +46,4 @@ You can preview the production build with `npm run preview`.
 - [x] notify admin when apply for author
 - [x] notify admin when user subscribe
 - [x] author can delete chapter and novel
+- [ ] update novel and cover style
