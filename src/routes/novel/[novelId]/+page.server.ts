@@ -11,7 +11,7 @@ export async function load({ params }: { params: { novelId: string } }) {
 
   novel.chapters = getSortedChapters(novel.chapters);
   novel.chapters = novel.chapters.map((c:Chapter)=>{
-    c.is_free = FREE_OPTIONS_MAP[novel.is_free || c.is_free]
+    c.is_free = FREE_OPTIONS_MAP[c.is_free || novel.is_free]
     return c;
   });
   novel.author = userProfile;

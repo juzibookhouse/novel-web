@@ -17,10 +17,10 @@ export const CHAPTER_FREE_OPTIONS = [
   {value: "vip", label:"仅对开通会员开发阅读"}
 ]
 
-export const FREE_OPTIONS_MAP = {
+export const FREE_OPTIONS_MAP:{[key:string]:string} = {
   public: '完全开放阅读',
   private: '仅对注册用户阅读',
-  vip: '仅对开通会员开发阅读'
+  vip: '仅对开通会员开发阅读',
 }
 
 export interface Category {
