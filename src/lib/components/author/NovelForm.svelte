@@ -199,7 +199,7 @@
                     type="checkbox"
                     value={tag.id}
                     checked={newNovel.tags.includes(tag.id)}
-                    disabled={tag.user_id && tag.user_id !== $user?.id}
+                    
                     on:change={(e) => {
                       if (e.target.checked) {
                         newNovel.tags = [...newNovel.tags, tag.id];
