@@ -14,7 +14,7 @@
   });
 
   function changeFontSize(delta: number) {
-    fontSize = Math.max(12, Math.min(24, fontSize + delta));
+    fontSize = Math.max(12, Math.min(48, fontSize + delta));
     localStorage.setItem("reading-font-size", fontSize.toString());
   }
 
