@@ -199,6 +199,7 @@ export const upsertNovel = async (user: User, newNovel: NewNovel) => {
       .single();
 
     if (novelError) throw novelError;
+    novelId = novel.id;
   } else {
     // Update existing novel
     const { error: updateError } = await supabase
@@ -526,7 +527,6 @@ export const upsertChapterReadingRecords = async(chapter, readingTime, user) => 
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const curDate = `${year}-${(month < 10 ? '0'+month : month)}`;
-  console.log(curDate);
   
   const {data:readingRecord,error} = await supabase
     .from('reading_records')
