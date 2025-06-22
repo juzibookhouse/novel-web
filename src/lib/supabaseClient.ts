@@ -28,6 +28,7 @@ interface SearchNovelsParams {
   start?: number,
   end?: number,
   limit?: number,
+  is_short?: boolean
 }
 
 export const getUserProfile = async (user_id: string) => {
@@ -45,7 +46,7 @@ export const updateUserProfile = async (user_id: string, updates: { email?: stri
     .eq("user_id", user_id);
 }
 
-export const getNovels = async ({ search, category, status, start, end, limit }: SearchNovelsParams) => {
+export const getNovels = async ({ search, category, status, start, end, limit,is_short }: SearchNovelsParams) => {
   let query = supabase.from("novels").select(
     `
       id,
@@ -54,6 +55,7 @@ export const getNovels = async ({ search, category, status, start, end, limit }:
       cover_url,
       status,
       category_id,
+      is_short,
       categories!inner (
         id,name
       ),
@@ -88,6 +90,10 @@ export const getNovels = async ({ search, category, status, start, end, limit }:
 
   if (limit) {
     query = query.limit(limit);
+  }
+
+  if (typeof is_short !== 'undefined') {
+    query = query.eq('is_short', is_short);
   }
 
   query = query.eq("published", true).eq("chapters.chapter_order", 1);
@@ -190,6 +196,7 @@ export const upsertNovel = async (user: User, newNovel: NewNovel) => {
         is_free: newNovel.is_free,
         published: newNovel.published,
         category_id: newNovel.category_id,
+        is_short: newNovel.is_short,
         cover_url,
         user_id: user.id,
         pen_name: newNovel.pen_name || null,
@@ -210,6 +217,7 @@ export const upsertNovel = async (user: User, newNovel: NewNovel) => {
         category_id: newNovel.category_id,
         status: newNovel.status,
         is_free: newNovel.is_free,
+        is_short: newNovel.is_short,
         published: newNovel.published,
         cover_url,
         pen_name: newNovel.pen_name || null,

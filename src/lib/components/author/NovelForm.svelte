@@ -16,7 +16,8 @@
     tags: [],
     status: "ongoing",
     pen_name: "",
-    is_free: ''
+    is_free: '',
+    is_short: false,
   };
   export let categories;
   export let tags;
@@ -144,6 +145,7 @@
           />
           
           <CheckInput title="发布" object={newNovel} field="published" />
+          <CheckInput title="精品短篇" object={newNovel} field="is_short" />
           <SelectInput title="免费阅读" object={newNovel} field="is_free" options={FREE_OPTIONS} />
 
           <div>

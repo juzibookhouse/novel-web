@@ -6,7 +6,7 @@
   import Novels from "$lib/components/home/Novels.svelte";
   import { WEBSITE_NAME } from "$lib/constants";
   export let data;
-  const { ongoingNovels, finishedNovels, quotationChapters, categories } = data;
+  const { ongoingNovels, finishedNovels, quotationChapters, categories, shortNovels } = data;
 </script>
 
 <svelte:head>
@@ -24,14 +24,21 @@
   <Novels
     novels={ongoingNovels}
     title={"连载作品"}
-    status={"ongoing"}
+    url={"/novels?status=ongoing"}
     bg={"/50"}
   />
 
   <Novels
     novels={finishedNovels}
     title={"完结作品"}
-    status={"finished"}
+    url={"/novels?status=finished"}
+    bg={"bg-white/80"}
+  />
+
+  <Novels
+    novels={shortNovels}
+    title={"精品短篇"}
+    url={"/novels?is_short=1"}
     bg={"bg-white/80"}
   />
 

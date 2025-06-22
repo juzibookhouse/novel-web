@@ -23,6 +23,9 @@
       <div class="space-y-4">
         <div class="flex items-center gap-2">
           <NovelCatTags catTags={[{name:getNovelStatus(novel)}]} type={novel.status} />
+          {#if novel.is_short }
+          <NovelCatTags catTags={[{name:'短篇'}]} type='cat' />
+          {/if}
           <NovelCatTags catTags={[novel.categories]} type="cat" />
           <NovelCatTags catTags={novel.tags} />
         </div>

@@ -3,7 +3,7 @@
 
   export let novels;
   export let title:string;
-  export let status:string;
+  export let url:string;
   export let bg:string;
 </script>
 
@@ -12,8 +12,8 @@
   <div class="max-w-7xl mx-auto">
     <h2 class=" text-5xl text-primary text-center mb-16 flex justify-between items-center">
       <span></span>
-      <a href="/novels?status={status}">{title}</a>
-      <a href="/novels?status={status}" class="text-3xl">更多</a>
+      <a href={url}>{title}</a>
+      <a href={url} class="text-3xl">更多</a>
     </h2>
     <div class="grid grid-cols-4 gap-8">
       {#each novels as novel}

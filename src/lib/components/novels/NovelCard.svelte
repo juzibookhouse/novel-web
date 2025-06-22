@@ -26,6 +26,9 @@
     <h3 class="text-2xl font-medium text-gray-900">{novel.title}</h3>
     <p class="text-gray-600 line-clamp-2">{novel.description}</p>
     <div class="flex flex-wrap gap-2">
+      {#if novel.is_short }
+      <NovelCatTags catTags={[{name:'短篇'}]} type='cat' />
+      {/if}
       <NovelCatTags catTags={[novel.categories]} type='cat' />
       <NovelCatTags catTags={novel.tags} />
     </div>

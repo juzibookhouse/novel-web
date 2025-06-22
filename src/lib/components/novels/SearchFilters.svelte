@@ -6,6 +6,7 @@
   let searchTerm = data.search || '';
   let selectedCategory = data.selectedCategory || '';
   let selectedStatus = data.selectedStatus || '';
+  let isShort = data.is_short === 'true';
   
   const statusOptions = [
     { value: '', label: '全部状态' },
@@ -18,6 +19,7 @@
     if (searchTerm) params.set('search', searchTerm);
     if (selectedCategory) params.set('category', selectedCategory);
     if (selectedStatus) params.set('status', selectedStatus);
+    if (isShort) params.set('is_short', 'true');
     params.set('page', '1');
     goto(`/novels?${params.toString()}`);
   }
@@ -40,7 +42,7 @@
     </div>
   </div>
   
-  <div class="p-6 bg-gray-50 flex flex-wrap gap-4">
+  <div class="p-6 bg-gray-50 flex flex-wrap items-center gap-4">
     <div class="flex-1 min-w-[200px]">
       <label for="category" class="block text-sm font-medium text-gray-700 mb-2">类别</label>
       <div class="relative">
@@ -77,6 +79,21 @@
         <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500">
           ▼
         </div>
+      </div>
+    </div>
+    
+    <div class="flex-1 min-w-[200px] flex items-end">
+      <div class="w-full">
+        <label for="is-short" class="flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            id="is-short"
+            bind:checked={isShort}
+            on:change={handleSearch}
+            class="w-5 h-5 text-red-500 border-2 border-gray-400 rounded focus:ring-red-500"
+          />
+          <span class="ml-2 text-sm font-medium text-gray-700">只看短篇小说</span>
+        </label>
       </div>
     </div>
   </div>

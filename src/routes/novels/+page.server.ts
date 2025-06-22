@@ -5,6 +5,7 @@ export async function load({ url }: { url: URL }) {
   const search = url.searchParams.get("search") || "";
   const category = url.searchParams.get("category") || "";
   const status = url.searchParams.get("status") || "";
+  const is_short = url.searchParams.get("is_short")? true : undefined;
   const pageSize = 12;
   const start = (page - 1) * pageSize;
   const end = start + pageSize - 1;
@@ -13,7 +14,7 @@ export async function load({ url }: { url: URL }) {
     data: novels,
     count,
     error,
-  } = await getNovels({search, category, status, start, end});
+  } = await getNovels({search, category, status, start, end, is_short});
 
   const {data:categories} = await getCategories();
 
@@ -25,5 +26,6 @@ export async function load({ url }: { url: URL }) {
     search,
     selectedCategory: category,
     selectedStatus: status,
+    is_short
   };
 }

@@ -56,6 +56,7 @@ export interface NewNovel {
   cover_url?: string;
   cover_file?: File;
   is_free?: string;
+  is_short: boolean;
   published?: boolean;
   pen_name?: string;
   chapters?: [];
@@ -73,6 +74,7 @@ export interface Novel {
   category_id?: string;
   cover_url?: string;
   is_free?: string;
+  is_short?: boolean;
   published?: boolean;
   chapters?: Chapter[];
   tags:[];
