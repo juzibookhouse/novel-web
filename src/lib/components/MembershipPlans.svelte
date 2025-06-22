@@ -128,10 +128,18 @@
       processing = true;
       paymentError = null;
 
-      const { error: stripeError } = await stripe.confirmPayment({
+      const paymentOption = {
         elements,
         redirect: "if_required",
-      });
+      };
+      
+      if (selectedPaymentMethod === 'alipay') {
+        paymentOption.confirmParams = {
+          return_url: window.location.origin + `/payment-confirm?user_membership_id=${$user?.membership?.id}&previous_url=${window.location.href}`
+        }
+      }
+
+      const { error: stripeError } = await stripe.confirmPayment(paymentOption);
 
       if (stripeError) {
         paymentError = stripeError.message;
