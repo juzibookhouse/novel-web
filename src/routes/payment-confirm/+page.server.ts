@@ -19,6 +19,7 @@ export const load = async ({ url }) => {
         .single();
 
     if (userMembershipError || !userMembership) {
+        console.error(userMembershipError);
         throw error(404, '未找到待支付的会员记录');
     }
 
