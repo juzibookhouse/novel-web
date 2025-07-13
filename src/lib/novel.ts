@@ -3,22 +3,24 @@ const NOVEL_STATUS:{[key:string]:string} = {
   finished: '完结'
 }
 
+const PUBLIC_TEXT = '开放阅读';
+
 export const FREE_OPTIONS = [
   {value: "", label:"取决于章节"},
-  {value: "public", label:"完全开放阅读"},
+  {value: "public", label:PUBLIC_TEXT},
   {value: "private", label:"仅对注册用户阅读"},
   {value: "vip", label:"仅对开通会员开发阅读"}
 ]
 
 export const CHAPTER_FREE_OPTIONS = [
   {value: "", label:"取决于小说"},
-  {value: "public", label:"完全开放阅读"},
+  {value: "public", label:PUBLIC_TEXT},
   {value: "private", label:"仅对注册用户阅读"},
   {value: "vip", label:"仅对开通会员开发阅读"}
 ]
 
 export const FREE_OPTIONS_MAP:{[key:string]:string} = {
-  public: '完全开放阅读',
+  public: PUBLIC_TEXT,
   private: '仅对注册用户阅读',
   vip: '仅对开通会员开发阅读',
 }
