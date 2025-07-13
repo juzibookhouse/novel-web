@@ -519,7 +519,9 @@ export const fetchAdminAuthors = async () => {
         novelCount: novels?.length,
         novelReadingTime: novels.reduce((acc, novel)=>{
           if (novel.reading_records.length > 0) {
-            return acc + novel.reading_records[0].reading_time;
+            return acc + novel.reading_records.reduce((acc, record)=>{
+              return acc + record.reading_time;
+            },0);
           } else {
             return acc;
           }
