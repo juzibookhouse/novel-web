@@ -78,9 +78,21 @@
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
             >{user.user_name}</td
           >
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-            >{user.ip || '未记录'}</td
-          >
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            {#if user.ip}
+              <a 
+                href={`https://ip-api.com/#${user.ip}`} 
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary hover:underline"
+                title="点击查看IP位置信息"
+              >
+                {user.ip}
+              </a>
+            {:else}
+              未记录
+            {/if}
+          </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
             >{user.email || '未记录'}</td
           >
