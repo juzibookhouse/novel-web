@@ -4,25 +4,26 @@ const NOVEL_STATUS:{[key:string]:string} = {
 }
 
 const PUBLIC_TEXT = '开放阅读';
+const PRIVATE_TEXT = '仅对注册用户阅读';
 const VIP_TEXT = '仅对会员阅读';
 
 export const FREE_OPTIONS = [
   {value: "", label:"取决于章节"},
   {value: "public", label:PUBLIC_TEXT},
-  {value: "private", label:"仅对注册用户阅读"},
+  {value: "private", label:PRIVATE_TEXT},
   {value: "vip", label:VIP_TEXT}
 ]
 
 export const CHAPTER_FREE_OPTIONS = [
   {value: "", label:"取决于小说"},
   {value: "public", label:PUBLIC_TEXT},
-  {value: "private", label:"仅对注册用户阅读"},
+  {value: "private", label:PRIVATE_TEXT},
   {value: "vip", label:VIP_TEXT}
 ]
 
 export const FREE_OPTIONS_MAP:{[key:string]:string} = {
   public: PUBLIC_TEXT,
-  private: '仅对注册用户阅读',
+  private: PRIVATE_TEXT,
   vip: VIP_TEXT,
 }
 
