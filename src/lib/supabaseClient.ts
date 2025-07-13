@@ -462,7 +462,8 @@ export const getAdminNovels = async () => {
     status,
     created_at,
     reading_records (
-      reading_time
+      reading_time,
+      date
     )
   `);
   let adminNovels = [];
@@ -470,7 +471,7 @@ export const getAdminNovels = async () => {
     adminNovels = novelsData.map(novel => {
       return {
         ...novel,
-        readingTime: novel.reading_records?.length > 0 ? novel.reading_records[0].reading_time : 0
+        readingTime: novel.reading_records?.length > 0 ? novel.reading_records.reduce((acc, record) => acc + record.reading_time, 0) : 0
       }
     });
   }
