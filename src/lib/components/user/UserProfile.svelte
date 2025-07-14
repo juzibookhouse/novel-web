@@ -216,9 +216,14 @@
           <p class="text-red-100">
             状态: {$user.membership?.status === "active" ? "有效" : "待缴费"}
           </p>
-          {#if !$user.isMembership}
-            <Btn title="缴费" handleClick={() => (showMembershipModal = true)} />
-          {/if}
+          <div class="flex gap-2">
+            {#if $user.isMembership}
+              <Btn title="查看计划" handleClick={() => (showMembershipModal = true)} />
+              <!-- <Btn title="提前续费" handleClick={() => (showMembershipModal = true)} /> -->
+            {:else}
+              <Btn title="缴费" handleClick={() => (showMembershipModal = true)} />
+            {/if}
+          </div>
         </div>
       </div>
     {:else}
