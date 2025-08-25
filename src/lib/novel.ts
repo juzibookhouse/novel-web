@@ -124,6 +124,8 @@ export function formatDuration(seconds: number): string {
     return `${minutes}分钟`;
   } else {
     const hours = Math.floor(seconds / 3600);
-    return `${hours}小时`;
+    const remainingSeconds = seconds % 3600;
+    const minutes = Math.floor(remainingSeconds / 60);
+    return `${hours}小时${minutes}分钟`;
   }
 }
