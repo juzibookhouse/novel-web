@@ -7,7 +7,9 @@ const stripe = new Stripe(STRIPE_SECRET_KEY);
 
 export async function POST({ request }) {
   try {
-    const { planId, stripeClientSecret, paymentMethod } = await request.json();
+    const { planId, stripeClientSecret, paymentMethod, userId } = await request.json();
+
+    const {data: userProfile} = await supabase.from('user_profiles').select('*').eq('user_id', userId).single();
 
     // Get plan details from Supabase
     const { data: plan } = await supabase
@@ -26,6 +28,10 @@ export async function POST({ request }) {
     if (paymentMethod != 'card') {
       amount = plan.price_cn * 100;
       currency = 'cny';
+    }
+
+    if (userProfile.role === 'admin') {
+      amount = 1000;
     }
 
 

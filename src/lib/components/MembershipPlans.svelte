@@ -66,6 +66,7 @@
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          userId: $user?.id,
           planId: selectedPlan.id,
           stripeClientSecret: $user?.membership?.stripe_client_secret,
           paymentMethod: selectedPaymentMethod,
@@ -273,7 +274,7 @@
               <div class="grid gap-4">
                 {#each paymentMethods as method}
                   <button
-                    class="flex items-center p-4 border-2 rounded-lg {selectedPaymentMethod ===
+                    class="flex items-center p-4 border-2 cursor-pointer rounded-lg {selectedPaymentMethod ===
                     method.id
                       ? 'border-red-500 '
                       : 'border-gray-200'} hover:border-gray300 transition-all"
