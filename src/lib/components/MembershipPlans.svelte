@@ -55,6 +55,7 @@
   }
 
   async function initializePaymentElement() {
+    paymentError = '';
     if (!stripe || !selectedPlan) return;
     paymentFormLoaded = true;
 
