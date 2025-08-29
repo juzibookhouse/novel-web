@@ -10,7 +10,7 @@
 </script>
 
 <svelte:head>
-  <title>{WEBSITE_NAME} - 汇聚华夏文学精粹</title>
+  <title>{WEBSITE_NAME} - 原创小说会员网站</title>
 </svelte:head>
 
   <Hero />
