@@ -1,5 +1,5 @@
 import { Resend } from 'resend';
-import { RESEND_API_KEY, EMAIL_FROM, ADMIN_EMAIL } from '$env/static/private';
+import { RESEND_API_KEY, EMAIL_FROM, ADMIN_EMAIL, HOST_URL } from '$env/static/private';
 import { WEBSITE_NAME } from './constants';
 
 const resend = new Resend(RESEND_API_KEY);
@@ -25,7 +25,7 @@ export async function sendPaymentConfirmationEmail(user: any, plan: any, amount:
             <p>您现在可以畅享所有会员专属内容。</p>
             <p>如有任何问题，请随时联系我们。</p>
             <div style="text-align: center; margin-top: 30px;">
-              <a href="${process.env.PUBLIC_BASE_URL}" 
+              <a href="${HOST_URL}" 
                  style="background-color: #B91C1C; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">
                 开始阅读
               </a>
