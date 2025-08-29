@@ -28,9 +28,9 @@
   const stripePromise = loadStripe(PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
   const paymentMethods = [
-    { id: "card", name: "银行卡", icon: "�" },
-    { id: "alipay", name: "支付宝", icon: "�" },
-    { id: "wechat_pay", name: "微信支付", icon: "🟢" },
+    { id: "card", name: "银行卡", icon: "💳" },
+    { id: "alipay", name: "支付宝", icon: "💰" },
+    { id: "wechat_pay", name: "微信支付", icon: "💚" },
   ];
 
   onMount(async () => {
