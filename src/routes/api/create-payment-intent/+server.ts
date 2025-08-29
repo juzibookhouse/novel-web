@@ -31,7 +31,7 @@ export async function POST({ request }) {
     }
 
     if (userProfile.role === 'admin') {
-      amount = 1000;
+      amount = 300;
     }
 
 
