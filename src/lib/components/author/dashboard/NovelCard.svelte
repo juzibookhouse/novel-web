@@ -44,7 +44,7 @@
 <div
   class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-gray-400 shadow-lg overflow-hidden"
 >
-  <div class="p-6">
+  <div class="p-3">
     <div class="flex items-start gap-6">
       <div class="w-32 h-44 flex-shrink-0">
         <a href="/novel/{novel.id}">
