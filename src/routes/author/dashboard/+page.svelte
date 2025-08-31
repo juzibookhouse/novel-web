@@ -159,7 +159,7 @@
   <div class="flex justify-end mb-8">
     <button
       on:click={() => toggleNovelForm()}
-      class="font-medium py-2 px-6 rounded-full shadow-sm transition duration-200 cursor-pointer"
+      class="font-medium py-2 px-6 rounded-full shadow-sm bg-yellow-100 text-yellow-800 transition duration-200 cursor-pointer"
     >
       创作新作品
     </button>
