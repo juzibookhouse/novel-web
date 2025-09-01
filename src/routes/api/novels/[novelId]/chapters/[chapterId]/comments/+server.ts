@@ -4,7 +4,6 @@ import { supabase } from '$lib/supabaseClient';
 export async function GET({ params }) {
   try {
     const { chapterId } = params;
-    console.log('test: ',chapterId);
 
     // Fetch comments with user profile information and nested replies
     const { data: comments, error } = await supabase
@@ -153,106 +152,6 @@ export async function POST({ request, params, locals }) {
     };
 
     return json({ comment: formattedComment }, { status: 201 });
-  } catch (err) {
-    console.error('Comments API error:', err);
-    return json({ error: 'Internal server error' }, { status: 500 });
-  }
-}
-
-export async function PUT({ request, params, locals }) {
-  try {
-    const { content, commentId } = await request.json();
-
-    // Validate required fields
-    if (!content || content.trim().length === 0) {
-      return json({ error: 'Comment content is required' }, { status: 400 });
-    }
-
-    if (!commentId) {
-      return json({ error: 'Comment ID is required' }, { status: 400 });
-    }
-
-    // Check if user is authenticated
-    if (!locals.user) {
-      return json({ error: 'Authentication required' }, { status: 401 });
-    }
-
-    // Update the comment
-    const { data: updatedComment, error: updateError } = await supabase
-      .from('chapter_comments')
-      .update({
-        content: content.trim(),
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', commentId)
-      .eq('user_id', locals.user.id) // Ensure user can only update their own comments
-      .select(`
-        id,
-        content,
-        created_at,
-        updated_at,
-        parent_id,
-        user_id,
-        user_profiles!inner (
-          user_name
-        )
-      `)
-      .single();
-
-    if (updateError) {
-      console.error('Error updating comment:', updateError);
-      return json({ error: 'Failed to update comment' }, { status: 500 });
-    }
-
-    if (!updatedComment) {
-      return json({ error: 'Comment not found or unauthorized' }, { status: 404 });
-    }
-
-    // Format the response
-    const formattedComment = {
-      id: updatedComment.id,
-      content: updatedComment.content,
-      created_at: updatedComment.created_at,
-      updated_at: updatedComment.updated_at,
-      parent_id: updatedComment.parent_id,
-      user_id: updatedComment.user_id,
-      user_name: updatedComment.user_profiles.user_name,
-      replies: []
-    };
-
-    return json({ comment: formattedComment });
-  } catch (err) {
-    console.error('Comments API error:', err);
-    return json({ error: 'Internal server error' }, { status: 500 });
-  }
-}
-
-export async function DELETE({ request, params, locals }) {
-  try {
-    const { commentId } = await request.json();
-
-    if (!commentId) {
-      return json({ error: 'Comment ID is required' }, { status: 400 });
-    }
-
-    // Check if user is authenticated
-    if (!locals.user) {
-      return json({ error: 'Authentication required' }, { status: 401 });
-    }
-
-    // Delete the comment (this will also delete replies due to CASCADE)
-    const { error: deleteError } = await supabase
-      .from('chapter_comments')
-      .delete()
-      .eq('id', commentId)
-      .eq('user_id', locals.user.id); // Ensure user can only delete their own comments
-
-    if (deleteError) {
-      console.error('Error deleting comment:', deleteError);
-      return json({ error: 'Failed to delete comment' }, { status: 500 });
-    }
-
-    return json({ success: true });
   } catch (err) {
     console.error('Comments API error:', err);
     return json({ error: 'Internal server error' }, { status: 500 });
