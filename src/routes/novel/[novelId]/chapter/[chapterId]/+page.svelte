@@ -12,6 +12,7 @@
   import ChapterMemberSubscriptionMsg from "$lib/components/novels/ChapterMemberSubscriptionMsg.svelte";
   import ChapterHeader from "$lib/components/novels/ChapterHeader.svelte";
   import FavNovel from "$lib/components/novels/FavNovel.svelte";
+  import ChapterComments from "$lib/components/novels/ChapterComments.svelte";
 
   export let data;
   $: ({ chapter, prevChapterId, nextChapterId, novelId } = data);
@@ -167,6 +168,8 @@
   </div>
 
   <ChapterPagination novelId={novelId} prevChapterId={prevChapterId} nextChapterId={nextChapterId} />
+    
+  <ChapterComments chapterId={chapter.id} novelId={novelId} />
     
 </div>
 </div>
