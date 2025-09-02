@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { user } from '$lib/stores/authStore';
   import Btn from '../common/Btn.svelte';
+    import { sendRequest } from '$lib/api';
 
   export let chapterId: string;
   export let novelId: string;
@@ -66,19 +67,14 @@
       submitting = true;
       error = null;
 
-      const response = await fetch(`/api/novels/${novelId}/chapters/${chapterId}/comments`, {
+      const {response, data} = await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/comments`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify({
           content: newComment.trim()
         })
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
+      if (!response?.ok) {
         throw new Error(data.error || 'Failed to submit comment');
       }
 

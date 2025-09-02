@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
+import { getAuthUser } from '$lib/server/auth.js';
 
 export async function GET({ params }) {
   try {
@@ -71,6 +72,7 @@ export async function GET({ params }) {
 export async function POST({ request, params, locals }) {
   try {
     const { chapterId } = params;
+    const {user_id} = await getAuthUser(request);
     const { content, parent_id } = await request.json();
 
     // Validate required fields
@@ -83,7 +85,7 @@ export async function POST({ request, params, locals }) {
     }
 
     // Check if user is authenticated
-    if (!locals.user) {
+    if (!user_id) {
       return json({ error: 'Authentication required' }, { status: 401 });
     }
 
@@ -117,7 +119,7 @@ export async function POST({ request, params, locals }) {
       .from('chapter_comments')
       .insert({
         chapter_id: chapterId,
-        user_id: locals.user.id,
+        user_id,
         content: content.trim(),
         parent_id: parent_id || null
       })
