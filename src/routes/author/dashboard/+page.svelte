@@ -13,6 +13,7 @@
   import EmptyState from '$lib/components/author/dashboard/EmptyState.svelte';
   import LoadingIndicator from '$lib/components/author/dashboard/LoadingIndicator.svelte';
   import ErrorDisplay from '$lib/components/author/dashboard/ErrorDisplay.svelte';
+    import { sendRequest } from '$lib/api';
   
   const EMPTY_NOVEL:NewNovel = {
     title: '',
@@ -104,16 +105,12 @@
   async function fetchNovels() {
     try {
       loading = true;
-      if (!$user?.id) return;
-      const {data, error: fetchError} = await getAuthorNovels($user);
-      
-      if (fetchError) throw fetchError;
-      
-      novels = (data || []).map(novel => ({
-        ...novel,
-        tags: novel.novel_tags?.map(nc => nc.tags),
-        chapters: getSortedChapters(novel.chapters)
-      }));
+      const {data:{novels: novelsData, error: fetchError}} = await sendRequest('/api/novels');
+      if (fetchError) {
+        console.error('Error fetching novels:', fetchError);
+        return;
+      }
+      novels = novelsData;
     } catch (e: any) {
       error = e.message;
     } finally {
