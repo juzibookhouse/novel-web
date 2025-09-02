@@ -1,7 +1,7 @@
 import { supabase } from "$lib/supabaseClient";
 
 export async function getAuthUser(request:Request) {
-  const authorization = request.headers.get('Authorization');
+  let authorization = request.headers.get('Authorization')?.replace('Bearer ', '');
   let userProfile = {id:'',user_id:'',isAdmin:false,email:''};
   if (!authorization) return userProfile;
   try {
@@ -12,8 +12,6 @@ export async function getAuthUser(request:Request) {
         userProfile = {
           ...profile,
           isAdmin: profile?.role === 'admin',
-          name: `${profile.first_name} ${profile.last_name}`,
-          initial: `${profile.first_name[0]}`,
         }
       }
     }
