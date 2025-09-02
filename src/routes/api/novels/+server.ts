@@ -39,7 +39,7 @@ export async function GET({ request }) {
     
     const novels = (data || []).map(novel => ({
       ...novel,
-      tags: novel.novel_tags?.map(nc => nc.tags),
+      tags: novel.novel_tags?.map((nc: { tags: any; }) => nc.tags),
       chapters: getSortedChapters(novel.chapters)
     }));
     
