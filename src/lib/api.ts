@@ -1,17 +1,24 @@
+import { PUBLIC_SUPABASE_URL } from "$env/static/public"
+
+export function getAuthToken() {
+  const authorizationKey = PUBLIC_SUPABASE_URL.split('https://')[1].split('.')[0];
+  if (typeof localStorage === 'undefined') return null;
+  return localStorage.getItem(`sb-${authorizationKey}-auth-token`);
+}
+
 /**
  * 封装 fetch 方法，提供统一的请求处理逻辑
  * @param url 请求地址
  * @param options 请求配置
  * @returns Promise<Response>
  */
-export async function sendRequest(url: string, options?: RequestInit): Promise<Response> {
+export async function sendRequest(url: string, options?: RequestInit) {
   // 从 localStorage 获取 Supabase 密钥
-  const supabaseKey = typeof window !== 'undefined' ? localStorage.getItem('supabaseKey') : null;
 
   const defaultOptions: RequestInit = {
     headers: {
       'Content-Type': 'application/json',
-      ...(supabaseKey ? { 'Authorization': `Bearer ${supabaseKey}` } : {}),
+      'Authorization': `Bearer ${getAuthToken()}`
     },
   };
 
@@ -26,10 +33,11 @@ export async function sendRequest(url: string, options?: RequestInit): Promise<R
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.status}`);
     }
+    const data = await response.json();
 
-    return response;
+    return {response,data};
   } catch (error) {
     console.error('Request error:', error);
-    throw error;
+    return {error};
   }
 }
