@@ -92,7 +92,7 @@ getUserSession();
 import { browser } from '$app/environment';
 
 // Subscribe to auth changes
-const PATHS_TO_REDIRECT = ["/user/login", "/user/signup", "author/signup"];
+const PATHS_TO_REDIRECT = ["/user/signup", "author/signup"];
 
 if (browser) {
   supabase.auth.onAuthStateChange(async (event, session) => {
