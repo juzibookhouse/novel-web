@@ -59,13 +59,18 @@
             } else {
               console.log("用户资料已更新");
             }
-          } catch (error) {
+          } catch (error:any) {
             console.error("获取IP地址失败:", error.message);
           }
         }
       }
 
-      if ($user?.profile?.role == 'author') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectUrl = urlParams.get('redirect');
+
+      if (redirectUrl) {
+        return goto(redirectUrl);
+      } else if ($user?.profile?.role == 'author') {
         goto('/author/dashboard');
       } else {
         goto('/');
@@ -88,7 +93,7 @@
 </svelte:head>
 
 {#if showMembership}
-  <MembershipPlans onClose={handleMembershipClose} />
+  <MembershipPlans onClose={handleMembershipClose} redirectUrl='' />
 {/if}
 
 <div class="min-h-screen  flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-[url('https://www.transparenttextures.com/patterns/chinese-pattern.png')]">

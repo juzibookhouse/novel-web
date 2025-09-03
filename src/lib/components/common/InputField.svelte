@@ -5,7 +5,7 @@
   export let placeholder: string;
   export let value: string;
   export let required: boolean = false;
-  export let minlength: number | undefined;
+  export let minlength: number | undefined = 3;
 </script>
 <div>
   <label for={field} class="block text-sm font-medium text-gray-700">{label}</label>
