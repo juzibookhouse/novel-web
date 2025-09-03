@@ -265,7 +265,7 @@
               <!-- Comment Content -->
               <p class="text-gray-800 whitespace-pre-wrap">{comment.content}</p>
               
-              {#if $user}
+              <!-- {#if $user}
                 <div class="mt-3">
                   <button
                     on:click={() => startReply(comment.id)}
@@ -274,7 +274,7 @@
                     回复
                   </button>
                 </div>
-              {/if}
+              {/if} -->
 
             <!-- Reply Form -->
             {#if replyingTo === comment.id}
