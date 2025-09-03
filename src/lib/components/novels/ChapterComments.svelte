@@ -210,7 +210,7 @@
     <div class="mb-8 text-center py-6 bg-gray-50 rounded-lg">
       <p class="text-gray-600 mb-4">请登录后发表评论</p>
       <a
-        href="/user/login"
+        href={`/user/login?redirect=${typeof window !== 'undefined'?window.location.pathname:''}`}
         class="inline-block bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
       >
         立即登录
