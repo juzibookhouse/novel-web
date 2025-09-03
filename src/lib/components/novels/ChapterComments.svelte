@@ -25,8 +25,7 @@
   let submitting = false;
   let replyingTo: string | null = null;
   let replyContent = '';
-  let editingComment: string | null = null;
-  let editContent = '';
+
 
   onMount(() => {
     loadComments();
@@ -102,20 +101,15 @@
       submitting = true;
       error = null;
 
-      const response = await fetch(`/api/novels/${novelId}/chapters/${chapterId}/comments`, {
+      const {response, data} = await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/comments`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify({
           content: replyContent.trim(),
           parent_id: parentId
         })
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
+      if (!response?.ok) {
         throw new Error(data.error || 'Failed to submit reply');
       }
 
@@ -129,42 +123,7 @@
     }
   }
 
-  async function updateComment(commentId: string) {
-    if (!editContent.trim()) {
-      error = '评论内容不能为空';
-      return;
-    }
 
-    try {
-      submitting = true;
-      error = null;
-
-      const response = await fetch(`/api/novels/${novelId}/chapters/${chapterId}/comments`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          commentId,
-          content: editContent.trim()
-        })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to update comment');
-      }
-
-      editingComment = null;
-      editContent = '';
-      await loadComments();
-    } catch (err: any) {
-      error = err.message;
-    } finally {
-      submitting = false;
-    }
-  }
 
   async function deleteComment(commentId: string) {
     if (!confirm('确定要删除这条评论吗？此操作不可撤销。')) {
@@ -212,13 +171,6 @@
   function startReply(commentId: string) {
     replyingTo = commentId;
     replyContent = '';
-    editingComment = null;
-  }
-
-  function startEdit(comment: Comment) {
-    editingComment = comment.id;
-    editContent = comment.content;
-    replyingTo = null;
   }
 
   function cancelReply() {
@@ -226,10 +178,7 @@
     replyContent = '';
   }
 
-  function cancelEdit() {
-    editingComment = null;
-    editContent = '';
-  }
+
 </script>
 
 <div class="border-t-2 border-gray-400 p-6">
@@ -318,12 +267,6 @@
               {#if $user?.id === comment.user_id}
                 <div class="flex space-x-2">
                   <button
-                    on:click={() => startEdit(comment)}
-                    class="text-xs text-gray-500 hover:text-gray-700"
-                  >
-                    编辑
-                  </button>
-                  <button
                     on:click={() => deleteComment(comment.id)}
                     class="text-xs text-red-500 hover:text-red-700"
                   >
@@ -333,31 +276,7 @@
               {/if}
             </div>
 
-            {#if editingComment === comment.id}
-              <!-- Edit Form -->
-              <div class="mt-3">
-                <textarea
-                  bind:value={editContent}
-                  rows="3"
-                  class="w-full rounded-lg border-2 border-gray-300 px-3 py-2 focus:border-red-500 focus:ring-red-500 resize-none"
-                  maxlength="1000"
-                ></textarea>
-                <div class="flex justify-end space-x-2 mt-2">
-                  <button
-                    on:click={cancelEdit}
-                    class="text-sm text-gray-500 hover:text-gray-700"
-                  >
-                    取消
-                  </button>
-                  <Btn
-                    handleClick={() => updateComment(comment.id)}
-                    disabled={submitting || !editContent.trim()}
-                    title={submitting ? '更新中...' : '更新'}
-                    cssClass="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 disabled:opacity-50"
-                  />
-                </div>
-              </div>
-            {:else}
+
               <!-- Comment Content -->
               <p class="text-gray-800 whitespace-pre-wrap">{comment.content}</p>
               
@@ -371,7 +290,6 @@
                   </button>
                 </div>
               {/if}
-            {/if}
 
             <!-- Reply Form -->
             {#if replyingTo === comment.id}
@@ -434,12 +352,6 @@
                     {#if $user?.id === reply.user_id}
                       <div class="flex space-x-2">
                         <button
-                          on:click={() => startEdit(reply)}
-                          class="text-xs text-gray-500 hover:text-gray-700"
-                        >
-                          编辑
-                        </button>
-                        <button
                           on:click={() => deleteComment(reply.id)}
                           class="text-xs text-red-500 hover:text-red-700"
                         >
@@ -449,33 +361,7 @@
                     {/if}
                   </div>
 
-                  {#if editingComment === reply.id}
-                    <!-- Edit Reply Form -->
-                    <div class="mt-2">
-                      <textarea
-                        bind:value={editContent}
-                        rows="2"
-                        class="w-full rounded-lg border-2 border-gray-300 px-3 py-2 focus:border-red-500 focus:ring-red-500 resize-none"
-                        maxlength="1000"
-                      ></textarea>
-                      <div class="flex justify-end space-x-2 mt-2">
-                        <button
-                          on:click={cancelEdit}
-                          class="text-sm text-gray-500 hover:text-gray-700"
-                        >
-                          取消
-                        </button>
-                        <Btn
-                          handleClick={() => updateComment(reply.id)}
-                          disabled={submitting || !editContent.trim()}
-                          title={submitting ? '更新中...' : '更新'}
-                          cssClass="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 disabled:opacity-50"
-                        />
-                      </div>
-                    </div>
-                  {:else}
-                    <p class="text-sm text-gray-700 whitespace-pre-wrap">{reply.content}</p>
-                  {/if}
+                  <p class="text-sm text-gray-700 whitespace-pre-wrap">{reply.content}</p>
                 </div>
               {/each}
             </div>
