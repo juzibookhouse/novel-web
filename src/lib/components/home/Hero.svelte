@@ -22,9 +22,10 @@
   <div class="relative max-w-7xl mx-auto text-center z-10">
     <div class="flex flex-col items-center justify-center space-y-8">
       <div 
-        class="flex items-center justify-center gap-4 transition-all duration-1000 transform {visible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}"
+        class="flex flex-col justify-center gap-4 transition-all duration-1000 transform {visible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}"
       >
         <img src="/home_title.png" class="w-full max-w-2xl" alt="">
+        <img src="/home_subtitle.png" class="w-full max-w-2xl" alt="">
         <!-- <h1 class="font-jianhao text-8xl text-white drop-shadow-lg">
           {WEBSITE_NAME}
         </h1> -->
