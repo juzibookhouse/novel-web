@@ -124,19 +124,14 @@
       submitting = true;
       error = null;
 
-      const response = await fetch(`/api/novels/${novelId}/chapters/${chapterId}/comments`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          commentId
-        })
-      });
+      const { response, data } = await sendRequest(
+        `/api/novels/${novelId}/chapters/${chapterId}/comments/${commentId}`,
+        {
+          method: 'DELETE',
+        }
+      );
 
-      const data = await response.json();
-
-      if (!response.ok) {
+      if (!response?.ok) {
         throw new Error(data.error || 'Failed to delete comment');
       }
 
