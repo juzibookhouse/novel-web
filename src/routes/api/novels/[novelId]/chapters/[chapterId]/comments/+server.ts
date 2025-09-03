@@ -1,6 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
 import { getAuthUser } from '$lib/server/auth.js';
+import type { Comment } from '$lib/types/comment.js';
 
 export async function GET({ params }) {
   try {
@@ -30,7 +31,7 @@ export async function GET({ params }) {
 
     // Organize comments into a nested structure
     const commentMap = new Map();
-    const rootComments = [];
+    const rootComments:Comment[] = [];
 
     // First pass: create all comment objects
     comments.forEach(comment => {
@@ -41,7 +42,7 @@ export async function GET({ params }) {
         updated_at: comment.updated_at,
         parent_id: comment.parent_id,
         user_id: comment.user_id,
-        user_name: comment.user_profiles.user_name,
+        user_name: comment.user_profiles?.user_name,
         replies: []
       };
       commentMap.set(comment.id, commentObj);
@@ -149,7 +150,7 @@ export async function POST({ request, params, locals }) {
       updated_at: newComment.updated_at,
       parent_id: newComment.parent_id,
       user_id: newComment.user_id,
-      user_name: newComment.user_profiles.user_name,
+      user_name: newComment.user_profiles?.user_name,
       replies: []
     };
 

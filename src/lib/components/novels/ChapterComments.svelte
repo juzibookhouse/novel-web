@@ -7,19 +7,10 @@
   export let chapterId: string;
   export let novelId: string;
 
-  interface Comment {
-    id: string;
-    content: string;
-    created_at: string;
-    updated_at: string;
-    parent_id: string | null;
-    user_id: string;
-    user_name: string;
-    replies: Comment[];
-  }
+  import type { Comment } from '$lib/types/comment';
 
   let comments: Comment[] = [];
-  let loading = false;
+  let loading = true;
   let error: string | null = null;
   let newComment = '';
   let submitting = false;
@@ -33,7 +24,6 @@
 
   async function loadComments() {
     try {
-      loading = true;
       error = null;
 
       const response = await fetch(`/api/novels/${novelId}/chapters/${chapterId}/comments`);
