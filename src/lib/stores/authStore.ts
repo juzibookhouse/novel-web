@@ -38,45 +38,13 @@ export const setUser = async (newUser: User | null) => {
     return;
   }
 
-  const {data, response} = await sendRequest('/api/user');
-
-  const { data: profile, error } = await supabase
-    .from("user_profiles")
-    .select("*")
-    .eq("user_id", newUser.id)
-    .single();
+  const {data:{currentUser, error}, response} = await sendRequest('/api/user');
 
   if (error) {
     throw error;
   }
 
-  // Fetch active membership
-  const now = new Date().toISOString();
-  const { data: membership, error: membershipError } = await supabase
-    .from("user_memberships")
-    .select("id, plan_id, start_date, end_date, status, stripe_client_secret")
-    .eq("user_id", newUser.id)
-    .or("status.eq.active,status.eq.pending)")
-    .gte("end_date", now)
-    .lte("start_date", now)
-    .limit(1)
-    .single();
-
-  if (membershipError && membershipError.code !== "PGRST116") {
-    // Ignore "no rows returned" error
-    throw membershipError;
-  }
-
-  // Combine user and profile data
-  const userData: UserData = {
-    ...newUser,
-    profile,
-    membership: membership || undefined,
-    isMembership:
-      membership?.status == "active" &&
-      membership?.end_date > new Date().toISOString(),
-  };
-  user.set(userData);
+  user.set(currentUser);
 };
 
 export const getUserSession = async () => {
