@@ -36,9 +36,9 @@
   ];
 
   $: menuItems = $user 
-    ? $user?.profile?.role === "admin" 
+    ? $user?.isAdmin
       ? adminMenuItems
-      : $user?.profile?.role === "author"
+      : $user?.role === "author"
         ? authorMenuItems
         : readerMenuItems
     : guestMenuItems;

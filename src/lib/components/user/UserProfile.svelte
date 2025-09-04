@@ -6,8 +6,8 @@
   import { getPlanPrice } from "$lib/membership";
   import Btn from "../common/Btn.svelte";
 
-  let userName = "";
-  let userEmail = "";
+  let userName = $user?.user_name || '';
+  let userEmail = $user?.email || '';
   let userPassword = "";
   let membershipPlan: any;
   let loading = false;
@@ -106,20 +106,6 @@
 
   onMount(async () => {
     if ($user) {
-      // Set email from auth user
-      userEmail = $user.email || "";
-      
-      // Fetch user profile
-      const { data: profile } = await supabase
-        .from("user_profiles")
-        .select("user_name")
-        .eq("user_id", $user.id)
-        .single();
-
-      if (profile) {
-        userName = profile.user_name || "";
-      }
-
       // Fetch membership plan details if user has active membership
       if ($user.membership?.plan_id) {
         const { data: plan } = await supabase
