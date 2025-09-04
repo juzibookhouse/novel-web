@@ -150,7 +150,7 @@
 <div class="max-w-7xl mx-auto">
   <DashboardHeader websiteName={WEBSITE_NAME} />
 
-  {#if ($user?.profile?.role === 'author') && ($user?.profile.is_approved === false)}
+  {#if ($user?.role === 'author') && ($user?.is_approved === false)}
   <h2 class="text-3xl text-center my-10">等待管理员通过作者审核</h2>
   {:else}
   <div class="flex justify-end mb-8">

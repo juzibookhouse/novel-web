@@ -70,7 +70,7 @@
 
       if (redirectUrl) {
         return goto(redirectUrl);
-      } else if ($user?.profile?.role == 'author') {
+      } else if ($user?.role == 'author') {
         goto('/author/dashboard');
       } else {
         goto('/');

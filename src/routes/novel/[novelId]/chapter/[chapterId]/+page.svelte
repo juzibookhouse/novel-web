@@ -20,7 +20,7 @@
   $: chapterReadingStatus = data.chapter?.is_free || data.chapter?.novels?.is_free;
   
   $: canReadChapter = 
-      ($user?.profile?.role === 'admin') || 
+      ($user?.role === 'admin') || 
       (chapterReadingStatus === 'public') || 
       (chapterReadingStatus === 'private' && $user) || 
       (chapterReadingStatus === 'vip' && $user?.isMembership);

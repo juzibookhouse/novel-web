@@ -26,7 +26,7 @@
   let error: string | null = null;
 
   onMount(async () => {
-    if (!($user?.profile?.role === "admin")) {
+    if (!($user?.role === "admin")) {
       return goto("/user/login");
     }
     await loadData();

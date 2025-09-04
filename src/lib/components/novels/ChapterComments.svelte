@@ -182,7 +182,7 @@
         <div class="flex-shrink-0">
           <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
             <span class="text-sm font-medium text-gray-700">
-              {$user.profile?.user_name?.charAt(0) || 'U'}
+              {$user?.user_name?.charAt(0) || 'U'}
             </span>
           </div>
         </div>
@@ -283,7 +283,7 @@
                   <div class="flex-shrink-0">
                     <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
                       <span class="text-xs font-medium text-gray-700">
-                        {$user?.profile?.user_name?.charAt(0) || 'U'}
+                        {$user?.user_name?.charAt(0) || 'U'}
                       </span>
                     </div>
                   </div>

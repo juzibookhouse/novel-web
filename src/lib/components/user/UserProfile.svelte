@@ -231,7 +231,7 @@
           {message}
         </div>
       {/if}
-      {#if ($user?.profile?.role === 'author') && ($user?.profile?.is_approved)}
+      {#if ($user?.role === 'author') && ($user?.is_approved)}
         <p class="mt-1 text-green-600">已是认证作家</p>
       {/if}
       <div>

@@ -2,18 +2,6 @@ import { writable, type Writable } from "svelte/store";
 import { supabase } from "$lib/supabaseClient";
 import type { User } from "@supabase/supabase-js";
 
-interface UserProfile {
-  id: string;
-  user_id: string;
-  user_name: string;
-  role: string;
-  is_approved: boolean;
-  created_at: string;
-  email?: string;
-  ip?: string;
-  draft_file_path?: string;
-}
-
 interface UserMembership {
   plan_id: string;
   status: string;
@@ -24,7 +12,16 @@ interface UserMembership {
 }
 
 export interface UserData extends User {
-  profile?: UserProfile;
+  id: string;
+  isAdmin: boolean;
+  user_id: string;
+  user_name: string;
+  role: string;
+  is_approved: boolean;
+  created_at: string;
+  email?: string;
+  ip?: string;
+  draft_file_path?: string;
   membership?: UserMembership;
   isMembership?: Boolean;
 }

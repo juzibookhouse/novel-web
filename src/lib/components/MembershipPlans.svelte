@@ -108,7 +108,7 @@
       const paymentElement = elements.create("payment", {
         defaultValues: {
           billingDetails: {
-            name: `${$user?.profile?.user_name}`,
+            name: `${$user?.user_name}`,
           },
         },
         paymentMethodTypes: ["card", "alipay", "wechat_pay"],
