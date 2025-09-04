@@ -1,15 +1,9 @@
 <script lang="ts">
   import { WEBSITE_NAME, WEBSITE_URL } from "$lib/constants";
-  import { user, getUserSession } from "$lib/stores/authStore";
+  import { user } from "$lib/stores/authStore";
   import { supabase } from "$lib/supabaseClient";
   import { goto } from "$app/navigation";
   import { page } from '$app/stores';
-  import { onMount } from "svelte";
-  import Btn from "./common/Btn.svelte";
-
-  onMount(() => {
-    getUserSession()
-  })
 
   const commonMenuItems = [
     { href: "/novels", label: "书库" },
