@@ -24,6 +24,7 @@ export async function getAuthUser(request:Request) {
       if (profile) {
         userProfile = {
           ...profile,
+          id: profile.user_id,
           isAdmin: profile?.role === 'admin',
           membership: membership || undefined,
           isMembership: membership?.status == "active" && membership?.end_date > new Date().toISOString()
