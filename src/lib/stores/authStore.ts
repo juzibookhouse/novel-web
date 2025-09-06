@@ -59,18 +59,18 @@ getUserSession();
 import { browser } from '$app/environment';
 import { sendRequest } from "$lib/api";
 
-// // Subscribe to auth changes
-// const PATHS_TO_REDIRECT = ["/user/signup", "author/signup"];
+// Subscribe to auth changes
+const PATHS_TO_REDIRECT = ["/user/signup", "author/signup"];
 
-// if (browser) {
-//   supabase.auth.onAuthStateChange(async (event, session) => {
-//     if (session) {
-//       setUser(session.user);
-//       if (PATHS_TO_REDIRECT.includes(window.location.pathname)) {
-//         window.location.href = "/";
-//       }
-//     } else {
-//       setUser(null);
-//     }
-//   });
-// }
+if (browser) {
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    if (session) {
+      setUser(session.user);
+      if (PATHS_TO_REDIRECT.includes(window.location.pathname)) {
+        window.location.href = "/";
+      }
+    } else {
+      setUser(null);
+    }
+  });
+}

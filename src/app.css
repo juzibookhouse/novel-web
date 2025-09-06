@@ -51,7 +51,7 @@ a:hover {
 .btn-secondary {
   @apply border-2 border-[var(--accent-color)] text-[var(--accent-color)]
          px-6 py-2 rounded-lg hover:bg-[var(--accent-color)] hover:text-white
-         transition-all duration-300 ease-in-out;
+         transition-all duration-300 ease-in-out cursor-pointer;
 }
 
 /* 卡片样式 */
