@@ -58,7 +58,7 @@
 
           if (userProfileError) throw userProfileError;
         } catch (ipError) {
-          console.error("获取IP地址失败:", ipError.message);
+          console.error("获取IP地址失败:", ipError);
           // 即使获取IP失败，也继续创建用户资料
           const {data:userProfile, error:userProfileError} = await supabase
           .from('user_profiles')
