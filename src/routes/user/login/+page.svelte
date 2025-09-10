@@ -77,7 +77,6 @@
       }
     } catch (e: any) {
       error = e;
-    } finally {
       loading = false;
     }
   }
