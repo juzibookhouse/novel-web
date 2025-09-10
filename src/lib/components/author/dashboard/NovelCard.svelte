@@ -89,7 +89,6 @@
         <Btn
           handleClick={onAddChapter}
           title="添加新章节"
-          cssClass="px-4 py-2 rounded-full text-sm"
         />
       </div>
     </div>
