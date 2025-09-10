@@ -143,10 +143,6 @@
             object={newNovel}
             bind:value={newNovel.pen_name}
           />
-          
-          <CheckInput title="发布" object={newNovel} field="published" />
-          <CheckInput title="精品短篇" object={newNovel} field="is_short" />
-          <SelectInput title="免费阅读" object={newNovel} field="is_free" options={FREE_OPTIONS} />
 
           <div>
             <label
@@ -225,6 +221,11 @@
           </div>
         </div>
         <div class="space-y-4">
+
+          
+          <CheckInput title="发布" object={newNovel} field="published" />
+          <CheckInput title="精品短篇" object={newNovel} field="is_short" />
+          <SelectInput title="免费阅读" object={newNovel} field="is_free" options={FREE_OPTIONS} />
           
           <SelectInput title="连载状态" object={newNovel} field="status" options={statusOptions} />
 
