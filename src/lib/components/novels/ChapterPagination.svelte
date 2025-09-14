@@ -37,7 +37,7 @@
 </script>
 <!-- Chapter Navigation Buttons -->
 <div
-class="p-6 border-t-2 border-gray-400 flex justify-between items-center"
+class="p-4 border-t-2 border-gray-400 flex justify-between items-center"
 >
 {#if prevChapterId}
   <a

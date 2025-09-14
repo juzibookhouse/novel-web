@@ -137,7 +137,7 @@
   <ChapterHeader chapter={chapter} />
 
   <!-- Chapter Content -->
-  <div class="py-8">
+  <div class="pt-8">
     <h2 class="text-3xl text-gray-900 mb-4 text-center">{chapter.title}</h2>
     <div class="text-gray-600 text-center mb-2">
       <p>字数: {getChapterLength(chapter)}</p>
