@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { WEBSITE_NAME, WEBSITE_URL } from "$lib/constants";
+  import { AUTHOR_DASHBOARD_URL, WEBSITE_NAME, WEBSITE_URL } from "$lib/constants";
   import { user, getUserSession } from "$lib/stores/authStore";
   import { supabase } from "$lib/supabaseClient";
   import { goto } from "$app/navigation";
@@ -19,13 +19,13 @@
   const adminMenuItems = [
     ...commonMenuItems,
     { href: "/admin", label: "管理员面板" },
-    { href: "/author/dashboard", label: "作家专区" },
+    { href: AUTHOR_DASHBOARD_URL, label: "作家专区" },
     { href: "/user/dashboard", label: "个人中心" }
   ];
 
   const authorMenuItems = [
     ...commonMenuItems,
-    { href: "/author/dashboard", label: "作家专区" },
+    { href: AUTHOR_DASHBOARD_URL, label: "作家专区" },
     { href: "/user/dashboard", label: "个人中心" }
   ];
 
