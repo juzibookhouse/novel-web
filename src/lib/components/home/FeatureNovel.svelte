@@ -76,7 +76,7 @@
         </button>
 
         <!-- Slide Indicators -->
-        <div class="flex space-x-2 mb-4 justify-center">
+        <div class="flex space-x-2 mt-5 justify-center">
           {#each quotationChapters as _, i}
             <button
               class="w-2 h-2 cursor-pointer rounded-full transition-colors {i === currentIndex ? 'bg-white' : 'bg-gray-300'}"
