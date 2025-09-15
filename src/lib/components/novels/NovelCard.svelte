@@ -22,7 +22,7 @@
       </span>
     </div>
   </div>
-  <div class="p-6 space-y-2">
+  <div class="p-4 space-y-2">
     <h3 class="text-2xl font-medium text-gray-900">{novel.title}</h3>
     <p class="text-gray-600 line-clamp-2">{novel.description}</p>
     <div class="flex flex-wrap gap-2">
