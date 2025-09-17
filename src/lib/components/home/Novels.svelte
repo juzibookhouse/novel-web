@@ -15,10 +15,14 @@
       <a href={url}>{title}</a>
       <a href={url} class="text-3xl">更多</a>
     </h2>
+    {#if novels.length > 0}
     <div class="grid grid-cols-4 gap-8">
       {#each novels as novel}
         <NovelCard {novel} />
       {/each}
     </div>
+    {:else}
+    <p class="text-center text-2xl text-gray-500">暂无小说</p>
+    {/if}
   </div>
 </section>
