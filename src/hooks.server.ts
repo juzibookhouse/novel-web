@@ -4,6 +4,7 @@ import {
   PUBLIC_SUPABASE_URL,
   PUBLIC_SUPABASE_ANON_KEY,
 } from "$env/static/public";
+import { AUTHOR_DASHBOARD_URL } from "$lib/constants";
 
 export const handle: Handle = async ({ event, resolve }) => {
   event.locals.supabase = createServerClient(
@@ -33,7 +34,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   event.locals.user = session?.user || null;
 
   // Protected routes
-  const protectedRoutes = ["/author/dashboard", "/user/dashboard"];
+  const protectedRoutes = [AUTHOR_DASHBOARD_URL, "/user/dashboard"];
   const isProtectedRoute = protectedRoutes.some((route) =>
     event.url.pathname.startsWith(route),
   );

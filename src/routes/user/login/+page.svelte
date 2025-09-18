@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { WEBSITE_NAME } from '$lib/constants';
+  import { AUTHOR_DASHBOARD_URL, WEBSITE_NAME } from '$lib/constants';
   import { supabase, getUserProfile, updateUserProfile } from '$lib/supabaseClient';
   import { getUserIp } from '$lib/helpers';
   import { goto } from '$app/navigation';
@@ -71,7 +71,7 @@
       if (redirectUrl) {
         return goto(redirectUrl);
       } else if ($user?.role == 'author') {
-        goto('/author/dashboard');
+        goto(AUTHOR_DASHBOARD_URL);
       } else {
         goto('/');
       }
