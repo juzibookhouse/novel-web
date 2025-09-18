@@ -29,9 +29,6 @@
 <div class="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg mb-8 overflow-hidden">
   <div class="p-6 border-b border-gray-400">
     <div class="relative">
-      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <span class="text-gray-500">🔍</span>
-      </div>
       <input
         type="text"
         bind:value={searchTerm}
