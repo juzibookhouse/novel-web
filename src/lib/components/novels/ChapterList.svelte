@@ -12,7 +12,7 @@
         class="group p-4 rounded-lg border-2 border-gray-400 hover:border-gray300 hover: transition-all duration-200 relative"
       >
         <h3
-          class="text-lg text-gray-900 group-hover:text-primary transition-colors duration-200"
+          class="text-lg text-[var(--primary-color)] group-hover:text-primary transition-colors duration-200"
         >
           {chapter.title}
         </h3>
