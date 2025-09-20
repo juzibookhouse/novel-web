@@ -14,10 +14,6 @@
 
 <div class="min-h-screen py-8 px-4">
   <div class="max-w-7xl mx-auto">
-    <div class="text-center mb-12">
-      <h1 class=" text-5xl text-primary mb-4">墨香书库</h1>
-      <p class="text-lg text-red-700">千卷书中自有黄金屋</p>
-    </div>
 
     <SearchFilters data={data} />
 
