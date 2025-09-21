@@ -140,7 +140,7 @@
   <div class="pt-8">
     <h2 class="text-3xl text-gray-900 mb-4 text-center">{chapter.title}</h2>
     <div class="text-gray-600 text-center mb-2">
-      <p>字数: {getChapterLength(chapter)}</p>
+      <p class="font-bold">字数: {getChapterLength(chapter)}</p>
       <p>更新时间: {getUserDateFormat(chapter.updated_at)}</p>
     </div>
 
