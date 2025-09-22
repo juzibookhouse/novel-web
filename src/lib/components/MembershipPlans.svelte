@@ -8,12 +8,13 @@
   import UserMembershipPlans from "./user/UserMembershipPlans.svelte";
   import { getMemberShipEndDate, getPlanPrice } from "$lib/membership";
   import { adminEmail } from "$lib/api/adminEmail";
+    import type { MembershipPlan } from "$lib/types/membership";
 
   export let onClose = () => {};
   export let redirectUrl;
   let viewOnly = $user?.isMembership;
 
-  let plans: any[] = [];
+  let plans: MembershipPlan[] = [];
   let loading = true;
   let error: string | null = null;
   let processing = false;
@@ -179,7 +180,7 @@
         console.error('Failed to send confirmation email:', emailError);
       }
 
-      await adminEmail.newSubscription($user.email);
+      await adminEmail.newSubscription($user?.email);
 
       onClose();
     } catch (e: any) {
