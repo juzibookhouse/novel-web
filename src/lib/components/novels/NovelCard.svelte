@@ -8,7 +8,7 @@
 
 <a
   href={`/novel/${novel.id}`}
-  class="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
+  class="group bg-white rounded overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
 >
   <div class="relative">
     <img
