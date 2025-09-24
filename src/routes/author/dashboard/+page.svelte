@@ -22,7 +22,8 @@
     tags:[],
     status: 'ongoing',
     is_free: '',
-    published: true
+    published: true,
+    is_short: false,
   };
   
   let novels: Novel[] = [];
