@@ -153,7 +153,7 @@
   {#if ($user?.role === 'author') && ($user?.is_approved === false)}
   <h2 class="text-3xl text-center my-10">等待管理员通过作者审核</h2>
   {:else}
-  <div class="flex justify-end mb-8">
+  <div class="flex justify-end mb-6">
     <button
       on:click={() => toggleNovelForm()}
       class="font-medium py-2 px-6 rounded-full shadow-sm bg-yellow-100 text-yellow-800 transition duration-200 cursor-pointer"
