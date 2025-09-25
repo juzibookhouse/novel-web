@@ -2,18 +2,9 @@
   import { COVER_PLACEHOLDER } from "$lib/constants";
   import Btn from "$lib/components/common/Btn.svelte";
   import { deleteNovel } from "$lib/supabaseClient";
+    import type { Novel } from "$lib/novel";
 
-  export let novel: {
-    id: string;
-    title: string;
-    cover_url: string;
-    status: string;
-    word_count: number;
-    updated_at: string;
-    categories: Array<{ name: string }>;
-    description: string;
-    chapters: Array<any>;
-  };
+  export let novel: Novel;
   export let isSelected: boolean;
   export let onEdit: () => void;
   export let onAddChapter: () => void;

@@ -81,7 +81,8 @@ export interface Novel {
   is_short?: boolean;
   published?: boolean;
   chapters?: Chapter[];
-  tags:[];
+  tags:Tag[];
+  categories:Category[];
 }
 
 export const getNovelStatus = (novel:Novel) => {
