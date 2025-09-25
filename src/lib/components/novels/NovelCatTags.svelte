@@ -13,7 +13,7 @@
 </script>
 <div class="flex gap-2">
 {#each catTags as item}
-<span class="{cssClass}  px-2 py-1 rounded-full text-xs">
+<span class="{cssClass}  px-2 py-1 rounded text-xs">
   {item.name}
 </span>
 {/each}
