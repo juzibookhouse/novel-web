@@ -81,7 +81,7 @@
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
             {#if user.ip}
               <a 
-                href={`https://ip-api.com/#${user.ip}`} 
+                href={`https://whatismyipaddress.com/ip/${user.ip}`} 
                 target="_blank"
                 rel="noopener noreferrer"
                 class="text-primary hover:underline"
