@@ -16,7 +16,7 @@
       <a href={url} class="text-3xl">更多</a>
     </h2>
     {#if novels.length > 0}
-    <div class="grid grid-cols-4 gap-8">
+    <div class="grid grid-cols-4 gap-6">
       {#each novels as novel}
         <NovelCard {novel} />
       {/each}
