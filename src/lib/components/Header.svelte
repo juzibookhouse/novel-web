@@ -62,7 +62,7 @@
         <span class="text-sm">{WEBSITE_URL}</span>
       </a>
 
-      <div class="flex space-x-6 items-center">
+      <div class="flex gap-4 items-center">
         {#each menuItems as item}
           {#if item.href === "/user/signup" && !$user}
             <a
