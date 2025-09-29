@@ -40,6 +40,10 @@ a:hover {
   @apply transform scale-105;
 }
 
+.bg-primary {
+  @apply bg-[var(--primary-color)];
+}
+
 /* 主要按钮样式 */
 .btn-primary {
   @apply bg-[var(--primary-color)] text-white px-6 py-2 rounded-lg
