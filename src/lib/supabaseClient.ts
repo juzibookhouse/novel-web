@@ -304,6 +304,9 @@ export const getQuotationChapters = async () => {
     `)
     .neq('quotation', null)
     .eq('published', true)
+    .order('updated_at', {
+      ascending: false
+    })
     ;
 }
 
