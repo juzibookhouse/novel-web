@@ -34,7 +34,7 @@
           )
         `,
         )
-        .gte("user_memberships.end_date", new Date().toISOString())
+        // .gte("user_memberships.end_date", new Date().toISOString())
         .order("created_at", { ascending: false });
 
       if (usersError) throw usersError;
@@ -44,6 +44,7 @@
 </script>
 
 <div class="p-6">
+  <h3 class="text-2xl font-bold mb-4">用户数: {users.length}</h3>
   <table class="min-w-full divide-y divide-red-100">
     <thead>
       <tr>
