@@ -22,7 +22,7 @@ export async function GET({ params }) {
         )
       `)
       .eq('chapter_id', chapterId)
-      .order('created_at', { ascending: true });
+      .order('created_at', { ascending: false });
 
     if (error) {
       console.error('Error fetching comments:', error);

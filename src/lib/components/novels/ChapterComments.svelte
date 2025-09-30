@@ -17,10 +17,11 @@
   let replyingTo: string | null = null;
   let replyContent = '';
 
-
-  onMount(() => {
-    loadComments();
-  });
+  $: {
+    if (chapterId) {
+      loadComments();
+    }
+  }
 
   async function loadComments() {
     try {
