@@ -39,7 +39,7 @@
 </script>
 
 <!-- Featured Novel Section -->
-<section class="relative py-24 bg-primary overflow-hidden">
+<section class="relative py-24 overflow-hidden">
   <div class="max-w-5xl mx-auto px-4 relative min-h-[300px]">
     {#if quotationChapters.length > 0}
       {#each [quotationChapters[currentIndex]] as { quotation, novel_id, title, novels:{title: novelTitle} }}
