@@ -34,7 +34,8 @@
           )
         `,
         )
-        .gte("user_memberships.end_date", new Date().toISOString());
+        .gte("user_memberships.end_date", new Date().toISOString())
+        .order("created_at", { ascending: false });
 
       if (usersError) throw usersError;
       users = usersData;
