@@ -14,6 +14,7 @@
   import LoadingIndicator from '$lib/components/author/dashboard/LoadingIndicator.svelte';
   import ErrorDisplay from '$lib/components/author/dashboard/ErrorDisplay.svelte';
     import { sendRequest } from '$lib/api';
+    import { EMPTY_CHAPTER } from '$lib/types/novel';
   
   const EMPTY_NOVEL:NewNovel = {
     title: '',
@@ -51,16 +52,6 @@
   let selectedNovel: Novel | null = null;
   let newNovel = EMPTY_NOVEL;
 
-  const EMPTY_CHAPTER: Chapter = {
-    id: '',
-    title: '',
-    content: '',
-    novel_id: '',
-    created_at: '',
-    is_free: '',
-    published: true,
-    chapter_order: 0
-  };
   let newChapter = EMPTY_CHAPTER;
 
   let newCategoryName: string = '';

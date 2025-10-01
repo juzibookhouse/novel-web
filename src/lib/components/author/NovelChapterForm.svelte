@@ -6,6 +6,7 @@
     import CheckInput from "./CheckInput.svelte";
     import Btns from "./Btns.svelte";
   import SelectInput from "./SelectInput.svelte";
+    import { EMPTY_CHAPTER } from "$lib/types/novel";
 
 
   export let fetchNovels:Function;
@@ -24,6 +25,8 @@
       }
       const {data,error} = await upsertChapter(newChapter);
       if (error) throw error;
+
+      newChapter = EMPTY_CHAPTER;
       
       fetchNovels();
       toggleNovelChapterForm()
