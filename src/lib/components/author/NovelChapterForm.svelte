@@ -57,7 +57,7 @@
   class="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
 >
   <div
-    class="bg-white rounded-lg overflow-hidden shadow-xl max-w-4xl w-full mx-4"
+    class="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-auto max-h-[80vh] overflow-y-scroll"
   >
     <div class="px-6 py-4 border-b-2 border-gray-400">
       <h3 class="text-xl font-medium text-gray-900">
