@@ -13,18 +13,21 @@ export async function DELETE({ params, request }) {
     const {error: ReadingError } = await supabase.from('reading_records').delete().eq('novel_id', novelId);
 
     if (ReadingError) {
+      console.error('Error deleting reading records:', ReadingError);
       return json({ error: 'Failed to delete reading records' }, { status: 500 });
     }
 
     const { error: chaptersError } = await supabase.from('chapters').delete().eq('novel_id', novelId);
 
     if (chaptersError) {
+      console.error('Error deleting chapters:', chaptersError);
       return json({ error: 'Failed to delete chapters' }, { status: 500 });
     }
 
   // Then delete the novel itself
     const {error: novelError} = await supabase.from('novels').delete().eq('id', novelId);
     if (novelError) {
+      console.error('Error deleting novel:', novelError);
       return json({ error: 'Failed to delete novel' }, { status: 500 });
     }
 

@@ -3,6 +3,7 @@
   import Btn from "$lib/components/common/Btn.svelte";
   import { deleteNovel } from "$lib/supabaseClient";
     import type { Novel } from "$lib/novel";
+    import { sendRequest } from "$lib/api";
 
   export let novel: Novel;
   export let isSelected: boolean;
@@ -18,7 +19,7 @@
     try {
       isDeleting = true;
       deleteError = "";
-      const { error } = await deleteNovel(novel.id);
+      const {data:{error}} = await sendRequest(`/api/novels/${novel.id}`,{method: 'DELETE'});
       
       if (error) throw error;
       
