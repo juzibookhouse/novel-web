@@ -35,3 +35,30 @@ export const GET: RequestHandler = async (event) => {
     return json({error: ""},{status:500})
   }
 };
+
+export const POST: RequestHandler = async ({request}) => {
+  try {
+    const user = await getAuthUser(request);
+    
+    if (!user?.isAdmin) {
+      return json({ error: 'User not authenticated' }, { status: 401 });
+    }
+
+    const { name } = await request.json();
+    if (!name) {
+      return json({ error: 'Name is required' }, { status: 400 });
+    }
+
+    const { data, error } = await supabase
+      .from("tags")
+      .insert([{ name, user_id: user.user_id }])
+      .select().single();
+
+    if (error) throw error;
+
+    return json({ tag: data }, { status: 201 });
+  } catch (error) {
+    console.error(error);
+    return json({ error: "" }, { status: 500 });
+  }
+};

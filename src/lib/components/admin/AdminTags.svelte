@@ -5,6 +5,7 @@
   import { onMount } from "svelte";
   import Btn from "../common/Btn.svelte";
   import { sendRequest } from "$lib/api";
+  import { json } from "@sveltejs/kit";
   let tags: Tag[] = [];
 
   // New category form
@@ -30,9 +31,8 @@
       if (!newTagName.trim()) return;
 
       addingTag = true;
-      const { error: tagError } = await supabase
-        .from("tags")
-        .insert([{ name: newTagName.trim(), user_id: $user?.id }]);
+
+      const {data:{error:tagError}} = await sendRequest(`/api/admin/tags`,{method:'POST',body:JSON.stringify({name:newTagName})});
 
       if (tagError) throw tagError;
 
