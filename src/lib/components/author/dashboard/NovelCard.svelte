@@ -1,7 +1,6 @@
 <script lang="ts">
   import { COVER_PLACEHOLDER } from "$lib/constants";
   import Btn from "$lib/components/common/Btn.svelte";
-  import { deleteNovel } from "$lib/supabaseClient";
     import type { Novel } from "$lib/novel";
     import { sendRequest } from "$lib/api";
 
