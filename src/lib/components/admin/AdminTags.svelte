@@ -4,6 +4,7 @@
   import { supabase } from "$lib/supabaseClient";
   import { onMount } from "svelte";
   import Btn from "../common/Btn.svelte";
+  import { sendRequest } from "$lib/api";
   let tags: Tag[] = [];
 
   // New category form
@@ -16,28 +17,12 @@
 
   async function fetchTags() {
     try {
-      // Load tags
-      const { data: tagsData, error: tagsError } = await supabase
-        .from("tags")
-        .select(
-          `
-            *,
-            user_profiles (
-              user_name
-            )
-          `,
-        )
-        .order("name");
-
-      if (tagsError) throw tagsError;
-      tags = tagsData.map(({ id, name, user_profiles }) => {
-        return {
-          id,
-          name,
-          user_name: user_profiles ? user_profiles.user_name : "",
-        };
-      });
-    } catch (e) {}
+      const {data} = await sendRequest(`/api/admin/tags`);
+      if (data.error) throw data.error;
+      tags = data.tags;
+    } catch (e) {
+      throw e;
+    }
   }
 
   async function addTag() {
