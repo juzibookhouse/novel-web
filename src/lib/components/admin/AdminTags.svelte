@@ -47,10 +47,7 @@
 
   async function delTag(tagId: string) {
     try {
-      const { error: deleteError } = await supabase
-        .from("tags")
-        .delete()
-        .eq("id", tagId);
+      const {data:{error:deleteError}} = await sendRequest(`/api/admin/tags/${tagId}`,{method:'DELETE'});
 
       if (deleteError) throw deleteError;
       await fetchTags();
