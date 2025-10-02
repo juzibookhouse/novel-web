@@ -112,7 +112,7 @@
           >
             <button
               on:click={() => delTag(tag.id)}
-              class="text-red-600 hover:text-primary"
+              class="text-red-600 hover:text-primary cursor-pointer"
             >
               删除
             </button>
