@@ -5,7 +5,6 @@
     import { sendRequest } from "$lib/api";
 
   export let novel: Novel;
-  export let isSelected: boolean;
   export let onEdit: () => void;
   export let onAddChapter: () => void;
   export let fetchNovels: () => void;
