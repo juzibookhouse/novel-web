@@ -121,7 +121,7 @@
 
 <div class="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
   <div
-    class="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-auto max-h-[80vh] overflow-y-scroll"
+    class="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-auto max-h-[90vh] overflow-y-scroll"
   >
     <div class="p-4 border-b-2 border-gray-400">
       <h3 class="text-xl font-medium text-gray-900">创作新作品</h3>
