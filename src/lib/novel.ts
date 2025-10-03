@@ -49,6 +49,8 @@ export interface Chapter {
   created_at: string;
   chapter_order: number;
   quotation?: string;
+  chapter_comments?: Comment[];
+  novel: Novel;
 }
 
 export interface NewNovel {
