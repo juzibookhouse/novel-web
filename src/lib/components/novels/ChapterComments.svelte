@@ -6,6 +6,7 @@
 
   export let chapterId: string;
   export let novelId: string;
+  export let toggleKeydownEvent: (enable: boolean) => void;
 
   import type { Comment } from '$lib/types/comment';
 
@@ -194,6 +195,8 @@
             rows="3"
             class="w-full rounded-lg border-2 border-gray-300 px-3 py-2 focus:border-red-500 focus:ring-red-500 resize-none"
             maxlength="1000"
+            on:focus={() => toggleKeydownEvent(false)}
+            on:blur={() => toggleKeydownEvent(true)}
           ></textarea>
           <div class="flex justify-between items-center mt-2">
             <span class="text-xs text-gray-500">{newComment.length}/1000</span>

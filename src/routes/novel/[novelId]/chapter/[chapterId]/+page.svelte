@@ -37,15 +37,31 @@
     }
   }
   
+  // 切换键盘事件监听器的状态
+  let isKeydownEnabled = true;
+  function toggleKeydownEvent(enable: boolean) {
+    if (typeof window === 'undefined') return;
+    if (enable) {
+      window.addEventListener('keydown', handleKeydown);
+    } else {
+      window.removeEventListener('keydown', handleKeydown);
+    }
+    isKeydownEnabled = enable;
+  }
+  
   // 组件挂载时添加键盘事件监听器
   if (typeof window != 'undefined') {
     onMount(() => {
-      window.addEventListener('keydown', handleKeydown);
+      if (isKeydownEnabled) {
+        window.addEventListener('keydown', handleKeydown);
+      }
     });
     
     // 组件销毁时移除键盘事件监听器，防止内存泄漏
     onDestroy(() => {
-      window.removeEventListener('keydown', handleKeydown);
+      if (isKeydownEnabled) {
+        window.removeEventListener('keydown', handleKeydown);
+      }
     });
   }
   
@@ -203,7 +219,7 @@
 
   <!-- <ChapterGift chapterId={chapter.id} /> -->
 
-  <ChapterComments chapterId={chapter.id} novelId={novelId} />
+  <ChapterComments chapterId={chapter.id} novelId={novelId} toggleKeydownEvent={toggleKeydownEvent} />
     
 </div>
 </div>
