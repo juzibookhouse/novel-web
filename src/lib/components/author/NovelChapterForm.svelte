@@ -26,7 +26,7 @@
       const {data,error} = await upsertChapter(newChapter);
       if (error) throw error;
 
-      newChapter = EMPTY_CHAPTER;
+      newChapter = {...EMPTY_CHAPTER};
       
       fetchNovels();
       toggleNovelChapterForm()

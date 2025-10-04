@@ -44,7 +44,7 @@
   let showChapterForm: boolean = false;
   function toggleNovelChapterForm() {
     if (showChapterForm) {
-      newChapter = EMPTY_CHAPTER;
+      newChapter = {...EMPTY_CHAPTER};
     }
     showChapterForm = !showChapterForm;
   }
@@ -124,7 +124,7 @@
   
   function startAddChapter(novel: Novel) {
     selectedNovel = novel;
-    newChapter = EMPTY_CHAPTER
+    newChapter = {...EMPTY_CHAPTER}
     newChapter.novel_id = novel.id;
     newChapter.chapter_order = (selectedNovel.chapters?.length || 0) + 1
     toggleNovelChapterForm();
