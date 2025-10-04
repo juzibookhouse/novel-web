@@ -8,8 +8,6 @@
     prevChapterUrl = `/novel/${novelId}/chapter/${prevChapterId}`;
     nextChapterUrl = `/novel/${novelId}/chapter/${nextChapterId}`;
   }
-
-  console.log(prevChapterId, nextChapterId);
   
   // 处理键盘事件的函数
   function handleKeydown(event: KeyboardEvent) {
