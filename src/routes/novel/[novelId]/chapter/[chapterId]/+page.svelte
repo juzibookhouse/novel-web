@@ -14,9 +14,40 @@
   import FavNovel from "$lib/components/novels/FavNovel.svelte";
   import ChapterComments from "$lib/components/novels/ChapterComments.svelte";
   import ChapterGift from "$lib/components/novels/ChapterGift.svelte";
+  import { goto } from '$app/navigation';
 
   export let data;
   $: ({ chapter, prevChapterId, nextChapterId, novelId } = data);
+  
+  let prevChapterUrl:string, nextChapterUrl:string;
+  $:{
+    prevChapterUrl = `/novel/${novelId}/chapter/${prevChapterId}`;
+    nextChapterUrl = `/novel/${novelId}/chapter/${nextChapterId}`;
+  }
+  
+  // 处理键盘事件的函数
+  function handleKeydown(event: KeyboardEvent) {
+    // 左箭头键 - 上一章
+    if (prevChapterId && event.key === 'ArrowLeft') {
+      goto(prevChapterUrl);
+    }
+    // 右箭头键 - 下一章
+    if (nextChapterId && event.key === 'ArrowRight') {
+      goto(nextChapterUrl);
+    }
+  }
+  
+  // 组件挂载时添加键盘事件监听器
+  if (typeof window != 'undefined') {
+    onMount(() => {
+      window.addEventListener('keydown', handleKeydown);
+    });
+    
+    // 组件销毁时移除键盘事件监听器，防止内存泄漏
+    onDestroy(() => {
+      window.removeEventListener('keydown', handleKeydown);
+    });
+  }
   
   $: chapterReadingStatus = data.chapter?.is_free || data.chapter?.novels?.is_free;
   
