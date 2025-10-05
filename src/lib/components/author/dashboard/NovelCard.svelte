@@ -51,12 +51,12 @@
           <Btn
             handleClick={onEdit}
             title="编辑小说"
-            cssClass="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 px-4 py-2 rounded-full text-sm transition duration-200"
+            cssClass="bg-yellow-300 hover:bg-yellow-400 text-yellow-900 px-4 py-2 rounded text-sm transition duration-200"
           />
           <Btn
             handleClick={() => showDeleteConfirm = true}
             title="删除小说"
-            cssClass="bg-red-100 hover:bg-red-200 text-red-800 px-4 py-2 rounded-full text-sm transition duration-200"
+            cssClass="bg-red-100 hover:bg-red-200 text-red-800 px-4 py-2 rounded text-sm transition duration-200"
           />
         </div>
       </div>
