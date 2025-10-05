@@ -28,7 +28,7 @@
           <Btn 
             handleClick={() => onEdit(chapter)}
             title="编辑"
-            cssClass="px-3 py-1 text-sm bg-yellow-100 text-yellow-800 rounded-full hover:bg-yellow-200"
+            cssClass="px-3 py-1 text-sm bg-yellow-100 text-yellow-800 rounded hover:bg-yellow-200"
           />
         </div>
       </div>
