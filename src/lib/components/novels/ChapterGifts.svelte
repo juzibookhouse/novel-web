@@ -2,6 +2,7 @@
   import { user } from "$lib/stores/authStore";
 
   export let chapterId: string;
+  export let novelId: string;
 
   let sending = false;
   let message = "";
@@ -44,24 +45,24 @@
 </script>
 
 {#if $user}
-<div class="bg-white p-4 rounded-lg shadow-md mx-4 mb-4">
-  <h3 class="text-lg font-semibold mb-3 text-gray-800">给作者送礼物</h3>
+<div class="bg-gray-50 p-6 rounded-xl shadow-sm mx-auto max-w-md">
+  <h3 class="text-xl font-medium mb-4 text-gray-700">给作者送礼物</h3>
 
-  <div class="flex gap-3">
+  <div class="grid grid-cols-3 gap-4">
     {#each gifts as gift}
       <button
         on:click={() => sendGift(gift.type, gift.amount)}
         disabled={sending}
-        class="flex-1 py-3 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="py-3 px-4 rounded-lg bg-white hover:bg-gray-100 transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200"
       >
-        <div class="text-2xl mb-1">{gift.icon}</div>
-        <div class="text-sm">{gift.type}</div>
+        <div class="text-3xl mb-2 text-gray-800">{gift.icon}</div>
+        <div class="text-sm text-gray-600">{gift.type}</div>
       </button>
     {/each}
   </div>
 
   {#if message}
-    <div class="mt-3 text-center text-sm font-medium text-green-600">
+    <div class="mt-4 text-center text-sm font-medium text-blue-500">
       {message}
     </div>
   {/if}

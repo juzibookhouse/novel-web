@@ -13,7 +13,7 @@
   import ChapterHeader from "$lib/components/novels/ChapterHeader.svelte";
   import FavNovel from "$lib/components/novels/FavNovel.svelte";
   import ChapterComments from "$lib/components/novels/ChapterComments.svelte";
-  import ChapterGift from "$lib/components/novels/ChapterGift.svelte";
+  import ChapterGifts from "$lib/components/novels/ChapterGifts.svelte";
   import { goto } from '$app/navigation';
 
   export let data;
@@ -217,7 +217,7 @@
 
   <ChapterPagination novelId={novelId} prevChapterId={prevChapterId} nextChapterId={nextChapterId} />
 
-  <!-- <ChapterGift chapterId={chapter.id} /> -->
+  <ChapterGifts chapterId={chapter.id} {novelId} />
 
   <ChapterComments chapterId={chapter.id} novelId={novelId} toggleKeydownEvent={toggleKeydownEvent} />
     
