@@ -62,6 +62,7 @@
       </div>
 
       <div class="flex items-center gap-4 text-sm text-gray-600 mb-4">
+        {#if novel.categories?.length > 0}
         <div class="flex flex-wrap gap-2">
           {#each novel.categories || [] as category}
             <span class="bg-red-100 text-primary px-2 py-1 rounded-full">
@@ -69,6 +70,7 @@
             </span>
           {/each}
         </div>
+        {/if}
         <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
           {novel.status === "ongoing" ? "连载中" : "已完结"}
         </span>
