@@ -17,6 +17,7 @@
   let submitting = false;
   let replyingTo: string | null = null;
   let replyContent = '';
+  let showAll = false;
 
   $: {
     if (chapterId) {
@@ -182,7 +183,7 @@
     </div>
   {:else}
     <div class="space-y-6">
-      {#each comments as comment}
+      {#each comments.slice(0, 2) as comment}
         <div class="border-l-4 border-gray-200 pl-4">
           <!-- Main Comment -->
           <div class="bg-gray-50 rounded-lg p-4">
@@ -306,6 +307,101 @@
           {/if}
         </div>
       {/each}
+      {#if comments.length > 2}
+        <div class="flex justify-center mt-4">
+          <button
+            on:click={() => showAll = !showAll}
+            class="flex items-center text-sm text-gray-500 hover:text-red-600 transition-colors"
+          >
+            {showAll ? '收起评论' : '展开更多评论'}
+            <svg
+              class={`w-4 h-4 ml-1 transition-transform ${showAll ? 'transform rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
+        {#if showAll}
+          {#each comments.slice(2) as comment}
+            <div class="border-l-4 border-gray-200 pl-4 mt-4">
+              <!-- Main Comment -->
+              <div class="bg-gray-50 rounded-lg p-4">
+                <div class="flex items-start justify-between">
+                  <div class="flex items-center space-x-3 mb-2">
+                    <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                      <span class="text-xs font-medium text-gray-700">
+                        {comment.user_name?.charAt(0) || 'U'}
+                      </span>
+                    </div>
+                    <div>
+                      <span class="font-medium text-gray-900">{comment.user_name}</span>
+                      <span class="text-xs text-gray-500 ml-2">{formatDate(comment.created_at)}</span>
+                      {#if comment.updated_at !== comment.created_at}
+                        <span class="text-xs text-gray-400 ml-1">(已编辑)</span>
+                      {/if}
+                    </div>
+                  </div>
+                  
+                  {#if $user?.id === comment.user_id}
+                    <div class="flex space-x-2">
+                      <button
+                        on:click={() => deleteComment(comment.id)}
+                        class="text-xs text-red-500 hover:text-red-700 cursor-pointer"
+                      >
+                        删除
+                      </button>
+                    </div>
+                  {/if}
+                </div>
+
+                <!-- Comment Content -->
+                <p class="text-gray-800 whitespace-pre-wrap">{comment.content}</p>
+
+                <!-- Replies -->
+                {#if comment.replies && comment.replies.length > 0}
+                  <div class="ml-8 mt-4 space-y-3">
+                    {#each comment.replies as reply}
+                      <div class="bg-white rounded-lg p-3 border border-gray-200">
+                        <div class="flex items-start justify-between">
+                          <div class="flex items-center space-x-2 mb-2">
+                            <div class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
+                              <span class="text-xs font-medium text-gray-700">
+                                {reply.user_name?.charAt(0) || 'U'}
+                              </span>
+                            </div>
+                            <span class="text-sm font-medium text-gray-900">{reply.user_name}</span>
+                            <span class="text-xs text-gray-500">{formatDate(reply.created_at)}</span>
+                            {#if reply.updated_at !== reply.created_at}
+                              <span class="text-xs text-gray-400">(已编辑)</span>
+                            {/if}
+                          </div>
+                          
+                          {#if $user?.id === reply.user_id}
+                            <div class="flex space-x-2">
+                              <button
+                                on:click={() => deleteComment(reply.id)}
+                                class="text-xs text-red-500 hover:text-red-700"
+                              >
+                                删除
+                              </button>
+                            </div>
+                          {/if}
+                        </div>
+
+                        <p class="text-sm text-gray-700 whitespace-pre-wrap">{reply.content}</p>
+                      </div>
+                    {/each}
+                  </div>
+                {/if}
+              </div>
+            </div>
+          {/each}
+        {/if}
+      {/if}
     </div>
   {/if}
 
