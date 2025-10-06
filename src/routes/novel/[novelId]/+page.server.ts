@@ -9,12 +9,19 @@ export async function load({ params }: { params: { novelId: string } }) {
 
   novel.tags = novel.novel_tags.map(({tags}:{tags:Tag})=>tags);
 
+  delete novel.novel_tags;
+
   novel.chapters = getSortedChapters(novel.chapters);
 
   novel.comments = [];
   novel.chapters = novel.chapters.map((c:Chapter)=>{
     if (c.chapter_comments?.length) {
-      novel.comments.push(...c.chapter_comments);
+      c.chapter_comments.forEach((cc) => {
+        novel.comments.push({
+          ...cc,
+          chapter_title: c.title
+        })
+      });
     }
     c.is_free = FREE_OPTIONS_MAP[c.is_free || novel.is_free]
     return c;

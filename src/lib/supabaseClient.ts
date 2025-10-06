@@ -144,7 +144,7 @@ export const getNovel = async (novelId: string) => {
         is_free,
         chapter_order,
         chapter_comments (
-          id,content,user_id,chapter_id
+          id,content
         )
       ),
       categories (
