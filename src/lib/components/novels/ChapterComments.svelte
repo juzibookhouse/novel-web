@@ -168,59 +168,8 @@
 
 </script>
 
-<div class="border-t-2 border-gray-400 p-6">
+<div class="border-t-2 border-gray-400 p-6 space-y-6">
   <h3 class="text-xl font-medium text-gray-900 mb-6">评论区</h3>
-
-  {#if error}
-    <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-      <p class="text-sm text-red-700">{error}</p>
-    </div>
-  {/if}
-
-  <!-- Comment Form -->
-  {#if $user}
-    <div class="mb-8">
-      <div class="flex items-start space-x-4">
-        <div class="flex-shrink-0">
-          <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-            <span class="text-sm font-medium text-gray-700">
-              {$user?.user_name?.charAt(0) || 'U'}
-            </span>
-          </div>
-        </div>
-        <div class="flex-grow">
-          <textarea
-            bind:value={newComment}
-            placeholder="写下您的评论..."
-            rows="3"
-            class="w-full rounded-lg border-2 border-gray-300 px-3 py-2 focus:border-red-500 focus:ring-red-500 resize-none"
-            maxlength="1000"
-            on:focus={() => toggleKeydownEvent(false)}
-            on:blur={() => toggleKeydownEvent(true)}
-          ></textarea>
-          <div class="flex justify-between items-center mt-2">
-            <span class="text-xs text-gray-500">{newComment.length}/1000</span>
-            <Btn
-              handleClick={submitComment}
-              disabled={submitting || !newComment.trim()}
-              title={submitting ? '发布中...' : '发布评论'}
-              cssClass="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 disabled:opacity-50"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  {:else}
-    <div class="mb-8 text-center py-6 bg-gray-50 rounded-lg">
-      <p class="text-gray-600 mb-4">请登录后发表评论</p>
-      <a
-        href={`/user/login?redirect=${typeof window !== 'undefined'?window.location.pathname:''}`}
-        class="inline-block bg-primary text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
-      >
-        立即登录
-      </a>
-    </div>
-  {/if}
 
   <!-- Comments List -->
   {#if loading}
@@ -359,4 +308,59 @@
       {/each}
     </div>
   {/if}
+
+
+
+  {#if error}
+    <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+      <p class="text-sm text-red-700">{error}</p>
+    </div>
+  {/if}
+
+  <!-- Comment Form -->
+  {#if $user}
+    <div class="mb-8">
+      <div class="flex items-start space-x-4">
+        <div class="flex-shrink-0">
+          <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
+            <span class="text-sm font-medium text-gray-700">
+              {$user?.user_name?.charAt(0) || 'U'}
+            </span>
+          </div>
+        </div>
+        <div class="flex-grow">
+          <textarea
+            bind:value={newComment}
+            placeholder="写下您的评论..."
+            rows="3"
+            class="w-full rounded-lg border-2 border-gray-300 px-3 py-2 focus:border-red-500 focus:ring-red-500 resize-none"
+            maxlength="1000"
+            on:focus={() => toggleKeydownEvent(false)}
+            on:blur={() => toggleKeydownEvent(true)}
+          ></textarea>
+          <div class="flex justify-between items-center mt-2">
+            <span class="text-xs text-gray-500">{newComment.length}/1000</span>
+            <Btn
+              handleClick={submitComment}
+              disabled={submitting || !newComment.trim()}
+              title={submitting ? '发布中...' : '发布评论'}
+              cssClass="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 disabled:opacity-50"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  {:else}
+    <div class="mb-8 text-center py-6 bg-gray-50 rounded-lg">
+      <p class="text-gray-600 mb-4">请登录后发表评论</p>
+      <a
+        href={`/user/login?redirect=${typeof window !== 'undefined'?window.location.pathname:''}`}
+        class="inline-block bg-primary text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
+      >
+        立即登录
+      </a>
+    </div>
+  {/if}
+
+
 </div>
