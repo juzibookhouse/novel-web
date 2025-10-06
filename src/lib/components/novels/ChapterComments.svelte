@@ -257,7 +257,7 @@
                 <div class="flex space-x-2">
                   <button
                     on:click={() => deleteComment(comment.id)}
-                    class="text-xs text-red-500 hover:text-red-700"
+                    class="text-xs text-red-500 hover:text-red-700 cursor-pointer"
                   >
                     删除
                   </button>
