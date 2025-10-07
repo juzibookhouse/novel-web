@@ -217,7 +217,7 @@
 
   <ChapterPagination novelId={novelId} prevChapterId={prevChapterId} nextChapterId={nextChapterId} />
 
-  <ChapterGifts chapterId={chapter.id} {novelId} />
+  <!-- <ChapterGifts chapterId={chapter.id} {novelId} /> -->
 
   <ChapterComments chapterId={chapter.id} novelId={novelId} toggleKeydownEvent={toggleKeydownEvent} />
     
