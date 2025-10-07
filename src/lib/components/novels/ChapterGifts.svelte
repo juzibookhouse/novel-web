@@ -1,6 +1,7 @@
 <script lang="ts">
   import { sendRequest } from "$lib/api";
   import { user } from "$lib/stores/authStore";
+  import type { Gift } from "$lib/types/gift";
   import { onMount } from "svelte";
 
   export let chapterId: string;
@@ -8,7 +9,7 @@
 
   let sending = false;
   let message = "";
-  let gifts:any = [];
+  let gifts:Gift[] = [];
 
   onMount(async() => {
     const {data} = await sendRequest('/api/gifts');
