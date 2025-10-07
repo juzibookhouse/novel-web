@@ -1,36 +1,37 @@
 <script lang="ts">
+  import { sendRequest } from "$lib/api";
   import { user } from "$lib/stores/authStore";
+  import { onMount } from "svelte";
 
   export let chapterId: string;
   export let novelId: string;
 
   let sending = false;
   let message = "";
+  let gifts:any = [];
 
-  const gifts = [
-    { type: "咖啡", icon: "☕", amount: 1 },
-    { type: "鲜花", icon: "🌹", amount: 5 },
-    { type: "爱心", icon: "❤️", amount: 10 }
-  ];
+  onMount(async() => {
+    const {data} = await sendRequest('/api/gifts');
+    if (data.gifts) {
+      gifts = data.gifts
+    }
+  })
 
-  async function sendGift(giftType: string, amount: number) {
+  async function sendGift(gift_id:string) {
     if (!$user) return;
 
     sending = true;
     message = "";
 
     try {
-      const response = await fetch("/api/chapter-gift", {
+      const {response} = await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gifts`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          chapterId,
-          giftType,
-          amount
+          gift_id,
         })
       });
 
-      if (response.ok) {
+      if (response?.ok) {
         message = "礼物已送出！";
         setTimeout(() => message = "", 2000);
       } else {
@@ -51,12 +52,12 @@
   <div class="grid grid-cols-3 gap-4">
     {#each gifts as gift}
       <button
-        on:click={() => sendGift(gift.type, gift.amount)}
+        on:click={() => sendGift(gift.id)}
         disabled={sending}
-        class="py-3 px-4 rounded-lg bg-white hover:bg-gray-100 transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200"
+        class="py-3 px-4 rounded-lg cursor-pointer bg-white hover:bg-gray-100 transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200"
       >
-        <div class="text-3xl mb-2 text-gray-800">{gift.icon}</div>
-        <div class="text-sm text-gray-600">{gift.type}</div>
+        <div class="text-3xl mb-2 text-gray-800">{gift.image}</div>
+        <div class="text-sm text-gray-600">{gift.title}</div>
       </button>
     {/each}
   </div>
