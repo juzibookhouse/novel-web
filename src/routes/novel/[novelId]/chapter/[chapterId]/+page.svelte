@@ -196,7 +196,7 @@
       {#if chapter.novels.user_id === $user?.id || canReadChapter}
         <ChapterContent chapter={chapter} />
       {:else if !$user}
-        <ChapterLoginMsg />
+        <ChapterLoginMsg novelId={novelId} chapterId={chapter.id}/>
       {:else if !$user?.isMembership}
         <ChapterMemberSubscriptionMsg handleMembershipModal={()=>showMembershipModal=true} />
       {/if}
