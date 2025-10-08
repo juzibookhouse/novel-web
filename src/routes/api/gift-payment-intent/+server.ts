@@ -10,12 +10,10 @@ export async function POST({ request }) {
   try {
     const { gift_id, stripeClientSecret, payment_method } = await request.json();
 
-    const user = await getAuthUser(request);
-    if (!user.user_id) {
+    const {user_id, isAdmin} = await getAuthUser(request);
+    if (!user_id) {
       return json({ error: 'User not authenticated' }, { status: 401 });
     }
-
-    const {data: userProfile} = await supabase.from('user_profiles').select('*').eq('user_id', user.user_id).single();
 
     // Get gift details from Supabase
     const { data: gift } = await supabase
@@ -35,11 +33,6 @@ export async function POST({ request }) {
       amount = gift.price_cn * 100;
       currency = 'cny';
     }
-
-    if (userProfile.role === 'admin') {
-      amount = 300;
-    }
-
 
     const paymentMethodTypes = [payment_method]; //card,alipay,wechat_pay
 
