@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 import { supabase } from '$lib/supabaseClient';
 import { STRIPE_SECRET_KEY } from '$env/static/private';
 import { getAuthUser } from '$lib/server/auth.js';
+import { CURRENCY_CN, CURRENCY_US } from '$lib/constants';
 
 const stripe = new Stripe(STRIPE_SECRET_KEY);
 
@@ -28,10 +29,10 @@ export async function POST({ request }) {
 
     let paymentIntent;
     let amount = gift.price * 100; // Convert to cents
-    let currency = 'usd';
+    let currency = CURRENCY_US;
     if (payment_method != 'card') {
       amount = gift.price_cn * 100;
-      currency = 'cny';
+      currency = CURRENCY_CN;
     }
 
     const paymentMethodTypes = [payment_method]; //card,alipay,wechat_pay
