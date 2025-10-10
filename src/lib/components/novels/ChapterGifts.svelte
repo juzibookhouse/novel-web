@@ -29,7 +29,10 @@
   let processing = false;
 
   onMount(async () => {
-    const { data } = await sendRequest('/api/gifts');
+    const { data,error } = await sendRequest('/api/gifts');
+    if (error) {
+      message = error.toString();
+    }
     if (data.gifts) {
       gifts = data.gifts;
     }
