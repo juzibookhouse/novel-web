@@ -19,7 +19,7 @@ export async function createPaymentIntent(
   existingClientSecret?: string
 ): Promise<string | null> {
   try {
-    const { data } = await sendRequest('/api/gift-payment-intent', {
+    const { data, error } = await sendRequest('/api/gift-payment-intent', {
       method: 'POST',
       body: JSON.stringify({
         gift_id: giftId,
@@ -27,6 +27,11 @@ export async function createPaymentIntent(
         stripeClientSecret: existingClientSecret
       })
     });
+
+    if (error) {
+      console.error('Failed to create payment intent:', error);
+      return null;
+    }
 
     return data.clientSecret || null;
   } catch (error) {
