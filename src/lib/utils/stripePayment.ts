@@ -70,14 +70,3 @@ export async function mountPaymentElement(
     }, 100);
   });
 }
-
-export async function confirmPayment(
-  stripe: Stripe,
-  elements: StripeElements,
-  returnUrl: string
-): Promise<{ error?: { message?: string } }> {
-  return await stripe.confirmPayment({
-    elements,
-    confirmParams: { return_url: returnUrl }
-  });
-}

@@ -11,7 +11,6 @@
     createPaymentIntent,
     createStripeElements,
     mountPaymentElement,
-    confirmPayment,
     type PaymentMethod
   } from "$lib/utils/stripePayment";
 
@@ -84,8 +83,16 @@
     message = "";
 
     try {
-      const returnUrl = window.location.origin + '/payment-confirm';
-      const { error } = await confirmPayment(stripe, elements, returnUrl);
+      const paymentOption = {
+        elements,
+        redirect: "if_required",
+      };
+      if (paymentMethod === 'alipay') {
+        // paymentOption.confirmParams = {
+        //   return_url: window.location.origin + `/payment-confirm?user_membership_id=${$user?.membership?.id}&previous_url=${window.location.href}`
+        // }
+      }
+      const { error } = await stripe.confirmPayment(paymentOption)
 
       if (error) {
         message = error.message || "支付失败，请重试";
