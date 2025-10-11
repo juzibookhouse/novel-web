@@ -15,7 +15,7 @@
 
   <Hero />
 
-  {#if quotationChapters?.length > 0}
+  {#if quotationChapters && quotationChapters?.length > 0}
   <FeatureNovel {quotationChapters} />
   {/if}
 
