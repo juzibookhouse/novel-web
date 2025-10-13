@@ -13,7 +13,7 @@
 </script>
 
 <!-- Hero Section -->
-<section class="relative flex items-center justify-center py-32 px-4 overflow-hidden">
+<section class="relative flex items-center justify-center py-30 overflow-hidden">
   <!-- 背景渐变 -->
   <div
     class="absolute inset-0 bg-gradient-to-r from-[var(--primary-color)] to-[var(--highlight-color)] opacity-90"
