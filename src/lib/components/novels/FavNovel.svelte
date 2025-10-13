@@ -32,7 +32,7 @@
   <button
     on:click={toggleBookshelf}
     disabled={loading}
-    class="flex items-center cursor-pointer gap-2 px-4 py-2 rounded-full border-2 border-gray-200 hover:border-gray-300 transition-all duration-200 {isInBookshelf ? 'bg-gray-50' : 'bg-white text-gray-600'}"
+    class="flex items-center cursor-pointer gap-2 px-4 py-2 rounded border-2 border-gray-200 hover:border-gray-300 transition-all duration-200 {isInBookshelf ? 'bg-gray-50' : 'bg-white text-gray-600'}"
   >
     <span class="text-sm">
       {#if loading}
