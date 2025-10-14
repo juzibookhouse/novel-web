@@ -34,7 +34,7 @@
         <div class="min-w-full bg-white/80 p-4 rounded-lg shadow-sm flex flex-col justify-center">
           <p class="text-gray-700">{comment.content}</p>
           {#if comment.chapter_title}
-            <p class="text-xs text-center text-gray-500 mt-1">来自章节：{comment.chapter_title}</p>
+            <p class="text text-center text-gray-500 mt-1">来自章节：{comment.chapter_title}</p>
           {/if}
         </div>
       {/each}
