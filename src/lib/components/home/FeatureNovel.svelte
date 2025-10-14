@@ -51,7 +51,7 @@
             <p class="text-3xl italic text-gray-800 mb-8 text-center relative z-10">
               {quotation}
             </p>
-            <h2 class="text-2xl font-bold mb-2">{novelTitle} {title}</h2>
+            <h2 class="text-2xl font-bold">{novelTitle} {title}</h2>
           </a>
         </div>
       {/each}
