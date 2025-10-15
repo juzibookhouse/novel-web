@@ -36,13 +36,23 @@
       gifts = data.gifts;
     }
     stripe = await initializeStripe();
+
+
+    const { data:{gift, stripe_client_secret,payment_method}} = await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gift`);
+    if (gift) {
+      selectedGift = gift;
+      clientSecret = stripe_client_secret;
+      paymentMethod = payment_method;
+      showPaymentForm = true;
+      await loadPaymentForm();
+    }
+
   });
 
   async function handleSelectGift(gift: Gift) {
     selectedGift = gift;
     showPaymentForm = true;
     paymentMethod = 'card';
-    clientSecret = '';
     await loadPaymentForm();
   }
 
@@ -68,7 +78,8 @@
           method:'POST',
           body:JSON.stringify({
             gift_id:selectedGift.id,
-            stripe_client_secret:clientSecret
+            stripe_client_secret:clientSecret,
+            payment_method:paymentMethod
           })
         });
 

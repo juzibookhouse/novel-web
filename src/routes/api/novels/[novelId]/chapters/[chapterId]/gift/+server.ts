@@ -2,11 +2,33 @@ import { json } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
 import { getAuthUser } from '$lib/server/auth.js';
 
-export async function GET({ params }) {
+export async function GET({ params, request }) {
   try {
-    const { chapterId } = params;
+    const { novelId, chapterId } = params;
+    const {user_id} = await getAuthUser(request);
 
-    return json({ chapterId });
+    if (!user_id) {
+      return json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const {data: chapterGift, error: chapterGiftError} = await supabase
+    .from('chapter_gifts')
+    .select('*')
+    .eq('chapter_id', chapterId)
+    .eq('payment_status','pending')
+    .eq('user_id',user_id).single();
+
+    if (chapterGiftError) {
+      return json({ error: 'Internal server error' }, { status: 500 });
+    }
+
+    const {data:gift} = await supabase
+    .from('gifts')
+    .select('*')
+    .eq('id', chapterGift.gift_id)
+    .single();
+
+    return json({ gift, stripe_client_secret: chapterGift.stripe_client_secret, payment_method: chapterGift.payment_method});
   } catch (err) {
     console.error('Comments API error:', err);
     return json({ error: 'Internal server error' }, { status: 500 });
@@ -17,7 +39,7 @@ export async function POST({ request, params, locals }) {
   try {
     const { chapterId, novelId } = params;
     const {user_id} = await getAuthUser(request);
-    const {gift_id, stripe_client_secret, payment_method} = await request.json();
+    const {gift_id, stripe_client_secret} = await request.json();
     
     if (!user_id) {
       return json({ error: 'Unauthorized' }, { status: 401 });
@@ -55,8 +77,7 @@ export async function POST({ request, params, locals }) {
         gift_id: gift_id,
         user_id: user_id,
         stripe_client_secret: stripe_client_secret,
-        payment_status: 'pending',
-        payment_method
+        payment_status: 'pending'
       });
       if (error) {
         console.error('Error creating chapter gift:', error);
@@ -66,8 +87,7 @@ export async function POST({ request, params, locals }) {
       const {error} = await supabase
       .from('chapter_gifts')
       .update({
-        gift_id,
-        payment_method
+        gift_id
       })
       .eq('id', chapterGift.id)
       if (error) {
