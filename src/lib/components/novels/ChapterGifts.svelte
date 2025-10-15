@@ -118,7 +118,17 @@
       if (error) {
         message = error.message || "支付失败，请重试";
       } else {
-        sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gifts`, {method:'POST',body:JSON.stringify({gift_id:selectedGift.id})})
+        const {data:{msg, error}} = await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gifts`, {
+          method:'POST',
+          body:JSON.stringify({
+            gift_id:selectedGift.id, 
+            stripe_client_secret:clientSecret,
+            payment_method:paymentMethod})
+          })
+        clientSecret = ''
+        showPaymentForm = false;
+        selectedGift = null;
+        message = msg;
       }
     } catch (error) {
       message = "支付失败，请重试";
@@ -130,7 +140,6 @@
   function handleCancelPayment() {
     showPaymentForm = false;
     selectedGift = null;
-    clientSecret = '';
     if (elements) {
       // elements.destroy();
       elements = null;

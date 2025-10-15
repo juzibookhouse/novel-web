@@ -16,9 +16,10 @@ export async function GET({ params, request }) {
     .select('*')
     .eq('chapter_id', chapterId)
     .eq('payment_status','pending')
-    .eq('user_id',user_id).single();
+    .eq('user_id',user_id).limit(1).single();
 
     if (chapterGiftError) {
+      console.error('Error getting chapter gift:', chapterGiftError);
       return json({ error: 'Internal server error' }, { status: 500 });
     }
 
