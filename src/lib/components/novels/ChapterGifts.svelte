@@ -64,6 +64,16 @@
       if (newClientSecret) {
         clientSecret = newClientSecret;
 
+        const {data} = await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gifts`,{
+          method:'POST',
+          body:JSON.stringify({
+            gift_id:selectedGift.id,
+            stripe_client_secret:clientSecret
+          })
+        });
+
+        console.log(data);
+
         // if (elements) {
         //   elements.destroy();
         // }
@@ -96,6 +106,8 @@
 
       if (error) {
         message = error.message || "支付失败，请重试";
+      } else {
+        sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gifts`, {method:'POST',body:JSON.stringify({gift_id:selectedGift.id})})
       }
     } catch (error) {
       message = "支付失败，请重试";
