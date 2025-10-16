@@ -24,7 +24,7 @@ export async function load({ params }: { params: { novelId: string } }) {
   }
 
   if (gifts?.length) {
-    novel.gifts = gifts.map(g => ({
+    novel.gifts = gifts.map((g:any) => ({
       id: g.gift_id,
       title: g.gifts?.title || '',
       image: g.gifts?.image || ''

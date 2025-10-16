@@ -30,7 +30,7 @@ export async function GET({ params, request }) {
 
     let chapterGifts:Gift[] = [];
     if (chapterGiftsData) {
-      chapterGifts = chapterGiftsData.map(cg => {
+      chapterGifts = chapterGiftsData.map((cg:any) => {
         return {
           gift_id: cg.gift_id,
           title: cg.gifts?.title,
