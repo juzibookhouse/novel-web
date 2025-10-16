@@ -3,12 +3,43 @@ import { supabase } from '$lib/supabaseClient';
 import { getAuthUser } from '$lib/server/auth.js';
 import Stripe from 'stripe';
 import { STRIPE_SECRET_KEY } from '$env/static/private';
+import type { Gift } from '$lib/types/gift.js';
 
-export async function GET({ params }) {
+export async function GET({ params, request }) {
   try {
-    const { chapterId } = params;
+    const { novelId, chapterId } = params;
 
-    return json({ chapterId });
+    const { data:gifts, error:giftsError } = await supabase
+      .from('gifts')
+      .select(`
+        *
+      `)
+      .order('updated_at', { ascending: false });
+
+    let {data:chapterGiftsData, error: chapterGiftsError} = await supabase
+    .from('chapter_gifts')
+    .select(`
+      gift_id,
+      gifts (
+        title,
+        image
+      )
+    `)
+    .eq('novel_id',novelId)
+    .eq('chapter_id',chapterId);
+
+    let chapterGifts:Gift[] = [];
+    if (chapterGiftsData) {
+      chapterGifts = chapterGiftsData.map(cg => {
+        return {
+          gift_id: cg.gift_id,
+          title: cg.gifts?.title,
+          image: cg.gifts?.image
+        }
+      });
+    }
+
+    return json({ chapterGifts, gifts });
   } catch (err) {
     console.error('Comments API error:', err);
     return json({ error: 'Internal server error' }, { status: 500 });

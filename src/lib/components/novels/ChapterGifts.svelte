@@ -19,6 +19,7 @@
 
   let message = "";
   let gifts: Gift[] = [];
+  let chapterGifts: Gift[] = [];
   let selectedGift: Gift | null = null;
   let showPaymentForm = false;
   let paymentMethod: PaymentMethod = 'card';
@@ -28,12 +29,15 @@
   let processing = false;
 
   onMount(async () => {
-    const { data,error } = await sendRequest('/api/gifts');
+    const { data,error } = await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gifts`);
     if (error) {
       message = error.toString();
     }
     if (data.gifts) {
       gifts = data.gifts;
+    }
+    if (data.chapterGifts) {
+      chapterGifts = data.chapterGifts;
     }
     stripe = await initializeStripe();
 
@@ -150,6 +154,16 @@
 
 {#if $user}
 <div class="bg-gray-50 p-6 rounded-xl shadow-sm mx-auto max-w-md">
+  {#if chapterGifts.length > 0}
+    <div class="mb-4">
+      <h3 class="text-lg font-medium mb-2 text-gray-700">已收到的打赏</h3>
+      <div class="flex space-x-1 overflow-x-auto pb-1">
+        {#each chapterGifts as gift}
+          <div class="text-3xl mb-1">{gift.image}</div>
+        {/each}
+      </div>
+    </div>
+  {/if}
   {#if !showPaymentForm}
     <GiftSelectors
       {gifts}
@@ -158,7 +172,7 @@
     />
 
     {#if message}
-      <div class="mt-4 text-center text-sm font-medium text-blue-500">
+      <div class="mt-3 text-center text-sm text-gray-600">
         {message}
       </div>
     {/if}

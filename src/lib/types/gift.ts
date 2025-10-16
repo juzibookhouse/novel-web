@@ -1,7 +1,7 @@
 export interface Gift {
-  id: string;
+  id?: string;
   title: string;
-  price: number;
-  price_cn: number;
+  price?: number;
+  price_cn?: number;
   image: string;
 }
