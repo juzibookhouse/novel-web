@@ -3,6 +3,7 @@
     import { getNovelStatus, getNovelWordCount } from "$lib/novel";
     import FavNovel from "./FavNovel.svelte";
     import NovelCatTags from "./NovelCatTags.svelte";
+    import ReceivedGifts from "./ReceivedGifts.svelte";
     export let novel;
 
 </script>
@@ -48,6 +49,10 @@
         </div>
 
         <FavNovel novelId={novel.id} />
+
+        {#if novel.gifts && novel.gifts.length}
+        <ReceivedGifts chapterGifts={novel.gifts} />
+        {/if}
 
 
       </div>
