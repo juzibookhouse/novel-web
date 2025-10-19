@@ -1,6 +1,5 @@
 <script lang="ts">
-    import type { Gift } from "$lib/types/gift";
-
+  import type { Gift } from "$lib/types/gift";
   export let chapterGifts: Gift[];
 </script>
 
