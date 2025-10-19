@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { sendRequest } from "$lib/api";
   import { supabase } from "$lib/supabaseClient";
   import {
     getUserDateFormat,
@@ -15,30 +16,12 @@
   async function fetchUsers() {
     try {
       // Load users from user_profiles
-      const { data: usersData, error: usersError } = await supabase
-        .from("user_profiles")
-        .select(
-          `
-          id,
-          user_id,
-          role,
-          created_at,
-          user_name,
-          ip,
-          email,
-          user_memberships (
-            id,
-            status,
-            plan_id,
-            end_date
-          )
-        `,
-        )
-        // .gte("user_memberships.end_date", new Date().toISOString())
-        .order("created_at", { ascending: false });
-
-      if (usersError) throw usersError;
-      users = usersData;
+      const {data, error} = await sendRequest("/api/admin/users", {
+        method: "GET",
+      });
+      if (data.users) {
+        users = data.users;
+      }
     } catch (error) {}
   }
 </script>
