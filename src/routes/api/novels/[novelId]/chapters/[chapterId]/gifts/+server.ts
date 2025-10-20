@@ -26,6 +26,7 @@ export async function GET({ params, request }) {
       )
     `)
     .eq('novel_id',novelId)
+    .eq('payment_status','paid')
     .eq('chapter_id',chapterId);
 
     let chapterGifts:Gift[] = [];

@@ -17,6 +17,7 @@ export async function load({ params }: { params: { novelId: string } }) {
       image
     )
   `)
+  .eq('payment_status', 'paid')
   .eq('novel_id', params.novelId);
 
   if (giftsError) {
