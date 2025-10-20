@@ -17,11 +17,10 @@
         class="w-full h-auto rounded-lg shadow-lg"
       />
     </div>
-    <div class="w-2/3">
-      <h1 class=" text-4xl text-primary mb-4">
+    <div class="w-2/3 space-y-2">
+      <h1 class=" text-4xl text-primary">
         {novel.title}
       </h1>
-      <div class="space-y-4">
         <div class="flex items-center gap-2">
           <NovelCatTags catTags={[{name:getNovelStatus(novel)}]} type={novel.status} />
           {#if novel.is_short }
@@ -54,8 +53,6 @@
         <ReceivedGifts chapterGifts={novel.gifts} />
         {/if}
 
-
-      </div>
     </div>
   </div>
 </div>

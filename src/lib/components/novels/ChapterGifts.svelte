@@ -13,7 +13,7 @@
     mountPaymentElement,
     type PaymentMethod
   } from "$lib/utils/stripePayment";
-    import ReceivedGifts from "./ReceivedGifts.svelte";
+  import ReceivedGifts from "./ReceivedGifts.svelte";
 
   export let chapterId: string;
   export let novelId: string;
@@ -29,29 +29,27 @@
   let elements: StripeElements | null = null;
   let processing = false;
 
+  // keep behavior: load gifts and optionally pending gift payment
   onMount(async () => {
-    const { data,error } = await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gifts`);
+    const { data, error } = await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gifts`);
     if (error) {
       message = error.toString();
     }
-    if (data.gifts) {
-      gifts = data.gifts;
-    }
-    if (data.chapterGifts) {
-      chapterGifts = data.chapterGifts;
-    }
+    if (data?.gifts) gifts = data.gifts;
+    if (data?.chapterGifts) chapterGifts = data.chapterGifts;
+
     stripe = await initializeStripe();
 
-
-    const { data:{gift, stripe_client_secret,payment_method}} = await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gift`);
-    if (gift) {
-      selectedGift = gift;
-      clientSecret = stripe_client_secret;
-      paymentMethod = payment_method;
+    // check if there's an in-progress gift payment
+    const res = await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gift`);
+    const payload = res?.data || {};
+    if (payload.gift) {
+      selectedGift = payload.gift;
+      clientSecret = payload.stripe_client_secret || '';
+      paymentMethod = payload.payment_method || 'card';
       showPaymentForm = true;
       await loadPaymentForm();
     }
-
   });
 
   async function handleSelectGift(gift: Gift) {
@@ -67,37 +65,25 @@
   }
 
   async function loadPaymentForm() {
-    if (!selectedGift || !stripe) return;
+    if (!selectedGift?.id || !stripe) return;
 
     try {
-      const newClientSecret = await createPaymentIntent(
-        selectedGift.id,
-        paymentMethod,
-        clientSecret
-      );
+      const newClientSecret = await createPaymentIntent(selectedGift.id, paymentMethod, clientSecret);
+      if (!newClientSecret) return;
+      clientSecret = newClientSecret;
 
-      if (newClientSecret) {
-        clientSecret = newClientSecret;
+      await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gifts`, {
+        method: 'POST',
+        body: JSON.stringify({
+          gift_id: selectedGift.id,
+          stripe_client_secret: clientSecret,
+          payment_method: paymentMethod
+        })
+      });
 
-        const {data} = await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gifts`,{
-          method:'POST',
-          body:JSON.stringify({
-            gift_id:selectedGift.id,
-            stripe_client_secret:clientSecret,
-            payment_method:paymentMethod
-          })
-        });
-
-        console.log(data);
-
-        // if (elements) {
-        //   elements.destroy();
-        // }
-
-        elements = createStripeElements(stripe, clientSecret);
-        await mountPaymentElement(elements);
-      }
-    } catch (error) {
+      elements = createStripeElements(stripe, clientSecret);
+      await mountPaymentElement(elements);
+    } catch (e) {
       message = "加载支付表单失败";
     }
   }
@@ -109,33 +95,26 @@
     message = "";
 
     try {
-      const paymentOption = {
-        elements,
-        redirect: "if_required",
-      };
-      if (paymentMethod === 'alipay') {
-        // paymentOption.confirmParams = {
-        //   return_url: window.location.origin + `/payment-confirm?user_membership_id=${$user?.membership?.id}&previous_url=${window.location.href}`
-        // }
-      }
-      const { error } = await stripe.confirmPayment(paymentOption)
+      const paymentOption: any = { elements, redirect: 'if_required' };
+      const result = await stripe.confirmPayment(paymentOption);
 
-      if (error) {
-        message = error.message || "支付失败，请重试";
+      if (result?.error) {
+        message = result.error.message || "支付失败，请重试";
       } else {
-        const {data:{msg, error}} = await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gifts`, {
-          method:'POST',
-          body:JSON.stringify({
-            gift_id:selectedGift.id, 
-            stripe_client_secret:clientSecret,
-            payment_method:paymentMethod})
+        const response = await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gifts`, {
+          method: 'POST',
+          body: JSON.stringify({
+            gift_id: selectedGift.id,
+            stripe_client_secret: clientSecret,
+            payment_method: paymentMethod
           })
-        clientSecret = ''
+        });
+        clientSecret = '';
         showPaymentForm = false;
         selectedGift = null;
-        message = msg;
+        message = response?.data?.msg || '感谢你的打赏！';
       }
-    } catch (error) {
+    } catch (err) {
       message = "支付失败，请重试";
     } finally {
       processing = false;
@@ -145,40 +124,48 @@
   function handleCancelPayment() {
     showPaymentForm = false;
     selectedGift = null;
-    if (elements) {
-      // elements.destroy();
-      elements = null;
-    }
+    elements = null;
     message = "";
   }
 </script>
 
 {#if $user}
-<div class="bg-gray-50 p-6 rounded-xl shadow-sm mx-auto max-w-md">
-  <ReceivedGifts {chapterGifts} />
-  {#if !showPaymentForm}
-    <GiftSelectors
-      {gifts}
-      onSelectGift={handleSelectGift}
-      disabled={processing}
-    />
-
-    {#if message}
-      <div class="mt-3 text-center text-sm text-gray-600">
-        {message}
+  <div class="max-w-xl mx-auto bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-md border border-gray-100">
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800">支持作者 · 打赏章节</h3>
+        <p class="mt-1 text-sm text-gray-500">选择一个礼物来表达你的支持。</p>
       </div>
-    {/if}
-  {:else if selectedGift}
-    <GiftPaymentForm
-      gift={selectedGift}
-      {paymentMethod}
-      {processing}
-      {clientSecret}
-      {message}
-      onCancel={handleCancelPayment}
-      onChangeMethod={handleChangePaymentMethod}
-      onSubmit={handleSubmitPayment}
-    />
-  {/if}
-</div>
+      <div class="text-sm text-gray-400">{chapterGifts?.length || 0} 收到</div>
+    </div>
+
+    <div class="mt-4 space-y-4">
+      <ReceivedGifts {chapterGifts} />
+
+      {#if !showPaymentForm}
+        <GiftSelectors
+          {gifts}
+          onSelectGift={handleSelectGift}
+          disabled={processing}
+        />
+
+        {#if message}
+          <div class="mt-2 text-center text-sm text-rose-600">{message}</div>
+        {/if}
+      {:else if selectedGift}
+        <div class="mt-2">
+          <GiftPaymentForm
+            gift={selectedGift}
+            {paymentMethod}
+            {processing}
+            {clientSecret}
+            {message}
+            onCancel={handleCancelPayment}
+            onChangeMethod={handleChangePaymentMethod}
+            onSubmit={handleSubmitPayment}
+          />
+        </div>
+      {/if}
+    </div>
+  </div>
 {/if}
