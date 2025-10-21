@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { supabase } from '$lib/supabaseClient';
+import { getNovelChapterGifts, supabase } from '$lib/supabaseClient';
 import { getAuthUser } from '$lib/server/auth.js';
 import Stripe from 'stripe';
 import { STRIPE_SECRET_KEY } from '$env/static/private';
@@ -16,28 +16,14 @@ export async function GET({ params, request }) {
       `)
       .order('updated_at', { ascending: false });
 
-    let {data:chapterGiftsData, error: chapterGiftsError} = await supabase
-    .from('chapter_gifts')
-    .select(`
-      gift_id,
-      gifts (
-        title,
-        image
-      )
-    `)
-    .eq('novel_id',novelId)
-    .eq('payment_status','paid')
-    .eq('chapter_id',chapterId);
-
-    let chapterGifts:Gift[] = [];
-    if (chapterGiftsData) {
-      chapterGifts = chapterGiftsData.map((cg:any) => {
-        return {
-          gift_id: cg.gift_id,
-          title: cg.gifts?.title,
-          image: cg.gifts?.image
-        }
-      });
+    const {gifts:chapterGifts, error:chapterGiftsError} = await getNovelChapterGifts({ novelId, chapterId });
+    
+    if (giftsError) {
+      console.error('Error fetching gifts:', giftsError);
+    }
+    
+    if (chapterGiftsError) {
+      console.error('Error fetching chapter gifts:', chapterGiftsError);
     }
 
     return json({ chapterGifts, gifts });

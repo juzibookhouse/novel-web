@@ -1,5 +1,5 @@
 import { FREE_OPTIONS_MAP, getSortedChapters, type Chapter, type Tag } from "$lib/novel";
-import { getNovel, getUserProfile, supabase } from "$lib/supabaseClient";
+import { getNovel, getNovelChapterGifts, getUserProfile, supabase } from "$lib/supabaseClient";
 import type { Gift } from "$lib/types/gift";
 import { error } from '@sveltejs/kit';
 
@@ -8,28 +8,12 @@ export async function load({ params }: { params: { novelId: string } }) {
   const {data:novel,error:novelError} = await getNovel(params.novelId);
   const {data:userProfile, error:profileError} = await getUserProfile(novel.user_id);
 
-  const {data:gifts, error:giftsError} = await supabase
-  .from('chapter_gifts')
-  .select(`
-    gift_id,
-    gifts (
-      title,
-      image
-    )
-  `)
-  .eq('payment_status', 'paid')
-  .eq('novel_id', params.novelId);
+  const {gifts, error:giftsError} = await getNovelChapterGifts({ novelId: params.novelId });
 
   if (giftsError) {
-    console.error('Failed to fetch gifts:', giftsError);
-  }
-
-  if (gifts?.length) {
-    novel.gifts = gifts.map((g:any) => ({
-      id: g.gift_id,
-      title: g.gifts?.title || '',
-      image: g.gifts?.image || ''
-    }));
+    console.error('Error fetching gifts:', giftsError);
+  } else if (gifts) {
+    novel.gifts = gifts;
   }
 
   novel.tags = novel.novel_tags.map(({tags}:{tags:Tag})=>tags);

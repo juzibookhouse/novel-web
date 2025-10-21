@@ -4,6 +4,7 @@ import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from "$env/static/publi
 import type { Chapter, NewNovel } from "./novel";
 import { getMemberShipEndDate } from "./membership";
 import type { UserData } from "./stores/authStore";
+import type { Gift } from "./types/gift";
 
 const supabaseUrl = PUBLIC_SUPABASE_URL;
 const supabaseKey = PUBLIC_SUPABASE_ANON_KEY;
@@ -29,6 +30,41 @@ interface SearchNovelsParams {
   end?: number,
   limit?: number,
   is_short?: boolean
+}
+
+export const getNovelChapterGifts = async ({novel_id, chapter_id}:any) => {
+  let query = supabase
+    .from('chapter_gifts')
+    .select(`
+      *,
+      gifts (
+        id,
+        title,
+        image
+      )
+    `)
+    .eq('payment_status', 'paid')
+  
+  if (novel_id) {
+    query = query.eq('novel_id', novel_id);
+  }
+
+  if (chapter_id) {
+    query = query.eq('chapter_id', chapter_id);
+  }
+  
+  const {data:giftsData, error} = await query;
+  let gifts:Gift[] = [];
+  if (giftsData) {
+    gifts = giftsData.map((cg:any) => {
+      return {
+        gift_id: cg.gift_id,
+        title: cg.gifts?.title,
+        image: cg.gifts?.image
+      }
+    });
+  }
+  return {gifts, error};
 }
 
 export const getUserProfile = async (user_id: string) => {
