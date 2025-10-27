@@ -8,6 +8,10 @@ export async function load({ params, locals }: { params: { novelId: string; chap
     throw error(404, 'Chapter not found');
   }
 
+  // normalize content: replace inline style attribute values with empty string and convert newlines to <br/>
+  chapter.content = chapter.content
+    .replace(/\sstyle\s*=\s*(["'])[\s\S]*?\1/gi, '');
+
   // Check if user is the author of the novel
   if (locals.user?.id) {
     const { data: userProfile } = await supabase
