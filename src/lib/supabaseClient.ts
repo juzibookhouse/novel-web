@@ -565,7 +565,8 @@ export const upsertChapterReadingRecords = async(chapter, readingTime, user) => 
     await supabase
       .from('reading_records')
       .update({
-        'reading_time': readingRecord.reading_time + readingTime
+        'reading_time': readingRecord.reading_time + readingTime,
+        'updated_at': new Date()
       })
       .eq('id', readingRecord.id)
   } else {
