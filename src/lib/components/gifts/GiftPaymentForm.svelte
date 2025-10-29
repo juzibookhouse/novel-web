@@ -28,7 +28,7 @@
 
   <div class="bg-white p-4 rounded-lg mb-4 border border-gray-200">
     <div class="flex items-center gap-3">
-      <div class="text-3xl">{gift.image}</div>
+      <img src={gift.image} alt={gift.title} class="w-12 h-12 rounded-full" />
       <div class="flex-1">
         <div class="font-medium text-gray-700">{gift.title}</div>
         <div class="text-sm text-gray-500">{displayPrice}</div>

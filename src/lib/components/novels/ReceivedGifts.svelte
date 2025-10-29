@@ -8,7 +8,12 @@
     <h3 class="text-lg font-medium text-gray-700">已收到的打赏</h3>
     <div class="flex overflow-x-auto">
       {#each chapterGifts as gift}
-        <div class="text-2xl">{gift.image}</div>
+        <img
+          src={gift.image}
+          alt={gift.title}
+          title={gift.title}
+          class="w-6 h-6"
+        />
       {/each}
     </div>
   </div>
