@@ -16,7 +16,7 @@ export async function GET({ params, request }) {
       `)
       .order('updated_at', { ascending: false });
 
-    const {gifts:chapterGifts, error:chapterGiftsError} = await getNovelChapterGifts({ novelId, chapterId });
+    const {gifts:chapterGifts, error:chapterGiftsError} = await getNovelChapterGifts({ novel_id:novelId, chapter_id:chapterId });
     
     if (giftsError) {
       console.error('Error fetching gifts:', giftsError);

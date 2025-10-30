@@ -29,8 +29,7 @@
   let elements: StripeElements | null = null;
   let processing = false;
 
-  // keep behavior: load gifts and optionally pending gift payment
-  onMount(async () => {
+  const fetchChapterGifts = async () => {
     const { data, error } = await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gifts`);
     if (error) {
       message = error.toString();
@@ -50,7 +49,18 @@
       showPaymentForm = true;
       await loadPaymentForm();
     }
+  };
+
+  // keep behavior: load gifts and optionally pending gift payment
+  onMount(async () => {
+    await fetchChapterGifts();
   });
+
+  $: {
+    if (chapterId) {
+      fetchChapterGifts();
+    }
+  }
 
   async function handleSelectGift(gift: Gift) {
     selectedGift = gift;
