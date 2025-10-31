@@ -1,7 +1,6 @@
 <script lang="ts">
-    import { formatDuration } from "$lib/novel";
-  import { supabase } from "$lib/supabaseClient";
-  import { onMount } from "svelte";
+  import { formatDuration } from "$lib/novel";
+  import { sendRequest } from "$lib/api";
 
   let selectedMonth = new Date().toISOString().slice(0, 7); // 默认选择当前月份
   let selectedFilter = "author"; // 'author' or 'novel'
@@ -14,65 +13,13 @@
       loading = true;
       error = null;
 
-      const startDate = new Date(selectedMonth + "-01");
-      const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
-
-      let query = supabase
-        .from('reading_records')
-        .select(`
-          id,
-          reading_time,
-          user_profiles (
-            id,
-            user_name
-          ),
-          novels (
-            id,
-            title,
-            user_id,
-            user_profiles (
-              id,
-              user_name
-            )
-          )
-        `)
-        .eq('date', selectedMonth);
-
-      const { data, error: queryError } = await query;
+      const { data, error: queryError } = await sendRequest(
+        `/api/reading_records?month=${selectedMonth}&filter=${selectedFilter}`
+      );
 
       if (queryError) throw queryError;
 
-      // 根据选择的过滤方式处理数据
-      const aggregatedData = new Map();
-
-      data.forEach((record: any) => {
-        let key, displayName;
-        
-        if (selectedFilter === 'user') {
-          key = record.user_profiles.id;
-          displayName = record.user_profiles.user_name;
-        } else if (selectedFilter === 'novel') {
-          key = record.novels.id;
-          displayName = record.novels.title;
-        } else if (selectedFilter === 'author') {
-          key = record.novels.user_id;
-          displayName = record.novels.user_profiles.pen_name || record.novels.user_profiles.user_name;
-        }
-        
-        if (!aggregatedData.has(key)) {
-          aggregatedData.set(key, {
-            name: displayName,
-            totalTime: 0,
-          });
-        }
-
-        const entry = aggregatedData.get(key);
-        entry.totalTime += record.reading_time;
-      });
-
-      readingData = Array.from(aggregatedData.values())
-        .sort((a, b) => b.totalTime - a.totalTime);
-
+      readingData = data;
     } catch (e: any) {
       error = e.message;
     } finally {
