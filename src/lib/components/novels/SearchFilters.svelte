@@ -80,18 +80,16 @@
     </div>
     
     <div class="flex-1 min-w-[200px] flex items-end">
-      <div class="w-full">
-        <label for="is-short" class="flex items-center cursor-pointer">
-          <input
-            type="checkbox"
-            id="is-short"
-            bind:checked={isShort}
-            on:change={handleSearch}
-            class="w-5 h-5 text-red-500 border-2 border-gray-400 rounded focus:ring-red-500"
-          />
-          <span class="ml-2 text-sm font-medium text-gray-700">只看短篇小说</span>
-        </label>
-      </div>
+      <label for="is-short" class="flex items-center cursor-pointer">
+        <input
+          type="checkbox"
+          id="is-short"
+          bind:checked={isShort}
+          on:change={handleSearch}
+          class="w-5 h-5 text-red-500 border-2 border-gray-400 rounded focus:ring-red-500 cursor-pointer"
+        />
+        <span class="ml-2 text-sm font-medium text-gray-700">只看短篇小说</span>
+      </label>
     </div>
   </div>
 </div>
