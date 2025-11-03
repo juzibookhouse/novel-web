@@ -16,7 +16,7 @@
       alt={novel.title}
       class="w-full object-cover transition duration-300"
     />
-    <div class="absolute top-4 right-4">
+    <div class="absolute top-3 right-3">
       <span class="{novel.status === 'ongoing' ? 'bg-orange-500' : 'bg-green-500'} text-white px-2 py-1 rounded text-sm">
         {getNovelStatus(novel)}
       </span>
