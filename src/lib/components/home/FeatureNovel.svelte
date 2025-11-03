@@ -59,7 +59,7 @@
       <!-- Navigation Buttons -->
       {#if quotationChapters.length > 1}
         <button 
-          class="absolute cursor-pointer -left-10 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-colors"
+          class="absolute cursor-pointer -left-10 top-1/2 transform -translate-y-1/2 bg-white/80 p-2 rounded-full shadow hover:shadow-lg transition-shadow"
           on:click={prevSlide}
           aria-label="Previous slide">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -67,7 +67,7 @@
           </svg>
         </button>
         <button 
-          class="absolute cursor-pointer -right-10 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-colors"
+          class="absolute cursor-pointer -right-10 top-1/2 transform -translate-y-1/2 bg-white/80 p-2 rounded-full shadow hover:shadow-lg transition-shadow"
           on:click={nextSlide}
           aria-label="Next slide">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
