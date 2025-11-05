@@ -7,13 +7,14 @@ import type { Gift } from "$lib/types/gift";
 {#if $user?.isAdmin && chapterGifts.length > 0}
   <div class="flex gap-1 items-center">
     <h3 class="text-lg font-medium text-gray-700">已收到的打赏</h3>
-    <div class="flex overflow-x-auto">
+    <div class="flex overflow-x-auto gap-1">
       {#each chapterGifts as gift}
         <img
           src={gift.image}
           alt={gift.title}
           title={gift.title}
           class="w-6 h-6"
+          loading="lazy"
         />
       {/each}
     </div>
