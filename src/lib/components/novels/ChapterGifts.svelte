@@ -53,11 +53,37 @@
 
   // keep behavior: load gifts and optionally pending gift payment
   onMount(async () => {
+    // Check for payment intent client secret in query string
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentIntentClientSecret = urlParams.get('payment_intent_client_secret');
+    const redirect_status = urlParams.get('redirect_status');
+    const source_type = urlParams.get('source_type') || 'card';
+    
+    if (paymentIntentClientSecret && redirect_status === 'succeeded') {
+      console.log('Found payment intent client secret:', paymentIntentClientSecret);
+      
+      clientSecret = paymentIntentClientSecret;
+      paymentMethod = source_type;
+      showPaymentForm = false;
+      await saveChapterGift();
+      message = '感谢你的打赏！';
+      const paymentElement = document.getElementById('payment-element');
+      if (paymentElement) {
+        paymentElement.scrollIntoView({ behavior: 'smooth' });
+      }
+      clientSecret = '';
+      paymentMethod = 'card';
+    }
+    
     await fetchChapterGifts();
   });
 
   $: {
     if (chapterId) {
+      clientSecret = ''
+      paymentMethod = 'card';
+      showPaymentForm = false;
+      message = '';
       fetchChapterGifts();
     }
   }
@@ -74,6 +100,17 @@
     await loadPaymentForm();
   }
 
+  async function saveChapterGift() {
+    return await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gifts`, {
+      method: 'POST',
+      body: JSON.stringify({
+        gift_id: selectedGift?.id,
+        stripe_client_secret: clientSecret,
+        payment_method: paymentMethod
+      })
+    });
+  }
+
   async function loadPaymentForm() {
     if (!selectedGift?.id || !stripe) return;
 
@@ -82,14 +119,7 @@
       if (!newClientSecret) return;
       clientSecret = newClientSecret;
 
-      await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gifts`, {
-        method: 'POST',
-        body: JSON.stringify({
-          gift_id: selectedGift.id,
-          stripe_client_secret: clientSecret,
-          payment_method: paymentMethod
-        })
-      });
+      await saveChapterGift();
 
       elements = createStripeElements(stripe, clientSecret);
       await mountPaymentElement(elements);
@@ -106,19 +136,20 @@
 
     try {
       const paymentOption: any = { elements, redirect: 'if_required' };
+      // Alipay requires a return_url when confirming the PaymentIntent
+      if (paymentMethod === 'alipay' || paymentMethod === 'wechat_pay') {
+        // Use a payment confirmation route in the app so the server/client can finalize state
+        paymentOption.confirmParams = {
+          return_url: `${location.href}`
+        };
+      }
+
       const result = await stripe.confirmPayment(paymentOption);
 
       if (result?.error) {
         message = result.error.message || "支付失败，请重试";
       } else {
-        const response = await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gifts`, {
-          method: 'POST',
-          body: JSON.stringify({
-            gift_id: selectedGift.id,
-            stripe_client_secret: clientSecret,
-            payment_method: paymentMethod
-          })
-        });
+        const response = await saveChapterGift();
         clientSecret = '';
         showPaymentForm = false;
         selectedGift = null;

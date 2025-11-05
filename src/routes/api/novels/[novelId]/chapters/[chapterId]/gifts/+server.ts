@@ -43,16 +43,6 @@ export async function POST({ request, params, locals }) {
       return json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    if (!gift_id) {
-      return json({ error: 'Gift id is required' }, { status: 400 });
-    }
-
-    const { data: gift, error: giftError } = await supabase.from('gifts').select('*').eq('id', gift_id).single();
-    
-    if (giftError || !gift) {
-      return json({ error: `Gift ${gift_id} not found` }, { status: 404 });
-    }
-
     const { data: novel, error: novelError } = await supabase.from('novels').select('*').eq('id', novelId).single();
     
     if (novelError || !novel) {
@@ -67,6 +57,19 @@ export async function POST({ request, params, locals }) {
 
     const {data: chapterGift, error: chapterGiftError} = await supabase.from('chapter_gifts').select('*').eq('chapter_id', chapterId).eq('stripe_client_secret', stripe_client_secret).eq('user_id',user_id).single();
     if (!chapterGift) {
+      
+      
+      if (!gift_id) {
+        return json({ error: 'Gift id is required' }, { status: 400 });
+      }
+
+      const { data: gift, error: giftError } = await supabase.from('gifts').select('*').eq('id', gift_id).single();
+      
+      if (giftError || !gift) {
+        return json({ error: `Gift ${gift_id} not found` }, { status: 404 });
+      }
+
+
       const {error} = await supabase
       .from('chapter_gifts')
       .insert({
