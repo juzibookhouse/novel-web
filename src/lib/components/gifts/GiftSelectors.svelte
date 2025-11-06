@@ -5,8 +5,15 @@
   export let gifts: Gift[];
   export let onSelectGift: (gift: Gift) => void;
   export let disabled = false;
+  export let chapterId: string;
 
   const showAll = writable(false);
+
+  $:{
+    if (chapterId) {
+      showAll.set(false);
+    }
+  }
 </script>
 
 <div class="space-y-4">

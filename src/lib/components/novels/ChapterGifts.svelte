@@ -186,6 +186,7 @@
       {#if !showPaymentForm}
         <GiftSelectors
           {gifts}
+          {chapterId}
           onSelectGift={handleSelectGift}
           disabled={processing}
         />
