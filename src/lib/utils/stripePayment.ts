@@ -17,7 +17,7 @@ export async function createPaymentIntent(
   giftId: string,
   paymentMethod: PaymentMethod,
   existingClientSecret?: string
-): Promise<string | null> {
+): Promise<string> {
   try {
     const { data, error } = await sendRequest('/api/gift-payment-intent', {
       method: 'POST',
@@ -30,13 +30,13 @@ export async function createPaymentIntent(
 
     if (error) {
       console.error('Failed to create payment intent:', error);
-      return null;
+      return '';
     }
 
-    return data.clientSecret || null;
+    return data.clientSecret;
   } catch (error) {
     console.error('Failed to create payment intent:', error);
-    return null;
+    return '';
   }
 }
 

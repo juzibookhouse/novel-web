@@ -46,7 +46,7 @@
       selectedGift = payload.gift;
       clientSecret = payload.stripe_client_secret || '';
       paymentMethod = payload.payment_method || 'card';
-      showPaymentForm = true;
+      // showPaymentForm = true;
       await loadPaymentForm();
     }
   };
@@ -115,9 +115,11 @@
     if (!selectedGift?.id || !stripe) return;
 
     try {
-      const newClientSecret = await createPaymentIntent(selectedGift.id, paymentMethod, clientSecret);
-      if (!newClientSecret) return;
-      clientSecret = newClientSecret;
+      clientSecret = await createPaymentIntent(selectedGift.id, paymentMethod, clientSecret);
+      if (!clientSecret) {
+        message = "无法创建支付，请重试";
+        return;
+      }
 
       await saveChapterGift();
 
