@@ -12,7 +12,6 @@ import type { Gift } from "$lib/types/gift";
         <img
           src={gift.image}
           alt={gift.title}
-          title={gift.title}
           class="w-6 h-6"
           loading="lazy"
         />
