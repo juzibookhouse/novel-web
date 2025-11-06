@@ -8,7 +8,7 @@ export async function load({ params }: { params: { novelId: string } }) {
   const {data:novel,error:novelError} = await getNovel(params.novelId);
   const {data:userProfile, error:profileError} = await getUserProfile(novel.user_id);
 
-  const {gifts, error:giftsError} = await getNovelChapterGifts({ novelId: params.novelId });
+  const {gifts, error:giftsError} = await getNovelChapterGifts({ novel_id: params.novelId });
 
   if (giftsError) {
     console.error('Error fetching gifts:', giftsError);
