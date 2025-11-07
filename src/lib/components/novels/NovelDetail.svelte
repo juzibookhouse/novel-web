@@ -47,6 +47,12 @@
           <span class="ml-2 text-gray-900">{getUserDateFormat(novel.updated_at)}</span>
         </div>
 
+        {#if novel.comments?.length}
+        <div class="flex items-center">
+          <span class="text-gray-900">{novel.comments?.length}讨论</span>
+        </div>
+        {/if}
+
         <div>
           <span class="text-gray-600">简介：</span>
           <p class="mt-2 text-gray-800 leading-relaxed">
