@@ -2,6 +2,7 @@
   import { user } from "$lib/stores/authStore";
 import type { Gift } from "$lib/types/gift";
   export let chapterGifts: Gift[];
+  export let isUserBookAuthor: boolean = true;
 </script>
 
 {#if $user?.isAdmin && chapterGifts.length > 0}
@@ -12,6 +13,7 @@ import type { Gift } from "$lib/types/gift";
         <img
           src={gift.image}
           alt={gift.title}
+          title={($user?.isAdmin || isUserBookAuthor) ? gift.title : ''}
           class="w-6 h-6"
           loading="lazy"
         />

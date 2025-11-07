@@ -1,6 +1,7 @@
 <script>
     import { COVER_PLACEHOLDER } from "$lib/constants";
     import { getNovelStatus, getNovelWordCount } from "$lib/novel";
+    import { user } from "$lib/stores/authStore";
     import FavNovel from "./FavNovel.svelte";
     import NovelCatTags from "./NovelCatTags.svelte";
     import ReceivedGifts from "./ReceivedGifts.svelte";
@@ -50,7 +51,7 @@
         <FavNovel novelId={novel.id} />
 
         {#if novel.gifts && novel.gifts.length}
-        <ReceivedGifts chapterGifts={novel.gifts} />
+        <ReceivedGifts chapterGifts={novel.gifts} isUserBookAuthor={novel.author?.user_id === $user?.user_id} />
         {/if}
 
     </div>
