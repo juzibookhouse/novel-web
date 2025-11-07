@@ -2,6 +2,7 @@
     import { COVER_PLACEHOLDER } from "$lib/constants";
     import { getNovelStatus, getNovelWordCount } from "$lib/novel";
     import { user } from "$lib/stores/authStore";
+    import { getUserDateFormat } from "$lib/user";
     import FavNovel from "./FavNovel.svelte";
     import NovelCatTags from "./NovelCatTags.svelte";
     import ReceivedGifts from "./ReceivedGifts.svelte";
@@ -39,6 +40,11 @@
         <div class="flex items-center">
           <span class="text-gray-600">字数：</span>
           <span class="ml-2 text-gray-900">{getNovelWordCount(novel)}</span>
+        </div>
+
+        <div class="flex items-center">
+          <span class="text-gray-600">更新时间：</span>
+          <span class="ml-2 text-gray-900">{getUserDateFormat(novel.updated_at)}</span>
         </div>
 
         <div>
