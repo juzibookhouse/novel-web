@@ -5,7 +5,7 @@ import type { Gift } from "$lib/types/gift";
   export let isUserBookAuthor: boolean = true;
 </script>
 
-{#if $user?.isAdmin && chapterGifts.length > 0}
+{#if chapterGifts.length > 0}
   <div class="flex gap-1 items-center">
     <h3 class="text-lg font-medium text-gray-700">已收到的打赏</h3>
     <div class="flex overflow-x-auto gap-1">
