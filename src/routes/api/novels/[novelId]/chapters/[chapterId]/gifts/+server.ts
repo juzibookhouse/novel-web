@@ -9,12 +9,40 @@ export async function GET({ params, request }) {
   try {
     const { novelId, chapterId } = params;
 
-    const { data:gifts, error:giftsError } = await supabase
+    const { data:giftsData, error:giftsError } = await supabase
       .from('gifts')
       .select(`
         *
       `)
       .order('updated_at', { ascending: false });
+    
+    const gifts:Gift[] = [];
+
+    // Process gifts according to requirements
+    if (giftsData) {
+      // 1. For each gift in giftsData, append type "must" to gifts
+      giftsData.forEach(gift => {
+        if (gift.type === 'must') {
+          gifts.push(gift);
+        }
+      });
+      
+      // 2. Randomly pick two gifts with type "random"
+      const randomGifts = giftsData.filter(gift => gift.type === 'random');
+      if (randomGifts.length > 0) {
+        const shuffled = [...randomGifts].sort(() => 0.5 - Math.random());
+        const selectedRandomGifts = shuffled.slice(0, 2);
+        selectedRandomGifts.forEach(gift => {
+          gifts.push(gift);
+        });
+      }
+      
+      giftsData.forEach(gift => {
+        if (gift.type === 'negative') {
+          gifts.push(gift);
+        }
+      });
+    }
 
     const {gifts:chapterGifts, error:chapterGiftsError} = await getNovelChapterGifts({ novel_id:novelId, chapter_id:chapterId });
     
