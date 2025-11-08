@@ -1,5 +1,6 @@
 import { FREE_OPTIONS_MAP, getSortedChapters, type Chapter, type Tag } from "$lib/novel";
 import { getNovel, getNovelChapterGifts, getUserProfile, supabase } from "$lib/supabaseClient";
+import type { Comment } from "$lib/types/comment";
 import type { Gift } from "$lib/types/gift";
 import { error } from '@sveltejs/kit';
 
@@ -35,6 +36,11 @@ export async function load({ params }: { params: { novelId: string } }) {
     c.is_free = FREE_OPTIONS_MAP[c.is_free || novel.is_free]
     return c;
   });
+
+  novel.comments.sort((a:Comment,b:Comment)=>{
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
+
   novel.author = userProfile;
 
   if (novelError) {

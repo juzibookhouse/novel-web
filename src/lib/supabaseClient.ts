@@ -180,7 +180,7 @@ export const getNovel = async (novelId: string) => {
         is_free,
         chapter_order,
         chapter_comments (
-          id,content
+          id,content,created_at
         )
       ),
       categories (
