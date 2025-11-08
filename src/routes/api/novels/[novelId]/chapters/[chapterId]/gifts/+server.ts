@@ -31,8 +31,8 @@ export async function GET({ params, request }) {
       const randomGifts = giftsData.filter(gift => gift.type === 'random');
       if (randomGifts.length > 0) {
         const shuffled = [...randomGifts].sort(() => 0.5 - Math.random());
-        const selectedRandomGifts = shuffled.slice(0, 2);
-        selectedRandomGifts.forEach(gift => {
+        // const selectedRandomGifts = shuffled.slice(0, 2);
+        shuffled.forEach(gift => {
           gifts.push(gift);
         });
       }
