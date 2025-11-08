@@ -63,7 +63,7 @@
       console.log('Found payment intent client secret:', paymentIntentClientSecret);
       
       clientSecret = paymentIntentClientSecret;
-      paymentMethod = source_type;
+      paymentMethod = source_type as PaymentMethod;
       showPaymentForm = false;
       await saveChapterGift();
       message = '感谢你的打赏！';
