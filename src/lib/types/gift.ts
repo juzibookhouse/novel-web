@@ -4,4 +4,6 @@ export interface Gift {
   price?: number;
   price_cn?: number;
   image: string;
+  chapter_title?: string;
+  user_name?: string;
 }
