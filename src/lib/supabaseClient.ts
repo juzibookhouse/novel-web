@@ -37,6 +37,12 @@ export const getNovelChapterGifts = async ({novel_id, chapter_id}:any) => {
     .from('chapter_gifts')
     .select(`
       *,
+      chapters(
+        title
+      ),
+      user_profiles (
+        user_name
+      ),
       gifts (
         id,
         title,
@@ -60,7 +66,9 @@ export const getNovelChapterGifts = async ({novel_id, chapter_id}:any) => {
       return {
         gift_id: cg.gift_id,
         title: cg.gifts?.title,
-        image: cg.gifts?.image
+        image: cg.gifts?.image,
+        chapter_title: cg.chapters?.title,
+        user_name: cg.user_profiles?.user_name,
       }
     });
   }
