@@ -4,10 +4,13 @@
   export let chapterGifts: Gift[];
   export let isUserBookAuthor: boolean = true;
 
+  const allowViewingGifts = $user?.isAdmin || isUserBookAuthor;
+
   let showModal = false;
   let modalGift: Gift | null = null;
 
   function openModal(gift: Gift) {
+    if (!allowViewingGifts) return;
     modalGift = gift;
     showModal = true;
   }
@@ -31,7 +34,7 @@
           on:click={() => openModal(gift)}
           class="focus:outline-none rounded"
           aria-label={gift.title}
-          title={$user?.isAdmin || isUserBookAuthor ? gift.title : ""}
+          title={allowViewingGifts ? gift.title : ""}
         >
           <img
             src={gift.image}
