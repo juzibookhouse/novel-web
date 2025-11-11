@@ -41,7 +41,7 @@
   
   <div class="p-6 bg-gray-50 flex flex-wrap items-center gap-4">
     <div class="flex-1 min-w-[200px]">
-      <label for="category" class="block text-sm font-medium text-gray-700 mb-2">类别</label>
+      <label for="category" class="hidden text-sm font-medium text-gray-700 mb-2">类别</label>
       <div class="relative">
         <select
           id="category"
@@ -61,7 +61,7 @@
     </div>
     
     <div class="flex-1 min-w-[200px]">
-      <label for="status" class="block text-sm font-medium text-gray-700 mb-2">状态</label>
+      <label for="status" class="hidden text-sm font-medium text-gray-700 mb-2">状态</label>
       <div class="relative">
         <select
           id="status"
