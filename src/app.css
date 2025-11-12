@@ -37,7 +37,7 @@ a {
 }
 
 a:hover {
-  @apply transform scale-105;
+  @apply transform scale-[103%];
 }
 
 .bg-primary {
