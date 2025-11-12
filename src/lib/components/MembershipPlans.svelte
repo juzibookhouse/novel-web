@@ -302,7 +302,7 @@
                     >
                   </p>
                   <p class="text-2xl font-bold text-primary mt-2">
-                    {getPlanPrice(selectedPlan, selectedPaymentMethod)}
+                    {getPlanPrice({plan:selectedPlan, payment_method:selectedPaymentMethod})}
                   </p>
                 </div>
 

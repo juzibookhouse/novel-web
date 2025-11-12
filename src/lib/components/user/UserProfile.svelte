@@ -192,7 +192,7 @@
             <p class="text-red-100">会员编号: {$user.membership?.id}</p>
           </div>
           <div class="text-right">
-            <p class="text-xl font-bold">{getPlanPrice(membershipPlan)}</p>
+            <p class="text-xl font-bold">{getPlanPrice({plan:membershipPlan})}</p>
             <p class="text-red-100">
               到期时间: {formatDate($user.membership?.end_date)}
             </p>
