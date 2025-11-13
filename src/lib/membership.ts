@@ -13,8 +13,8 @@ interface GetPlanPriceParams {
 }
 
 export const getPlanPrice = ({plan, payment_method='',isOldPrice}:GetPlanPriceParams) => {
-  const price = isOldPrice ? plan.old_price : plan.price;
-  const price_cn = isOldPrice ? plan.old_price_cn : plan.price_cn;
+  const price = isOldPrice ? plan?.old_price : plan?.price;
+  const price_cn = isOldPrice ? plan?.old_price_cn : plan?.price_cn;
   if (!payment_method) return `US $${price} 或者 ¥${price_cn}`;
   const PAYMENT_MAPS:{[key:string]:string} = {
     'alipay': `¥${price_cn}`,
