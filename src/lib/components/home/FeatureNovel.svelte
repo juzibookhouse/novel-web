@@ -89,14 +89,3 @@
     {/if}
   </div>
 </section>
-
-<style>
-  button {
-    outline: none;
-  }
-  
-  button:focus-visible {
-    outline: 2px solid #4f46e5;
-    outline-offset: 2px;
-  }
-</style>
