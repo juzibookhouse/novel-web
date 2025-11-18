@@ -210,12 +210,12 @@
     <div class="p-6 border-b border-gray-400">
       <div class="flex justify-between items-center">
         <h2 class="text-2xl font-semibold text-gray-900">选择会员计划</h2>
-        <a
+        <button
           on:click={onClose}
           class="text-gray-400 hover:text-gray-500 cursor-pointer"
         >
           ✕
-        </a>
+        </button>
       </div>
 
       <div class="mt-4 text-2xl">
