@@ -1,13 +1,19 @@
 import { supabase } from "$lib/supabaseClient";
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
+import { getAuthUser } from "$lib/server/auth";
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async ({ url, request }) => {
   const month = url.searchParams.get("month");
   const filter = url.searchParams.get("filter");
 
   if (!month || !filter) {
     return json({ error: "Missing required parameters: month and filter" }, { status: 400 });
+  }
+
+  const {isAdmin} = await getAuthUser(request);
+  if (!isAdmin) {
+    return json({ error: 'User not authenticated' }, { status: 401 });
   }
 
   try {
