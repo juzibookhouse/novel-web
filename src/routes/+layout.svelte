@@ -26,14 +26,14 @@
 <svelte:head>
   <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=1024">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SJITD11ECX"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SJ1TD11ECX"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);} 
     window.gtag = window.gtag || gtag;
     gtag('js', new Date());
     // disable automatic page_view so we can send page_view manually from the client
-    gtag('config', 'G-SJITD11ECX', { 'send_page_view': false });
+    gtag('config', 'G-SJ1TD11ECX', { 'send_page_view': false });
   </script>
 </svelte:head>
 
