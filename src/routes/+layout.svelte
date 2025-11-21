@@ -2,6 +2,25 @@
   import "../app.css";
   import Header from "$lib/components/Header.svelte";
   import Footer from "$lib/components/Footer.svelte";
+  import { afterNavigate } from '$app/navigation';
+  import { onMount } from 'svelte';
+
+  function sendPageView(url = typeof location !== 'undefined' ? location.href : '') {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'page_view', {
+        page_location: url,
+        page_path: typeof location !== 'undefined' ? location.pathname : undefined,
+        page_title: typeof document !== 'undefined' ? document.title : undefined
+      });
+    }
+  }
+
+  onMount(() => {
+    sendPageView();
+    afterNavigate(() => {
+      sendPageView();
+    });
+  });
 </script>
 
 <svelte:head>
@@ -13,7 +32,8 @@
     function gtag(){dataLayer.push(arguments);} 
     window.gtag = window.gtag || gtag;
     gtag('js', new Date());
-    gtag('config', 'G-SJITD11ECX', { 'send_page_view': true });
+    // disable automatic page_view so we can send page_view manually from the client
+    gtag('config', 'G-SJITD11ECX', { 'send_page_view': false });
   </script>
 </svelte:head>
 
