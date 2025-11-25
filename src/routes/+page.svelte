@@ -1,12 +1,11 @@
 <script lang="ts">
     import About from "$lib/components/home/About.svelte";
-  import Categories from "$lib/components/home/Categories.svelte";
   import FeatureNovel from "$lib/components/home/FeatureNovel.svelte";
   import Hero from "$lib/components/home/Hero.svelte";
   import Novels from "$lib/components/home/Novels.svelte";
   import { WEBSITE_NAME } from "$lib/constants";
   export let data;
-  const { ongoingNovels, finishedNovels, quotationChapters, categories, shortNovels } = data;
+  const { ongoingNovels, finishedNovels, quotationChapters, shortNovels } = data;
 </script>
 
 <svelte:head>
