@@ -67,7 +67,7 @@
           id="status"
           bind:value={selectedStatus}
           on:change={handleSearch}
-          class="w-full pl-4 pr-10 py-2.5 bg-white rounded border-2 border-gray-400 focus:border-red-500 focus:ring-red-500 appearance-none transition-all duration-200"
+          class="w-full pl-4 pr-8 py-2.5 bg-white rounded border-2 border-gray-400 focus:border-red-500 focus:ring-red-500 appearance-none transition-all duration-200"
         >
           {#each statusOptions as option}
             <option value={option.value}>{option.label}</option>
