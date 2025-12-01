@@ -4,7 +4,7 @@
 </script>
 
 <!-- About Section -->
-<section class="py-24 px-4 bg-primary">
+<section class="py-24 px-4">
   <div class="max-w-7xl mx-auto">
     <div class="bg-white/90 backdrop-blur-sm rounded p-8 shadow-xl">
       <div class="max-w-3xl mx-auto text-center">
