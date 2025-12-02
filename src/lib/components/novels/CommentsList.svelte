@@ -41,7 +41,7 @@
   }
 </script>
 
-<div class="relative overflow-hidden w-full min-h-[200px]">
+<div class="relative overflow-hidden w-full min-h-[250px]">
   {#if comments.length === 0}
     <p class="text-gray-500 text-center py-4">暂无评论</p>
   {:else}
@@ -61,9 +61,9 @@
     
     <!-- Navigation buttons -->
     {#if comments.length > 1}
-      <div class="absolute inset-x-0 bottom-0 flex justify-between space-x-4">
+      <div class="absolute inset-x-0 bottom-1 flex justify-evenly space-x-4">
         <button 
-          class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-full text-sm transition-colors"
+          class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded cursor-pointer text-sm transition-colors"
           on:click={prevComment}
         >
           上一页
@@ -72,7 +72,7 @@
           {currentIndex + 1} / {comments.length}
         </span>
         <button 
-          class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-full text-sm transition-colors"
+          class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded cursor-pointer text-sm transition-colors"
           on:click={nextComment}
         >
           下一页
