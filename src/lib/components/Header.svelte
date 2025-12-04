@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { AUTHOR_DASHBOARD_URL, WEBSITE_NAME, WEBSITE_URL } from "$lib/constants";
+  import { AUTHOR_DASHBOARD_URL, NOVELS_URL, WEBSITE_NAME, WEBSITE_URL } from "$lib/constants";
   import { user } from "$lib/stores/authStore";
   import { supabase } from "$lib/supabaseClient";
   import { goto } from "$app/navigation";
   import { page } from '$app/stores';
 
   const commonMenuItems = [
-    { href: "/novels", label: "书库" },
+    { href: NOVELS_URL, label: "书库" },
     { href: "/contact", label: "联系我们" }
   ];
 
