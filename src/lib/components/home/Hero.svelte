@@ -43,14 +43,14 @@
       >
         <a
           href="/user/signup"
-          class="bg-[var(--accent-color)] text-[var(--primary-color)] px-5 py-2 rounded-lg text-lg font-medium hover:bg-white transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+          class="bg-[var(--accent-color)] text-[var(--primary-color)] px-5 py-2 rounded text-lg font-medium hover:bg-white transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
         >
           注册会员
         </a>
         
         <a
           href="/author/signup"
-          class="border-2 border-[var(--accent-color)] text-[var(--accent-color)] px-5 py-2 rounded-lg text-lg font-medium hover:bg-[var(--accent-color)] hover:text-white transition duration-300 transform hover:-translate-y-1"
+          class="border-2 border-[var(--accent-color)] text-[var(--accent-color)] px-5 py-2 rounded text-lg font-medium hover:bg-[var(--accent-color)] hover:text-white transition duration-300 transform hover:-translate-y-1"
         >
           成为作家
         </a>
