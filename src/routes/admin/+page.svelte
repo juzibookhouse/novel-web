@@ -73,7 +73,7 @@
 
     <!-- Tabs -->
     <div
-      class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-gray-400 shadow-xl mb-8"
+      class="bg-white/80 backdrop-blur-sm rounded border-1 border-gray-400 shadow mb-8"
     >
       <div class="border-b border-gray-400">
         <nav class="flex -mb-px" aria-label="Tabs">
@@ -94,7 +94,7 @@
 
     <!-- Content -->
     <div
-      class="bg-white/80 backdrop-blur-sm rounded-lg border-2 border-gray-400 shadow-xl"
+      class="bg-white/80 backdrop-blur-sm rounded border-1 border-gray-400 shadow"
     >
       {#if loading}
         <div class="flex justify-center py-12">
