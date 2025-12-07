@@ -17,7 +17,7 @@
   <h4 class="text-lg font-medium text-gray-900 mb-4">章节列表</h4>
   <div class="grid grid-cols-3 gap-4">
     {#each chapters as chapter}
-      <div class="group p-3 rounded-lg border-2 border-gray-400 hover:border-gray300 hover: transition-all duration-200">
+      <div class="group p-3 rounded border-2 border-gray-400 hover:border-gray300 hover: transition-all duration-200">
         <div class="flex justify-between items-center">
           <a
             href={`/novel/${selectedNovelId}/chapter/${chapter.id}`}
