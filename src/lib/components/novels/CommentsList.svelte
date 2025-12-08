@@ -63,7 +63,7 @@
     {#if comments.length > 1}
       <div class="absolute inset-x-0 bottom-1 flex justify-evenly space-x-4">
         <button 
-          class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded cursor-pointer text-sm transition-colors"
+          class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded cursor-pointer text-sm transition-colors"
           on:click={prevComment}
         >
           上一页
@@ -72,7 +72,7 @@
           {currentIndex + 1} / {comments.length}
         </span>
         <button 
-          class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded cursor-pointer text-sm transition-colors"
+          class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded cursor-pointer text-sm transition-colors"
           on:click={nextComment}
         >
           下一页
