@@ -12,8 +12,8 @@
   <div class="max-w-7xl mx-auto">
     <h2 class=" text-5xl text-primary text-center mb-12 flex justify-between items-center">
       <span></span>
-      <a href={url}>{title}</a>
-      <a href={url} class="text-3xl">更多</a>
+      <a href={url} class="hover:text-[var(--primary-color)]">{title}</a>
+      <a href={url} class="text-3xl hover:text-[var(--primary-color)]">更多</a>
     </h2>
     {#if novels.length > 0}
     <div class="grid grid-cols-4 gap-6">
