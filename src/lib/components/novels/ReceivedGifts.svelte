@@ -27,7 +27,7 @@
 
 {#if chapterGifts.length > 0}
   <div class="flex gap-1 items-center">
-    <h3 class="text-lg font-medium text-gray-700">已收到的打赏</h3>
+    <h3 class="text text-gray-700">已收到的打赏</h3>
     <div class="flex overflow-x-auto gap-1">
       {#each chapterGifts as gift}
         <button
