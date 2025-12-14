@@ -15,7 +15,7 @@
   class="min-h-screen py-8 px-4"
 >
   <div
-    class="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden"
+    class="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm rounded shadow overflow-hidden"
   >
     {#if !novel.published}
       <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
