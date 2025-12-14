@@ -16,7 +16,7 @@
       <img
         src={novel.cover_url || COVER_PLACEHOLDER}
         alt={novel.title}
-        class="w-full h-auto rounded-lg shadow-lg"
+        class="w-full h-auto rounded shadow"
       />
     </div>
     <div class="w-2/3 space-y-2">
