@@ -9,7 +9,7 @@
     {#each novel.chapters as chapter}
       <a
         href={`/novel/${novel.id}/chapter/${chapter.id}`}
-        class="group p-4 rounded border-2 border-gray-400 hover:border-gray300 hover: transition-all duration-200 relative"
+        class="group p-4 rounded border border-gray-400 hover:border-gray300 hover: transition-all duration-200 relative"
       >
         <h3
           class="text-lg text-[var(--primary-color)] group-hover:text-primary transition-colors duration-200"
