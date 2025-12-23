@@ -31,14 +31,16 @@
     <p class="text-gray-700 mb-4 leading-relaxed">{plan.description}</p>
     
     <!-- Promotion Info -->
-    <!-- <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+    {#if plan.old_price}
+    <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
       <div class="flex items-center text-sm text-yellow-800">
         <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
         </svg>
-        <span class="font-medium">优惠截止日期：2025年11月30日</span>
+        <span class="font-medium">优惠截止日期：2026年01月04日</span>
       </div>
-    </div> -->
+    </div>
+    {/if}
     
     <!-- Call to Action -->
     <div class="mt-4 text-center">
