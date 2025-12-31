@@ -1,9 +1,9 @@
-import { json } from '@sveltejs/kit';
+import { json, type RequestEvent } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
 import { getAuthUser } from '$lib/server/auth.js';
 import type { Comment } from '$lib/types/comment.js';
 
-export async function GET({ params }) {
+export async function GET({ params }: RequestEvent) {
   try {
     const { chapterId } = params;
 
@@ -70,9 +70,9 @@ export async function GET({ params }) {
   }
 }
 
-export async function POST({ request, params, locals }) {
+export async function POST({ request, params, locals }: RequestEvent) {
   try {
-    const { chapterId } = params;
+    const { chapterId, novelId } = params;
     const {user_id} = await getAuthUser(request);
     const { content, parent_id } = await request.json();
 
@@ -140,6 +140,15 @@ export async function POST({ request, params, locals }) {
     if (insertError) {
       console.error('Error creating comment:', insertError);
       return json({ error: 'Failed to create comment' }, { status: 500 });
+    }
+
+    const {error: updateNovelError} = await supabase
+      .from('novels')
+      .update({ updated_at: new Date() })
+      .eq('id', novelId);
+
+    if (updateNovelError) {
+      console.error('Error updating novel timestamp:', updateNovelError);
     }
 
     // Format the response
