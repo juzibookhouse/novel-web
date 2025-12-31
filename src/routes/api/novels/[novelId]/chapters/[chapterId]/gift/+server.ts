@@ -1,8 +1,8 @@
-import { json } from '@sveltejs/kit';
+import { json, type RequestEvent } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
 import { getAuthUser } from '$lib/server/auth.js';
 
-export async function GET({ params, request }) {
+export async function GET({ params, request }: RequestEvent) {
   try {
     const { novelId, chapterId } = params;
     const {user_id} = await getAuthUser(request);
@@ -36,7 +36,7 @@ export async function GET({ params, request }) {
   }
 }
 
-export async function POST({ request, params, locals }) {
+export async function POST({ request, params, locals }: RequestEvent) {
   try {
     const { chapterId, novelId } = params;
     const {user_id} = await getAuthUser(request);

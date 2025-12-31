@@ -4,8 +4,9 @@ import { getAuthUser } from '$lib/server/auth.js';
 import Stripe from 'stripe';
 import { STRIPE_SECRET_KEY } from '$env/static/private';
 import type { Gift } from '$lib/types/gift.js';
+import type { RequestEvent } from '@sveltejs/kit';
 
-export async function GET({ params, request }) {
+export async function GET({ params }: RequestEvent) {
   try {
     const { novelId, chapterId } = params;
 
@@ -61,7 +62,7 @@ export async function GET({ params, request }) {
   }
 }
 
-export async function POST({ request, params, locals }) {
+export async function POST({ request, params, locals }: RequestEvent) {
   try {
     const { chapterId, novelId } = params;
     const {user_id} = await getAuthUser(request);
@@ -136,6 +137,17 @@ export async function POST({ request, params, locals }) {
       if (error) {
         console.error('Error updating chapter gift:', error);
         return json({ error: 'Internal server error' }, { status: 500 });
+      }
+
+      const {error: updateNovelError} = await supabase
+      .from('novels')
+      .update({
+        updated_at: new Date()
+      })
+      .eq('id', novelId);
+
+      if (updateNovelError) {
+        console.error('Error updating novel updated_at:', updateNovelError);
       }
 
       return json({ msg: 'Send Gift successfully'}, { status: 201 });
