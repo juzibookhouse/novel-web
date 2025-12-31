@@ -267,7 +267,7 @@ export const upsertNovel = async (user: User, newNovel: NewNovel) => {
         published: newNovel.published,
         cover_url,
         pen_name: newNovel.pen_name || null,
-        // updated_at: new Date()
+        updated_at: new Date()
       })
       .eq('id', novelId);
 
@@ -372,6 +372,11 @@ export const deleteChapter = async (chapterId: string) => {
 }
 
 export const upsertChapter = async (newChapter: Chapter) => {
+  await supabase.from('novels')
+  .update({
+    updated_at: new Date()
+  })
+  .eq('id', newChapter.novel_id);
   if (newChapter.id) {
     // Update existing chapter
     return await supabase
@@ -387,11 +392,6 @@ export const upsertChapter = async (newChapter: Chapter) => {
       .eq('id', newChapter.id);
 
   } else {
-    await supabase.from('novels')
-      .update({
-        updated_at: new Date()
-      })
-      .eq('id', newChapter.novel_id);
     // Create new chapter
     return await supabase
       .from('chapters')

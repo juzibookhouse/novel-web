@@ -3,7 +3,7 @@ import { getAuthUser } from '$lib/server/auth.js';
 import { supabase } from '$lib/supabaseClient';
 import { json } from '@sveltejs/kit';
 
-export async function GET({ request }) {
+export async function GET({ request }: { request: Request }) {
   try {
     const {user_id, isAdmin} = await getAuthUser(request);
     if (!user_id) {
