@@ -14,7 +14,7 @@ export async function load({ url }: { url: URL }) {
     data: novels,
     count,
     error,
-  } = await getNovels({search, category, status, start, end, is_short});
+  } = await getNovels({search, category, limit: pageSize, status, start, end, is_short});
 
   const {data:categories} = await getCategories();
 
