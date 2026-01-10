@@ -59,8 +59,6 @@
   onMount(async () => {
     supabase.auth.onAuthStateChange((event, session) => {
       fetchNovels();
-      fetchCategories();
-      fetchTags();
     });
   });
 
@@ -71,38 +69,18 @@
       });
     },10);
   }
-
-  async function fetchTags() {
-    const { data, error: fetchError } = await getTags();
-    
-    if (fetchError) {
-      console.error('Error fetching tags:', fetchError);
-      return;
-    }
-    
-    tags = data || [];
-  }
-
-  async function fetchCategories() {
-    const { data, error: fetchError } = await getCategories();
-    
-    if (fetchError) {
-      console.error('Error fetching categories:', fetchError);
-      return;
-    }
-    
-    categories = data || [];
-  }
   
   async function fetchNovels() {
     try {
       loading = true;
-      const {data:{novels: novelsData, error: fetchError}} = await sendRequest('/api/novels');
+      const {data:{novels: novelsData, categories: categoriesData, tags: tagsData, error: fetchError}} = await sendRequest('/api/novels');
       if (fetchError) {
         console.error('Error fetching novels:', fetchError);
         return;
       }
       novels = novelsData;
+      categories = categoriesData || [];
+      tags = tagsData || [];
     } catch (e: any) {
       error = e.message;
     } finally {

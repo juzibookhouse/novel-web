@@ -1,6 +1,6 @@
 import { getSortedChapters } from '$lib/novel.js';
 import { getAuthUser } from '$lib/server/auth.js';
-import { supabase } from '$lib/supabaseClient';
+import { getCategories, getTags, supabase } from '$lib/supabaseClient';
 import { json } from '@sveltejs/kit';
 
 export async function GET({ request }: { request: Request }) {
@@ -42,8 +42,18 @@ export async function GET({ request }: { request: Request }) {
       tags: novel.novel_tags?.map((nc: { tags: any; }) => nc.tags),
       chapters: getSortedChapters(novel.chapters)
     }));
-    
-    return json({ novels });
+
+    const {data: categoriesData, error: categoriesError} = await getCategories();
+    if (categoriesError) {
+      console.error(categoriesError);
+    }
+
+    const {data: tagsData, error: tagsError} = await getTags();
+    if (tagsError) {
+      console.error(tagsError);
+    }
+
+    return json({ novels, categories: categoriesData || [], tags: tagsData || [] });
   } catch (error) {
     return json({ error: 'Failed to fetch novels' }, { status: 500 });
   }
