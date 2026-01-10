@@ -4,7 +4,7 @@ import { WEBSITE_NAME } from './constants';
 
 const resend = new Resend(RESEND_API_KEY);
 
-export async function sendPaymentConfirmationEmail(user: any, plan: any, amount: number) {
+export async function sendPaymentConfirmationEmail(user: any, plan: any, amount: number|string) {
   try {
     const { data, error } = await resend.emails.send({
       from: EMAIL_FROM,

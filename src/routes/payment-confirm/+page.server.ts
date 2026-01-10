@@ -1,6 +1,8 @@
-import { error, redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
 import { getMemberShipEndDate } from '$lib/membership';
+import { checkPaymentIntentFromClientSecret } from '$lib/server/stripe';
+import { sendPaymentConfirmationEmail } from '$lib/email';
 
 export const load = async ({ url }) => {
     const user_membership_id = url.searchParams.get('user_membership_id');
@@ -10,23 +12,33 @@ export const load = async ({ url }) => {
         throw error(400, '缺少必要参数');
     }
 
-    // 获取pending状态的user_membership
+    // Fetch membership
     const { data: userMembership, error: userMembershipError } = await supabase
         .from('user_memberships')
         .select('*, membership_plans(*)')
         .eq('id', user_membership_id)
-        .eq('status', 'pending')
         .single();
 
     if (userMembershipError || !userMembership) {
         console.error(userMembershipError);
-        throw error(404, '未找到待支付的会员记录');
+        throw error(404, '未找到会员记录');
     }
 
+    const stripeClientSecret = userMembership.stripe_client_secret;
+    const check = await checkPaymentIntentFromClientSecret(stripeClientSecret);
+    if (!check.ok) {
+        console.error('Failed to retrieve payment intent:', check.error);
+        throw error(500, '查询支付状态失败');
+    }
+
+    if (!check.paid) {
+        throw error(400, '支付未完成');
+    }
+
+    // Activate membership and set end date
     const duration = userMembership.membership_plans.duration;
     const endDate = getMemberShipEndDate(duration);
 
-    // 更新user_membership状态
     const { error: updateError } = await supabase
         .from('user_memberships')
         .update({

@@ -9,6 +9,7 @@
   import { getMemberShipEndDate, getPlanPrice } from "$lib/membership";
   import { adminEmail } from "$lib/api/adminEmail";
     import type { MembershipPlan } from "$lib/types/membership";
+    import Layout from "../../routes/+layout.svelte";
 
   export let onClose = () => {};
   export let redirectUrl;
@@ -112,6 +113,8 @@
             name: `${$user?.user_name}`,
           },
         },
+        layout: "tabs",
+        paymentMethodOrder: ["card", "alipay", "wechat_pay"],
         paymentMethodTypes: ["card", "alipay", "wechat_pay"],
       });
       paymentElement.mount("#payment-element");
@@ -150,30 +153,17 @@
         return;
       }
 
-      // update existing subscription
-      const { error: subscribeError } = await supabase
-        .from("user_memberships")
-        .update({
-          status: "active",
-          end_date: getMemberShipEndDate(selectedPlan.duration),
-        })
-        .eq("id", $user?.membership?.id);
-
-      if (subscribeError) throw subscribeError;
-
       setUser($user);
 
       // Send confirmation email
       try {
-        await fetch('/api/send-payment-confirmation', {
+        await fetch('/api/confirm-payment', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            user: $user,
-            plan: selectedPlan,
-            amount: selectedPaymentMethod === 'card' ? `$${selectedPlan.price}` : `¥${selectedPlan.price_cn}`
+            user_membership_id: $user?.membership?.id
           })
         });
       } catch (emailError) {

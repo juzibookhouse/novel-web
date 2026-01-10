@@ -25,7 +25,9 @@
 
   function goBack() {
     // 返回上一页
-    goto(data?.previous_url);
+    if (data?.previous_url) {
+      goto(data?.previous_url);
+    }
   }
 </script>
 
