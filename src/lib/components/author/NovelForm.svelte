@@ -23,7 +23,6 @@
   export let tags;
   export let toggleNovelForm: Function;
   export let fetchNovels: Function;
-  export let fetchTags: Function;
 
   let newTagName = "";
   let authorTag = null;
@@ -82,7 +81,6 @@
 
       authorTag = tag;
       newTagName = "";
-      await fetchTags();
       newNovel.tags = [...newNovel.tags, tag.id];
     } catch (e: any) {
       // Handle error
