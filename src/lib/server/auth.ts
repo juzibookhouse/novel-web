@@ -1,4 +1,5 @@
 import { supabase } from "$lib/supabaseClient";
+import { checkPaymentIntentFromClientSecret } from "./stripe";
 
 export async function getAuthUser(request:Request) {
   let authorization = request.headers.get('Authorization')?.replace('Bearer ', '');
@@ -22,12 +23,13 @@ export async function getAuthUser(request:Request) {
         .single();
 
       if (profile) {
+        const check = await checkPaymentIntentFromClientSecret(membership?.stripe_client_secret || '');
         userProfile = {
           ...profile,
           id: profile.user_id,
           isAdmin: profile?.role === 'admin',
           membership: membership || undefined,
-          isMembership: membership?.status == "active" && membership?.end_date > new Date().toISOString()
+          isMembership: check.paid && membership?.status == "active" && membership?.end_date > new Date().toISOString()
         }
       }
     }

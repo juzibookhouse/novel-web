@@ -26,7 +26,7 @@ export const load = async ({ url }) => {
 
     const stripeClientSecret = userMembership.stripe_client_secret;
     const check = await checkPaymentIntentFromClientSecret(stripeClientSecret);
-    if (!check.ok) {
+    if (!check.paid) {
         console.error('Failed to retrieve payment intent:', check.error);
         throw error(500, '查询支付状态失败');
     }

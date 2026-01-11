@@ -31,7 +31,7 @@ export async function POST({ request }) {
 
     // Use shared helper to check payment status
     const check = await checkPaymentIntentFromClientSecret(stripeClientSecret);
-    if (!check.ok) {
+    if (!check.paid) {
       console.error('Payment intent retrieval error:', check.error);
       return json({ error: 'Failed to retrieve payment intent', details: check.error }, { status: 500 });
     }
