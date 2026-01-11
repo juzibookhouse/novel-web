@@ -33,6 +33,10 @@
   let loading: boolean = true;
   let error: string | null = null;
   let uploadProgress: number = 0;
+  let currentPage: number = 1;
+  let perPage: number = 5;
+  let totalCount: number = 0;
+  let totalPages: number = 1;
   
   let showNovelForm: boolean = false;
   
@@ -70,10 +74,11 @@
     },10);
   }
   
-  async function fetchNovels() {
+  async function fetchNovels(page: number = 1) {
     try {
       loading = true;
-      const {data:{novels: novelsData, categories: categoriesData, tags: tagsData, error: fetchError}} = await sendRequest('/api/novels');
+      currentPage = page;
+      const {data:{novels: novelsData, categories: categoriesData, tags: tagsData, totalCount: totalCountData, per_page: perPageData, error: fetchError}} = await sendRequest(`/api/novels?page=${page}`);
       if (fetchError) {
         console.error('Error fetching novels:', fetchError);
         return;
@@ -81,11 +86,19 @@
       novels = novelsData;
       categories = categoriesData || [];
       tags = tagsData || [];
+      totalCount = totalCountData || 0;
+      perPage = perPageData || perPage;
+      totalPages = Math.max(1, Math.ceil(totalCount / perPage));
     } catch (e: any) {
       error = e.message;
     } finally {
       loading = false;
     }
+  }
+
+  function goToPage(page: number) {
+    if (page < 1 || page > totalPages) return;
+    fetchNovels(page);
   }
 
 
@@ -123,13 +136,22 @@
   {#if ($user?.role === 'author') && ($user?.is_approved === false)}
   <h2 class="text-3xl text-center my-10">等待管理员通过作者审核</h2>
   {:else}
-  <div class="flex justify-end mb-6">
-    <button
-      on:click={() => toggleNovelForm()}
-      class="font-medium py-2 px-6 rounded shadow-sm bg-yellow-100 text-yellow-800 transition duration-200 cursor-pointer"
-    >
-      创作新作品
-    </button>
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      {#if totalPages > 1}
+        <button on:click={() => goToPage(currentPage - 1)} disabled={currentPage <= 1} class="mr-2 px-3 py-1 rounded bg-gray-100 disabled:opacity-50">上一页</button>
+        <span class="mx-2">第 {currentPage} / {totalPages} 页</span>
+        <button on:click={() => goToPage(currentPage + 1)} disabled={currentPage >= totalPages} class="ml-2 px-3 py-1 rounded bg-gray-100 disabled:opacity-50">下一页</button>
+      {/if}
+    </div>
+    <div>
+      <button
+        on:click={() => toggleNovelForm()}
+        class="font-medium py-2 px-6 rounded shadow-sm bg-yellow-100 text-yellow-800 transition duration-200 cursor-pointer"
+      >
+        创作新作品
+      </button>
+    </div>
   </div>
 
   {#if error}
