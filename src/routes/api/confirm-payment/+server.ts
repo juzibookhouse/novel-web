@@ -2,7 +2,7 @@ import { json } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
 import { checkPaymentIntentFromClientSecret } from '$lib/server/stripe';
 import { getMemberShipEndDate } from '$lib/membership';
-import { sendPaymentConfirmationEmail } from '$lib/email';
+import { sendAdminEmail, sendPaymentConfirmationEmail } from '$lib/email';
 
 export async function POST({ request }) {
   try {
@@ -78,6 +78,13 @@ export async function POST({ request }) {
       console.error('Failed to send confirmation email:', emailError);
       // do not fail the whole request on email error
     }
+
+    await sendAdminEmail('new_subscription', {
+      username: userProfile?.user_name,
+      email: userProfile?.email,
+      subject: '新会员订阅通知',
+      message: `用户 ${userProfile?.user_name} (${userProfile?.email}) 订阅了 ${userMembership.membership_plans.name} 计划。`
+    });
 
     return json({ success: true, plan_name: userMembership.membership_plans.name });
   } catch (error) {

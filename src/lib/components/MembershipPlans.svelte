@@ -6,10 +6,8 @@
   import { loadStripe } from "@stripe/stripe-js";
   import { onMount } from "svelte";
   import UserMembershipPlans from "./user/UserMembershipPlans.svelte";
-  import { getMemberShipEndDate, getPlanPrice } from "$lib/membership";
-  import { adminEmail } from "$lib/api/adminEmail";
-    import type { MembershipPlan } from "$lib/types/membership";
-    import Layout from "../../routes/+layout.svelte";
+  import { getPlanPrice } from "$lib/membership";
+  import type { MembershipPlan } from "$lib/types/membership";
 
   export let onClose = () => {};
   export let redirectUrl;
@@ -169,9 +167,6 @@
       } catch (emailError) {
         console.error('Failed to send confirmation email:', emailError);
       }
-
-      await adminEmail.newSubscription($user?.email);
-
       onClose();
     } catch (e: any) {
       paymentError = e.message;
