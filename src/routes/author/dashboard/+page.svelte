@@ -139,9 +139,9 @@
   <div class="flex justify-between items-center mb-6">
     <div>
       {#if totalPages > 1}
-        <button on:click={() => goToPage(currentPage - 1)} disabled={currentPage <= 1} class="mr-2 px-3 py-1 rounded bg-gray-100 disabled:opacity-50">上一页</button>
+        <button on:click={() => goToPage(currentPage - 1)} disabled={currentPage <= 1} class="mr-2 px-3 py-1 cursor-pointer rounded bg-gray-100 disabled:opacity-50">上一页</button>
         <span class="mx-2">第 {currentPage} / {totalPages} 页</span>
-        <button on:click={() => goToPage(currentPage + 1)} disabled={currentPage >= totalPages} class="ml-2 px-3 py-1 rounded bg-gray-100 disabled:opacity-50">下一页</button>
+        <button on:click={() => goToPage(currentPage + 1)} disabled={currentPage >= totalPages} class="ml-2 px-3 py-1 cursor-pointer rounded bg-gray-100 disabled:opacity-50">下一页</button>
       {/if}
     </div>
     <div>
