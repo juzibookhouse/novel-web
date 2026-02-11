@@ -11,7 +11,7 @@ export async function GET({ request }: { request: Request }) {
     }
     const url = new URL(request.url);
     const page = Math.max(1, parseInt(url.searchParams.get('page') || '1', 10));
-    const per_page = 3;
+    const per_page = 6;
     const from = (page - 1) * per_page;
     const to = from + per_page - 1;
 
@@ -22,9 +22,10 @@ export async function GET({ request }: { request: Request }) {
         chapters (
           id,
           title,
+          content,
           is_free,
-          is_published,
-          chapter_number,
+          published,
+          chapter_order
         ),
         novel_tags (
           tags (
