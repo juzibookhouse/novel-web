@@ -155,7 +155,7 @@
   </div>
 
   {#if error}
-    <ErrorDisplay error={error} onRetry={fetchNovels} />
+    <ErrorDisplay error={error} onRetry={() => fetchNovels(currentPage)} />
   {/if}
 
   {#if loading}
