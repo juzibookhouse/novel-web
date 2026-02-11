@@ -3,6 +3,7 @@ import { createClient, type User } from "@supabase/supabase-js";
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from "$env/static/public"
 import type { Chapter, NewNovel } from "./novel";
 import { getMemberShipEndDate } from "./membership";
+import { getChapterLength } from "./novel";
 import type { UserData } from "./stores/authStore";
 import type { Gift } from "./types/gift";
 
@@ -371,6 +372,9 @@ export const deleteChapter = async (chapterId: string) => {
 }
 
 export const upsertChapter = async (newChapter: Chapter) => {
+  // Calculate word count
+  const wordCount = getChapterLength(newChapter);
+
   await supabase.from('novels')
   .update({
     updated_at: new Date()
@@ -378,7 +382,7 @@ export const upsertChapter = async (newChapter: Chapter) => {
   .eq('id', newChapter.novel_id);
   if (newChapter.id) {
     // Update existing chapter
-    return await supabase
+    await supabase
       .from('chapters')
       .update({
         title: newChapter.title,
@@ -386,13 +390,14 @@ export const upsertChapter = async (newChapter: Chapter) => {
         is_free: newChapter.is_free,
         quotation: newChapter.quotation,
         published: newChapter.published,
+        word_count: wordCount,
         updated_at: new Date()
       })
       .eq('id', newChapter.id);
 
   } else {
     // Create new chapter
-    return await supabase
+    await supabase
       .from('chapters')
       .insert([{
         title: newChapter.title,
@@ -400,10 +405,29 @@ export const upsertChapter = async (newChapter: Chapter) => {
         is_free: newChapter.is_free,
         quotation: newChapter.quotation,
         published: newChapter.published,
+        word_count: wordCount,
         novel_id: newChapter.novel_id,
         chapter_order: newChapter.chapter_order
       }])
       .select();
+  }
+
+  // Update novel word_count by summing all chapters
+  const { data: chapters } = await supabase
+    .from('chapters')
+    .select('word_count')
+    .eq('novel_id', newChapter.novel_id);
+
+  if (chapters) {
+    const totalWordCount = chapters.reduce(
+      (acc, chapter) => acc + Math.floor(Number(chapter.word_count || 0)),
+      0
+    );
+
+    await supabase
+      .from('novels')
+      .update({ word_count: totalWordCount })
+      .eq('id', newChapter.novel_id);
   }
 }
 
