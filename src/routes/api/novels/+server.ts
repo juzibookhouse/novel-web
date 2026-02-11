@@ -20,7 +20,11 @@ export async function GET({ request }: { request: Request }) {
       .select(`
         *,
         chapters (
-          *
+          id,
+          title,
+          is_free,
+          is_published,
+          chapter_number,
         ),
         novel_tags (
           tags (
