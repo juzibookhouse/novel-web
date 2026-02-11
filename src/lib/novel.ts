@@ -49,6 +49,7 @@ export interface Chapter {
   created_at: string;
   chapter_order: number;
   quotation?: string;
+  word_count?: number;
   chapter_comments?: Comment[];
   novel: Novel;
 }
@@ -83,6 +84,7 @@ export interface Novel {
   is_free?: string;
   is_short?: boolean;
   published?: boolean;
+  word_count?: number;
   chapters?: Chapter[];
   tags:Tag[];
   categories:Category[];
@@ -110,7 +112,9 @@ export const getNovelWordCount = (novel:Novel) => {
 }
 
 export const formatNumberUnit = (num:number, unit = '万', threshold = 10000) => {
-  if (typeof num !== 'number' || isNaN(num)) return ''
+  if (typeof num !== 'number' || isNaN(num)) {
+    num = parseInt(num as any) || 0;
+  }
   
   return num >= threshold 
     ? `${(num / threshold)

@@ -1,6 +1,6 @@
 <script>
     import { COVER_PLACEHOLDER } from "$lib/constants";
-    import { getNovelStatus, getNovelWordCount } from "$lib/novel";
+    import { getNovelStatus,formatNumberUnit } from "$lib/novel";
     import { user } from "$lib/stores/authStore";
     import { getUserDateFormat } from "$lib/user";
     import FavNovel from "./FavNovel.svelte";
@@ -39,7 +39,7 @@
         
         <div class="flex items-center">
           <span class="text-gray-600">字数：</span>
-          <span class="ml-2 text-gray-900">{getNovelWordCount(novel)}</span>
+          <span class="ml-2 text-gray-900">{formatNumberUnit(novel.word_count)}</span>
         </div>
 
         <div class="flex items-center">
