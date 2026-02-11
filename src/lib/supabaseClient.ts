@@ -424,7 +424,7 @@ export const upsertChapter = async (newChapter: Chapter) => {
       0
     );
 
-    await supabase
+    return await supabase
       .from('novels')
       .update({ word_count: totalWordCount })
       .eq('id', newChapter.novel_id);

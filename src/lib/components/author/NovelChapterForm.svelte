@@ -2,6 +2,7 @@
     import { CHAPTER_FREE_OPTIONS, type Chapter, type Novel } from "$lib/novel";
     import { supabase, upsertChapter, deleteChapter } from "$lib/supabaseClient";
     import { error } from "@sveltejs/kit";
+    import { onMount } from "svelte";
     import TextInput from "./TextInput.svelte";
     import CheckInput from "./CheckInput.svelte";
     import Btns from "./Btns.svelte";
@@ -13,6 +14,23 @@
   export let newChapter:Chapter;
   export let toggleNovelChapterForm:Function;
   export let selectedNovel:Novel;
+
+  onMount(async () => {
+    // Fetch chapter data if editing an existing chapter
+    if (newChapter.id && selectedNovel?.id) {
+      try {
+        const response = await fetch(`/api/novels/${selectedNovel.id}/chapters/${newChapter.id}`);
+        if (response.ok) {
+          const { chapter } = await response.json();
+          newChapter = { ...chapter };
+        } else {
+          console.error('Failed to fetch chapter');
+        }
+      } catch (err) {
+        console.error('Error fetching chapter:', err);
+      }
+    }
+  });
 
   async function createChapter() {
     try {
@@ -75,7 +93,7 @@
           <!-- <TextInput title="引文(用于随机显示在首页)" object={newChapter} field="quotation" rows={3} /> -->
         </div>
 
-        <div class="">
+        <div class="overflow-y-scroll">
           <label for="content" class="block text-sm font-medium text-gray-700"
             >章节内容</label
           >
