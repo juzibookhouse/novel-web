@@ -60,7 +60,6 @@
     const source_type = urlParams.get('source_type') || 'card';
     
     if (paymentIntentClientSecret && redirect_status === 'succeeded') {
-      console.log('Found payment intent client secret:', paymentIntentClientSecret);
       
       clientSecret = paymentIntentClientSecret;
       paymentMethod = source_type as PaymentMethod;

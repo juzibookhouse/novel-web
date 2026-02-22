@@ -7,7 +7,6 @@ import { error } from '@sveltejs/kit';
 export async function load({ params }: { params: { novelId: string } }) {
   
   const {data:novel,error:novelError} = await getNovel(params.novelId);
-  console.log('Fetched novel:', novel);
   const {data:userProfile, error:profileError} = await getUserProfile(novel.user_id);
 
   const {gifts, error:giftsError} = await getNovelChapterGifts({ novel_id: params.novelId });

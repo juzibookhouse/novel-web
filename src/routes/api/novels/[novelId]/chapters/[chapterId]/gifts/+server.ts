@@ -124,7 +124,6 @@ export async function POST({ request, params, locals }: RequestEvent) {
       }
       const stripe = new Stripe(STRIPE_SECRET_KEY);
       const paymentIntent = await stripe.paymentIntents.retrieve(stripe_client_secret.split('_secret_')[0]);
-      console.log(paymentIntent);
       if (paymentIntent.status === 'succeeded') {
         updateOption.payment_status = 'paid';
         updateOption.paid_at = new Date();
