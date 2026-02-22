@@ -6,6 +6,7 @@
 
   let countdown = 5;
   let timer: ReturnType<typeof setInterval>;
+  let confirmTimeout: ReturnType<typeof setTimeout> | null = null;
 
   onMount(() => {
     // 设置倒计时，5秒后自动返回上一页
@@ -17,9 +18,27 @@
       }
     }, 1000);
 
-    // 组件卸载时清除定时器
+    // 如果 URL 中包含 user_membership_id，则在 2 秒后调用后端确认接口
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const user_membership_id = params.get("user_membership_id");
+      if (user_membership_id) {
+        confirmTimeout = setTimeout(() => {
+          fetch('/api/confirm-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_membership_id })
+          }).catch((err) => console.error('confirm-payment request failed', err));
+        }, 2000);
+      }
+    } catch (e) {
+      console.error('confirm-payment call error', e);
+    }
+
+    // 组件卸载时清除定时器和确认请求超时
     return () => {
       if (timer) clearInterval(timer);
+      if (confirmTimeout) clearTimeout(confirmTimeout);
     };
   });
 
