@@ -175,7 +175,7 @@
       <ErrorMessage error={error} />
     {/if}
     
-    <form class="mt-8 space-y-6 bg-white/80 backdrop-blur-sm p-8 rounded-lg border-2 border-gray-400 shadow-xl" on:submit|preventDefault={handleSignup}>
+    <form class="mt-8 space-y-6 bg-white/80 backdrop-blur-sm p-8 rounded border-2 border-gray-400 shadow" on:submit|preventDefault={handleSignup}>
       <div class="space-y-4">
         <div class="prose text-gray-700 mb-4">
           <h3 class="text-lg font-medium">欢迎加入我们</h3>
