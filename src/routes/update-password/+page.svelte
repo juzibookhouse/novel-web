@@ -59,7 +59,7 @@
       </div>
     {/if}
 
-    <form class="mt-8 space-y-6 bg-white/80 backdrop-blur-sm p-8 rounded-lg border-2 border-gray-400 shadow-xl" on:submit|preventDefault={handleUpdatePassword}>
+    <form class="mt-8 space-y-6 bg-white/80 backdrop-blur-sm p-8 rounded border-2 border-gray-400 shadow" on:submit|preventDefault={handleUpdatePassword}>
       <div class="space-y-4">
         <InputField field="password" label="新密码" type="password" placeholder="请输入新密码（至少6位）" bind:value={password} required minlength={6} />
         <InputField field="confirmPassword" label="确认新密码" type="password" placeholder="请再次输入新密码" bind:value={confirmPassword} required minlength={6} />

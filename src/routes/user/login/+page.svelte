@@ -109,7 +109,7 @@
       <ErrorMessage error={error} />
     {/if}
     
-    <form class="mt-8 space-y-6 bg-white/80 backdrop-blur-sm p-8 rounded-lg border-2 border-gray-400 shadow-xl" on:submit|preventDefault={handleLogin}>
+    <form class="mt-8 space-y-6 bg-white/80 backdrop-blur-sm p-8 rounded border-2 border-gray-400 shadow" on:submit|preventDefault={handleLogin}>
       <div class="space-y-4">
         <InputField field="email" label="电子邮箱" type="email" placeholder="请输入邮箱地址" bind:value={email} required />
         <InputField field="password" label="密码" type="password" placeholder="请输入密码" bind:value={password} required />
