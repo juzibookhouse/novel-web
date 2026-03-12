@@ -43,13 +43,38 @@ export async function POST({ request }) {
       // Extract payment intent ID from client secret
       const paymentIntentId = stripeClientSecret.split('_secret_')[0];
 
-      // Update existing payment intent
-      paymentIntent = await stripe.paymentIntents.update(paymentIntentId, {
-        amount,
-        currency,
-        metadata: { planId },
-        payment_method_types: paymentMethodTypes
-      });
+      // Get the existing payment intent to check its status
+      const existingIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+
+      if (existingIntent.status === 'canceled') {
+        // Create a new payment intent if the old one is canceled
+        paymentIntent = await stripe.paymentIntents.create({
+          amount,
+          currency,
+          metadata: { planId },
+          payment_method_types: paymentMethodTypes
+        });
+      } else {
+        // Check if there's a payment method attached
+        const hasAttachedPaymentMethod = existingIntent.payment_method !== null;
+
+        if (hasAttachedPaymentMethod) {
+          // Don't update payment_method_types if a payment method is already attached
+          paymentIntent = await stripe.paymentIntents.update(paymentIntentId, {
+            amount,
+            currency,
+            metadata: { planId }
+          });
+        } else {
+          // Update existing payment intent with new payment method types
+          paymentIntent = await stripe.paymentIntents.update(paymentIntentId, {
+            amount,
+            currency,
+            metadata: { planId },
+            payment_method_types: paymentMethodTypes
+          });
+        }
+      }
     } else {
       // Create payment intent
       paymentIntent = await stripe.paymentIntents.create({
