@@ -13,6 +13,11 @@ export async function POST({ request }) {
 
     const {data: userProfile} = await supabase.from('user_profiles').select('*').eq('user_id', userId).single();
 
+    if (!userProfile) {
+      await sendEmail('weisen.li@hotmail.com', `${WEBSITE_NAME} - 支付错误通知`, `${userId} 用户资料未找到，请检查数据库。`);
+      return json({ error: 'User profile not found' }, { status: 404 });
+    }
+
     // Get plan details from Supabase
     const { data: plan } = await supabase
       .from('membership_plans')
@@ -32,7 +37,7 @@ export async function POST({ request }) {
       currency = 'cny';
     }
 
-    if (userProfile.role === 'admin') {
+    if (userProfile?.role === 'admin') {
       amount = 300;
     }
 
