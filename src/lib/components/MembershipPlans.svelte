@@ -55,6 +55,7 @@
   }
 
   async function initializePaymentElement() {
+    if (!$user?.id) return;
     paymentError = '';
     if (!stripe || !selectedPlan) return;
     paymentFormLoaded = true;
