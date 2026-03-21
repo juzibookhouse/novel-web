@@ -37,9 +37,9 @@ export async function POST({ request }) {
       currency = 'cny';
     }
 
-    if (userProfile?.role === 'admin') {
-      amount = 300;
-    }
+    // if (userProfile?.role === 'admin') {
+    //   amount = 300;
+    // }
 
 
     const paymentMethodTypes = [paymentMethod]; //card,alipay,wechat_pay
