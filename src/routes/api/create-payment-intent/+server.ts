@@ -90,6 +90,11 @@ export async function POST({ request }) {
       });
     }
 
+    const {error:updateMembershipPlanError,data:updateMembershipPlanData} = await supabase.from('user_memberships').update({plan_id: planId}).eq('stripe_client_secret',paymentIntent.client_secret).eq('user_id',userId);
+    if (updateMembershipPlanError) {
+      console.error(`Update membership error:`, updateMembershipPlanError)
+    }
+
     return json({ clientSecret: paymentIntent.client_secret });
   } catch (error) {
     console.error('Error creating payment intent:', error);
