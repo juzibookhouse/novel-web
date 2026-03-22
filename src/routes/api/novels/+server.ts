@@ -2,6 +2,8 @@ import { getSortedChapters } from '$lib/novel.js';
 import { getAuthUser } from '$lib/server/auth.js';
 import { getCategories, getTags, supabase } from '$lib/supabaseClient';
 import { json } from '@sveltejs/kit';
+import { WEBSITE_NAME } from '$lib/constants';
+import { logError } from '$lib/errorLogger';
 
 export async function GET({ request }: { request: Request }) {
   try {
@@ -65,6 +67,7 @@ export async function GET({ request }: { request: Request }) {
 
     return json({ novels, categories: categoriesData || [], tags: tagsData || [], totalCount: count || 0, page, per_page });
   } catch (error) {
+    await logError(error, { request }, `${WEBSITE_NAME} - 获取小说列表失败`);
     return json({ error: 'Failed to fetch novels' }, { status: 500 });
   }
 }

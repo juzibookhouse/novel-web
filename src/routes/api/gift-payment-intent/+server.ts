@@ -4,6 +4,8 @@ import { supabase } from '$lib/supabaseClient';
 import { STRIPE_SECRET_KEY } from '$env/static/private';
 import { getAuthUser } from '$lib/server/auth.js';
 import { CURRENCY_CN, CURRENCY_US } from '$lib/constants';
+import { WEBSITE_NAME } from '$lib/constants';
+import { logError } from '$lib/errorLogger';
 
 const stripe = new Stripe(STRIPE_SECRET_KEY);
 
@@ -58,6 +60,7 @@ export async function POST({ request }) {
     return json({ clientSecret: paymentIntent.client_secret });
   } catch (error) {
     console.error('Error creating payment intent:', error);
+    await logError(error, { request }, `${WEBSITE_NAME} - 礼物支付意图创建失败`);
     return json({ error: 'Failed to create payment intent' }, { status: 500 });
   }
 }
