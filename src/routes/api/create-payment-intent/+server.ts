@@ -7,7 +7,7 @@ import { WEBSITE_NAME } from '$lib/constants';
 
 const stripe = new Stripe(STRIPE_SECRET_KEY);
 
-export async function POST({ request }) {
+export async function POST({ request }:{request:Request}) {
   try {
     const { planId, stripeClientSecret, paymentMethod, userId } = await request.json();
 
@@ -109,6 +109,7 @@ export async function POST({ request }) {
             <div style="background-color: white; padding: 15px; border-radius: 4px; margin: 20px 0; border: 1px solid #fecaca;">
               <h3 style="margin: 0; color: #991b1b;">错误详情：</h3>
               <p><strong>时间：</strong>${new Date().toLocaleString('zh-CN')}</p>
+              <p><strong>数据：</strong>${String(await request.json())}</p>
               <p><strong>错误信息：</strong>${error instanceof Error ? error.message : String(error)}</p>
               <p><strong>错误堆栈：</strong></p>
               <pre style="background-color: #f9fafb; padding: 10px; overflow-x: auto; font-size: 12px;">${error instanceof Error ? error.stack : 'No stack trace'}</pre>
