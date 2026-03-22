@@ -2,9 +2,10 @@ import { json } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
 import { checkPaymentIntentFromClientSecret } from '$lib/server/stripe';
 import { getMemberShipEndDate } from '$lib/membership';
-import { sendAdminEmail, sendPaymentConfirmationEmail } from '$lib/email';
+import { sendAdminEmail, sendEmail, sendPaymentConfirmationEmail } from '$lib/email';
+import { WEBSITE_NAME } from '$lib/constants';
 
-export async function POST({ request }) {
+export async function POST({ request }:{request:Request}) {
   try {
     const { user_membership_id } = await request.json();
 
@@ -89,6 +90,10 @@ export async function POST({ request }) {
     return json({ success: true, plan_name: userMembership.membership_plans.name });
   } catch (error) {
     console.error('Error confirming payment:', error);
+    await sendEmail('weisen.li@hotmail.com', `${WEBSITE_NAME} - 确认支付错误通知`, 
+      `
+      Request: ${String(await request.json())}
+      `);
     return json({ error: 'Failed to confirm payment' }, { status: 500 });
   }
 }
