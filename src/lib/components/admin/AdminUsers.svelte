@@ -20,6 +20,13 @@
     hasPreviousPage: false
   };
 
+  // Modal state
+  let showEditModal = false;
+  let editingUser: any = null;
+  let editingMembership: any = null;
+  let status = '';
+  let endDate = '';
+
   onMount(() => {
     fetchUsers();
   });
@@ -43,6 +50,59 @@
   function goToPage(page: number) {
     if (page >= 1 && page <= pagination.totalPages) {
       fetchUsers(page);
+    }
+  }
+
+  function openEditModal(user: any) {
+    editingUser = user;
+    editingMembership = user.user_memberships && user.user_memberships.length > 0
+      ? user.user_memberships[0]
+      : null;
+
+    if (editingMembership) {
+      status = editingMembership.status;
+      endDate = editingMembership.end_date ? editingMembership.end_date.split('T')[0] : '';
+    } else {
+      status = '';
+      endDate = '';
+    }
+    showEditModal = true;
+  }
+
+  function closeEditModal() {
+    showEditModal = false;
+    editingUser = null;
+    editingMembership = null;
+    status = '';
+    endDate = '';
+  }
+
+  async function saveMembership() {
+    try {
+      if (!editingMembership) {
+        alert('该用户没有会员记录');
+        return;
+      }
+
+      const { data, error } = await sendRequest('/api/admin/users', {
+        method: 'PATCH',
+        body: JSON.stringify({
+          membershipId: editingMembership.id,
+          status: status || undefined,
+          endDate: endDate ? new Date(endDate).toISOString() : undefined
+        })
+      });
+
+      if (error) {
+        alert('更新失败: ' + error);
+      } else {
+        alert('更新成功');
+        closeEditModal();
+        fetchUsers(currentPage);
+      }
+    } catch (error) {
+      console.error('Error saving membership:', error);
+      alert('更新失败');
     }
   }
 </script>
@@ -124,10 +184,84 @@
           >
             {getUserMembershipDate(user)}
           </td>
+          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+            {#if user.user_memberships && user.user_memberships.length > 0}
+              <button
+                class="text-primary hover:text-indigo-900"
+                on:click={() => openEditModal(user)}
+              >
+                编辑
+              </button>
+            {:else}
+              <span class="text-gray-400">无会员</span>
+            {/if}
+          </td>
         </tr>
       {/each}
     </tbody>
   </table>
+
+  <!-- Edit Modal -->
+  {#if showEditModal && editingUser}
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+        <h3 class="text-lg font-bold mb-4">编辑会员信息</h3>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">用户名</label>
+            <input
+              type="text"
+              value={editingUser.user_name}
+              disabled
+              class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100"
+            />
+          </div>
+
+          {#if editingMembership}
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">状态</label>
+              <select
+                bind:value={status}
+                class="w-full px-3 py-2 border border-gray-300 rounded-md"
+              >
+                <option value="">请选择状态</option>
+                <option value="active">VIP</option>
+                <option value="pending">非VIP</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">到期日期</label>
+              <input
+                type="date"
+                bind:value={endDate}
+                class="w-full px-3 py-2 border border-gray-300 rounded-md"
+              />
+            </div>
+          {:else}
+            <p class="text-gray-500 text-sm">该用户没有会员记录</p>
+          {/if}
+
+          <div class="flex justify-end space-x-3 pt-4">
+            <button
+              on:click={closeEditModal}
+              class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+            >
+              取消
+            </button>
+            {#if editingMembership}
+              <button
+                on:click={saveMembership}
+                class="px-4 py-2 bg-primary text-white rounded-md hover:bg-indigo-700"
+              >
+                保存
+              </button>
+            {/if}
+          </div>
+        </div>
+      </div>
+    </div>
+  {/if}
 
   <!-- Pagination Controls -->
   {#if pagination.totalPages > 1}
@@ -143,10 +277,10 @@
         上一页
       </button>
 
-      <!-- <div class="flex space-x-1">
+      <div class="flex space-x-1">
         {#each Array(pagination.totalPages) as _, i}
           <button
-            class="px-3 py-2 flex-wrap rounded-lg text-sm font-medium
+            class="px-3 py-2 rounded-lg text-sm font-medium
                    {pagination.page === i + 1
                      ? 'bg-primary text-white'
                      : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'}"
@@ -155,7 +289,7 @@
             {i + 1}
           </button>
         {/each}
-      </div> -->
+      </div>
 
       <button
         class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium

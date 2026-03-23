@@ -1,5 +1,6 @@
 import { getAuthUser } from "$lib/server/auth";
 import { supabase } from "$lib/supabaseClient";
+import { logError } from "$lib/errorLogger";
 import { json, type RequestHandler } from "@sveltejs/kit";
 
 export const GET: RequestHandler = async (event) => {
@@ -55,7 +56,46 @@ export const GET: RequestHandler = async (event) => {
       }
     })
   } catch (error) {
-    console.error(error);
+    await logError(error, 'GET /api/admin/users', 'Error fetching admin users');
     return json({error: "Failed to fetch users"},{status:500})
+  }
+};
+
+export const PATCH: RequestHandler = async (event) => {
+  try {
+    const user = await getAuthUser(event.request);
+
+    if (!user?.isAdmin) {
+      return json({ error: 'User not authenticated' }, { status: 401 });
+    }
+
+    const body = await event.request.json();
+    const { membershipId, status, endDate } = body;
+
+    if (!membershipId) {
+      return json({ error: 'membershipId is required' }, { status: 400 });
+    }
+
+    const updateData: any = {};
+    if (status !== undefined) {
+      updateData.status = status;
+    }
+    if (endDate !== undefined) {
+      updateData.end_date = endDate;
+    }
+
+    const { data, error } = await supabase
+      .from('user_memberships')
+      .update(updateData)
+      .eq('id', membershipId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return json({ success: true, data });
+  } catch (error) {
+    await logError(error, 'PATCH /api/admin/users', 'Error updating user membership');
+    return json({ error: 'Failed to update membership' }, { status: 500 });
   }
 };

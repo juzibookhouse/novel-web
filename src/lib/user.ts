@@ -17,13 +17,14 @@ export const getUserMembership = (user:User) => {
 }
 
 export const getUserDateFormat = (date:string) => {
-  const options = { 
+  const options = {
+    timeZone: 'UTC',
     year: 'numeric', 
     month: 'long', 
     day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
+    // hour: '2-digit',
+    // minute: '2-digit',
+    // second: '2-digit',
   };
   return new Date(date).toLocaleDateString('zh-CN',options);
 }
