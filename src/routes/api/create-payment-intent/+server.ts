@@ -48,6 +48,11 @@ export async function POST({ request }:{request:Request}) {
 
 
     const paymentMethodTypes = [paymentMethod]; //card,alipay,wechat_pay
+    const metadata = {
+      planId,
+      userId,
+      email: userProfile.email
+    }
 
     if (stripeClientSecret) {
       // Extract payment intent ID from client secret
@@ -61,7 +66,7 @@ export async function POST({ request }:{request:Request}) {
         paymentIntent = await stripe.paymentIntents.create({
           amount,
           currency,
-          metadata: { planId },
+          metadata,
           payment_method_types: paymentMethodTypes
         });
       } else {
@@ -73,14 +78,14 @@ export async function POST({ request }:{request:Request}) {
           paymentIntent = await stripe.paymentIntents.update(paymentIntentId, {
             amount,
             currency,
-            metadata: { planId }
+            metadata
           });
         } else {
           // Update existing payment intent with new payment method types
           paymentIntent = await stripe.paymentIntents.update(paymentIntentId, {
             amount,
             currency,
-            metadata: { planId },
+            metadata,
             payment_method_types: paymentMethodTypes
           });
         }
@@ -90,7 +95,7 @@ export async function POST({ request }:{request:Request}) {
       paymentIntent = await stripe.paymentIntents.create({
         amount,
         currency,
-        metadata: { planId },
+        metadata,
         payment_method_types: paymentMethodTypes
       });
     }
