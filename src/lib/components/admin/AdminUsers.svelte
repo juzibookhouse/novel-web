@@ -110,7 +110,29 @@
 <div class="p-6">
   <div class="flex justify-between items-center mb-4">
     <h3 class="text-2xl font-bold">用户总数: {pagination.total}</h3>
-    <span class="text-sm text-gray-500">第 {pagination.page} / {pagination.totalPages} 页</span>
+    <div class="flex items-center gap-3">
+      <button
+        class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium
+               {pagination.hasPreviousPage
+                 ? 'hover:bg-gray-50 text-gray-700 cursor-pointer'
+                 : 'text-gray-400 cursor-not-allowed'}"
+        disabled={!pagination.hasPreviousPage}
+        on:click={() => goToPage(currentPage - 1)}
+      >
+        上一页
+      </button>
+      <span class="text-sm text-gray-500">第 {pagination.page} / {pagination.totalPages} 页</span>
+      <button
+        class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium
+               {pagination.hasNextPage
+                 ? 'hover:bg-gray-50 text-gray-700 cursor-pointer'
+                 : 'text-gray-400 cursor-not-allowed'}"
+        disabled={!pagination.hasNextPage}
+        on:click={() => goToPage(currentPage + 1)}
+      >
+        下一页
+      </button>
+    </div>
   </div>
 
   <table class="min-w-full divide-y divide-red-100">
@@ -260,47 +282,6 @@
           </div>
         </div>
       </div>
-    </div>
-  {/if}
-
-  <!-- Pagination Controls -->
-  {#if pagination.totalPages > 1}
-    <div class="mt-4 flex justify-center items-center space-x-2">
-      <button
-        class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium
-               {pagination.hasPreviousPage
-                 ? 'hover:bg-gray-50 text-gray-700 cursor-pointer'
-                 : 'text-gray-400 cursor-not-allowed'}"
-        disabled={!pagination.hasPreviousPage}
-        on:click={() => goToPage(currentPage - 1)}
-      >
-        上一页
-      </button>
-
-      <div class="flex space-x-1">
-        {#each Array(pagination.totalPages) as _, i}
-          <button
-            class="px-3 py-2 rounded-lg text-sm font-medium
-                   {pagination.page === i + 1
-                     ? 'bg-primary text-white'
-                     : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'}"
-            on:click={() => goToPage(i + 1)}
-          >
-            {i + 1}
-          </button>
-        {/each}
-      </div>
-
-      <button
-        class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium
-               {pagination.hasNextPage
-                 ? 'hover:bg-gray-50 text-gray-700 cursor-pointer'
-                 : 'text-gray-400 cursor-not-allowed'}"
-        disabled={!pagination.hasNextPage}
-        on:click={() => goToPage(currentPage + 1)}
-      >
-        下一页
-      </button>
     </div>
   {/if}
 </div>
