@@ -32,7 +32,10 @@ export async function POST({ request }) {
     let paymentIntent;
     let amount = gift.price * 100; // Convert to cents
     let currency = CURRENCY_US;
-    if (payment_method != 'card') {
+    if (payment_method === 'wechat_pay') {
+      amount = gift.price_cn * 100;
+      currency = CURRENCY_CN;
+    } else if (payment_method === 'alipay') {
       amount = gift.price_cn * 100;
       currency = CURRENCY_CN;
     }
