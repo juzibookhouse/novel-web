@@ -1,11 +1,13 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
+    import { page } from "$app/stores";
 
   export let data;
-  let searchTerm = data.search || '';
-  let selectedCategory = data.selectedCategory || '';
-  let selectedStatus = data.selectedStatus || '';
-  let isShort = data.is_short || '';
+
+  $: searchTerm = $page.url.searchParams.get('search') || '';
+  $: selectedCategory = $page.url.searchParams.get('category') || '';
+  $: selectedStatus = $page.url.searchParams.get('status') || '';
+  $: isShort = $page.url.searchParams.get('is_short') || '';
 
   function goToPage(page: number) {
     const params = new URLSearchParams();
@@ -15,8 +17,7 @@
     if (isShort) params.set('is_short', isShort);
 
     params.set('page', page.toString());
-    console.log(params);
-    goto(`/novels?${params.toString()}`);
+    return goto(`/novels?${params.toString()}`);
   }
 </script>
 <!-- Pagination -->

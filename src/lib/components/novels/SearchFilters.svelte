@@ -1,19 +1,20 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-  
+    import { page } from "$app/stores";
+
   export let data;
 
-  let searchTerm = data.search || '';
-  let selectedCategory = data.selectedCategory || '';
-  let selectedStatus = data.selectedStatus || '';
-  let isShort = data.is_short === 'true';
-  
+  $: searchTerm = $page.url.searchParams.get('search') || '';
+  $: selectedCategory = $page.url.searchParams.get('category') || '';
+  $: selectedStatus = $page.url.searchParams.get('status') || '';
+  $: isShort = $page.url.searchParams.get('is_short') === 'true';
+
   const statusOptions = [
     { value: '', label: '全部状态' },
     { value: 'ongoing', label: '连载中' },
     { value: 'finished', label: '已完结' }
   ];
-  
+
   function handleSearch() {
     const params = new URLSearchParams();
     if (searchTerm) params.set('search', searchTerm);
@@ -21,9 +22,9 @@
     if (selectedStatus) params.set('status', selectedStatus);
     if (isShort) params.set('is_short', 'true');
     params.set('page', '1');
-    goto(`/novels?${params.toString()}`);
+    return goto(`/novels?${params.toString()}`);
   }
-  
+
 </script>
 <!-- Search and Filter Section -->
 <div class="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg mb-8 overflow-hidden">
