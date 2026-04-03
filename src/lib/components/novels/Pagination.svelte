@@ -5,13 +5,17 @@
   let searchTerm = data.search || '';
   let selectedCategory = data.selectedCategory || '';
   let selectedStatus = data.selectedStatus || '';
+  let isShort = data.is_short || '';
 
   function goToPage(page: number) {
     const params = new URLSearchParams();
     if (searchTerm) params.set('search', searchTerm);
     if (selectedCategory) params.set('category', selectedCategory);
     if (selectedStatus) params.set('status', selectedStatus);
+    if (isShort) params.set('is_short', isShort);
+
     params.set('page', page.toString());
+    console.log(params);
     goto(`/novels?${params.toString()}`);
   }
 </script>
