@@ -55,43 +55,35 @@ export async function POST({ request }:{request:Request}) {
     }
 
     if (stripeClientSecret) {
-      // Extract payment intent ID from client secret
       const paymentIntentId = stripeClientSecret.split('_secret_')[0];
-
-      // Get the existing payment intent to check its status
       const existingIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
-      if (existingIntent.status === 'canceled') {
-        // Create a new payment intent if the old one is canceled
+      const shouldCreateNewIntent =
+        existingIntent.status === 'canceled' ||
+        existingIntent.currency !== currency ||
+        (existingIntent.payment_method === null && !existingIntent.payment_method_types?.includes(paymentMethod));
+
+      if (shouldCreateNewIntent) {
         paymentIntent = await stripe.paymentIntents.create({
           amount,
           currency,
           metadata,
           payment_method_types: paymentMethodTypes
         });
+      } else if (existingIntent.payment_method) {
+        paymentIntent = await stripe.paymentIntents.update(paymentIntentId, {
+          amount,
+          metadata
+        });
       } else {
-        // Check if there's a payment method attached
-        const hasAttachedPaymentMethod = existingIntent.payment_method !== null;
-
-        if (hasAttachedPaymentMethod) {
-          // Don't update payment_method_types if a payment method is already attached
-          paymentIntent = await stripe.paymentIntents.update(paymentIntentId, {
-            amount,
-            currency,
-            metadata
-          });
-        } else {
-          // Update existing payment intent with new payment method types
-          paymentIntent = await stripe.paymentIntents.update(paymentIntentId, {
-            amount,
-            currency,
-            metadata,
-            payment_method_types: paymentMethodTypes
-          });
-        }
+        paymentIntent = await stripe.paymentIntents.update(paymentIntentId, {
+          amount,
+          currency,
+          metadata,
+          payment_method_types: paymentMethodTypes
+        });
       }
     } else {
-      // Create payment intent
       paymentIntent = await stripe.paymentIntents.create({
         amount,
         currency,

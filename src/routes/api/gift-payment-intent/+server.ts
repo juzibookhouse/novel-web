@@ -43,20 +43,32 @@ export async function POST({ request }) {
     const paymentMethodTypes = [payment_method]; //card,alipay,wechat_pay
 
     const paymentOption = {
-        amount,
-        currency,
-        metadata: { gift_id },
-        payment_method_types: paymentMethodTypes
-      }
+      amount,
+      currency,
+      metadata: { gift_id },
+      payment_method_types: paymentMethodTypes
+    }
 
     if (stripeClientSecret) {
-      // Extract payment intent ID from client secret
       const paymentIntentId = stripeClientSecret.split('_secret_')[0];
+      const existingIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
-      // Update existing payment intent
-      paymentIntent = await stripe.paymentIntents.update(paymentIntentId, paymentOption);
+      const shouldCreateNewIntent =
+        existingIntent.status === 'canceled' ||
+        existingIntent.currency !== currency ||
+        (existingIntent.payment_method === null && !existingIntent.payment_method_types?.includes(payment_method));
+
+      if (shouldCreateNewIntent) {
+        paymentIntent = await stripe.paymentIntents.create(paymentOption);
+      } else if (existingIntent.payment_method) {
+        paymentIntent = await stripe.paymentIntents.update(paymentIntentId, {
+          amount,
+          metadata: { gift_id }
+        });
+      } else {
+        paymentIntent = await stripe.paymentIntents.update(paymentIntentId, paymentOption);
+      }
     } else {
-      // Create payment intent
       paymentIntent = await stripe.paymentIntents.create(paymentOption);
     }
 
