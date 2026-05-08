@@ -2,6 +2,7 @@ import { getAuthUser } from "$lib/server/auth";
 import { supabase } from "$lib/supabaseClient";
 import { logError } from "$lib/errorLogger";
 import { json, type RequestHandler } from "@sveltejs/kit";
+import { WEBSITE_NAME } from "$lib/constants";
 
 export const GET: RequestHandler = async (event) => {
   try {
@@ -56,7 +57,8 @@ export const GET: RequestHandler = async (event) => {
       }
     })
   } catch (error) {
-    await logError(error, 'GET /api/admin/users', 'Error fetching admin users');
+    console.error('GET /api/admin/users:', error);
+    await logError(error, { request: event.request }, `${WEBSITE_NAME} - 获取用户列表失败`);
     return json({error: "Failed to fetch users"},{status:500})
   }
 };
@@ -95,7 +97,8 @@ export const PATCH: RequestHandler = async (event) => {
 
     return json({ success: true, data });
   } catch (error) {
-    await logError(error, 'PATCH /api/admin/users', 'Error updating user membership');
+    console.error('PATCH /api/admin/users:', error);
+    await logError(error, { request: event.request }, `${WEBSITE_NAME} - 更新用户会员失败`);
     return json({ error: 'Failed to update membership' }, { status: 500 });
   }
 };

@@ -2,6 +2,8 @@ import { supabase } from "$lib/supabaseClient";
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { getAuthUser } from "$lib/server/auth";
+import { logError } from "$lib/errorLogger";
+import { WEBSITE_NAME } from "$lib/constants";
 
 export const GET: RequestHandler = async ({ url, request }) => {
   const month = url.searchParams.get("month");
@@ -79,6 +81,7 @@ export const GET: RequestHandler = async ({ url, request }) => {
     return json(result);
   } catch (e: any) {
     console.error('GET /api/reading_records:', e);
+    await logError(e, { request }, `${WEBSITE_NAME} - 获取阅读记录失败`);
     return json({ error: e.message }, { status: 500 });
   }
 };

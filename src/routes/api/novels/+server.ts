@@ -46,6 +46,7 @@ export async function GET({ request }: { request: Request }) {
     
     if (error) {
       console.error(error);
+      await logError(error, { request }, `${WEBSITE_NAME} - 获取小说列表失败`);
       return json({ error: 'Failed to fetch novels' }, { status: 500 });
     }
     
@@ -58,11 +59,13 @@ export async function GET({ request }: { request: Request }) {
     const {data: categoriesData, error: categoriesError} = await getCategories();
     if (categoriesError) {
       console.error(categoriesError);
+      await logError(categoriesError, {}, `${WEBSITE_NAME} - 获取分类失败`);
     }
 
     const {data: tagsData, error: tagsError} = await getTags();
     if (tagsError) {
       console.error(tagsError);
+      await logError(tagsError, {}, `${WEBSITE_NAME} - 获取标签失败`);
     }
 
     return json({ novels, categories: categoriesData || [], tags: tagsData || [], totalCount: count || 0, page, per_page });

@@ -3,6 +3,8 @@ import { getNovelChapterGifts, supabase } from '$lib/supabaseClient';
 import { getAuthUser } from '$lib/server/auth.js';
 import Stripe from 'stripe';
 import { STRIPE_SECRET_KEY } from '$env/static/private';
+import { logError } from '$lib/errorLogger';
+import { WEBSITE_NAME } from '$lib/constants';
 import type { Gift } from '$lib/types/gift.js';
 import type { RequestEvent } from '@sveltejs/kit';
 
@@ -49,15 +51,18 @@ export async function GET({ params }: RequestEvent) {
     
     if (giftsError) {
       console.error('Error fetching gifts:', giftsError);
+      await logError(giftsError, {}, `${WEBSITE_NAME} - 获取礼物列表失败`);
     }
     
     if (chapterGiftsError) {
       console.error('Error fetching chapter gifts:', chapterGiftsError);
+      await logError(chapterGiftsError, {}, `${WEBSITE_NAME} - 获取章节礼物失败`);
     }
 
     return json({ chapterGifts, gifts });
   } catch (err) {
     console.error('GET /api/novels/[novelId]/chapters/[chapterId]/gifts:', err);
+    await logError(err, {}, `${WEBSITE_NAME} - 获取章节礼物列表失败`);
     return json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -112,6 +117,7 @@ export async function POST({ request, params, locals }: RequestEvent) {
       });
       if (error) {
         console.error('Error creating chapter gift:', error);
+        await logError(error, { request }, `${WEBSITE_NAME} - 创建章节礼物失败`);
         return json({ error: 'Internal server error' }, { status: 500 });
       }
     } else {
@@ -135,6 +141,7 @@ export async function POST({ request, params, locals }: RequestEvent) {
       .eq('id', chapterGift.id)
       if (error) {
         console.error('Error updating chapter gift:', error);
+        await logError(error, { request }, `${WEBSITE_NAME} - 更新章节礼物失败`);
         return json({ error: 'Internal server error' }, { status: 500 });
       }
 
@@ -147,6 +154,7 @@ export async function POST({ request, params, locals }: RequestEvent) {
 
       if (updateNovelError) {
         console.error('Error updating novel updated_at:', updateNovelError);
+        await logError(updateNovelError, { request }, `${WEBSITE_NAME} - 更新小说时间戳失败`);
       }
 
       return json({ msg: 'Send Gift successfully'}, { status: 201 });
@@ -156,6 +164,7 @@ export async function POST({ request, params, locals }: RequestEvent) {
     return json({ msg: 'Send Gift successfully'}, { status: 201 });
   } catch (err) {
     console.error('POST /api/novels/[novelId]/chapters/[chapterId]/gifts:', err);
+    await logError(err, { request }, `${WEBSITE_NAME} - 发送章节礼物失败`);
     return json({ error: 'Internal server error' }, { status: 500 });
   }
 }

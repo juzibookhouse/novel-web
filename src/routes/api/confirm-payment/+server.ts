@@ -23,6 +23,7 @@ export async function POST({ request }:{request:Request}) {
 
     if (userMembershipError || !userMembership) {
       console.error(userMembershipError);
+      await logError(userMembershipError || new Error('Membership not found'), { request }, `${WEBSITE_NAME} - 查找会员失败`);
       return json({ error: 'Membership not found' }, { status: 404 });
     }
 
@@ -35,6 +36,7 @@ export async function POST({ request }:{request:Request}) {
     const check = await checkPaymentIntentFromClientSecret(stripeClientSecret);
     if (!check.paid) {
       console.error('Payment intent retrieval error:', check.error);
+      await logError(check.error || new Error('Payment not completed'), { request }, `${WEBSITE_NAME} - 支付意图检查失败`);
       return json({ error: 'Failed to retrieve payment intent', details: check.error }, { status: 500 });
     }
 
@@ -52,6 +54,7 @@ export async function POST({ request }:{request:Request}) {
 
     if (updateError) {
       console.error(updateError);
+      await logError(updateError, { request }, `${WEBSITE_NAME} - 更新会员状态失败`);
       return json({ error: 'Failed to update membership' }, { status: 500 });
     }
 

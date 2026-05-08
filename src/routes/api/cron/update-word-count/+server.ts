@@ -1,6 +1,8 @@
 import { json, type RequestHandler } from "@sveltejs/kit";
 import { supabase } from "$lib/supabaseClient";
 import { getChapterLength } from "$lib/novel";
+import { logError } from "$lib/errorLogger";
+import { WEBSITE_NAME } from "$lib/constants";
 import type { Chapter } from "$lib/novel";
 
 /**
@@ -153,6 +155,7 @@ export const GET: RequestHandler = async ({ request }) => {
     });
   } catch (error: any) {
     console.error("GET /api/cron/update-word-count:", error);
+    await logError(error, { request }, `${WEBSITE_NAME} - 更新字数统计失败`);
     return json(
       {
         success: false,

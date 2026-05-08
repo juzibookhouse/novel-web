@@ -1,6 +1,8 @@
 import { json } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
 import { getAuthUser } from '$lib/server/auth.js';
+import { logError } from '$lib/errorLogger';
+import { WEBSITE_NAME } from '$lib/constants';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const DELETE: RequestHandler = async ({ params, request }) => {
@@ -15,6 +17,7 @@ export const DELETE: RequestHandler = async ({ params, request }) => {
 
     if (ReadingError) {
       console.error('Error deleting reading records:', ReadingError);
+      await logError(ReadingError, { request }, `${WEBSITE_NAME} - 删除阅读记录失败`);
       return json({ error: 'Failed to delete reading records' }, { status: 500 });
     }
 
@@ -22,6 +25,7 @@ export const DELETE: RequestHandler = async ({ params, request }) => {
 
     if (chaptersError) {
       console.error('Error deleting chapters:', chaptersError);
+      await logError(chaptersError, { request }, `${WEBSITE_NAME} - 删除章节失败`);
       return json({ error: 'Failed to delete chapters' }, { status: 500 });
     }
 
@@ -29,12 +33,14 @@ export const DELETE: RequestHandler = async ({ params, request }) => {
     const {error: novelError} = await supabase.from('novels').delete().eq('id', novelId);
     if (novelError) {
       console.error('Error deleting novel:', novelError);
+      await logError(novelError, { request }, `${WEBSITE_NAME} - 删除小说失败`);
       return json({ error: 'Failed to delete novel' }, { status: 500 });
     }
 
     return json({ msg: 'Comment deleted successfully' });
   } catch (err) {
     console.error('DELETE /api/novels/[novelId]:', err);
+    await logError(err, { request }, `${WEBSITE_NAME} - 删除小说失败`);
     return json({ error: 'Internal server error' }, { status: 500 });
   }
 };

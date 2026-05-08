@@ -1,6 +1,8 @@
 import { json, type RequestEvent } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
 import { getAuthUser } from '$lib/server/auth.js';
+import { logError } from '$lib/errorLogger';
+import { WEBSITE_NAME } from '$lib/constants';
 import type { Comment } from '$lib/types/comment.js';
 
 export async function GET({ params }: RequestEvent) {
@@ -26,6 +28,7 @@ export async function GET({ params }: RequestEvent) {
 
     if (error) {
       console.error('Error fetching comments:', error);
+      await logError(error, { request: null as any }, `${WEBSITE_NAME} - 获取评论失败`);
       return json({ error: 'Failed to fetch comments' }, { status: 500 });
     }
 
@@ -66,6 +69,7 @@ export async function GET({ params }: RequestEvent) {
     return json({ comments: rootComments });
   } catch (err) {
     console.error('GET /api/novels/[novelId]/chapters/[chapterId]/comments:', err);
+    await logError(err, {}, `${WEBSITE_NAME} - 获取评论失败`);
     return json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -139,6 +143,7 @@ export async function POST({ request, params, locals }: RequestEvent) {
 
     if (insertError) {
       console.error('Error creating comment:', insertError);
+      await logError(insertError, { request }, `${WEBSITE_NAME} - 创建评论失败`);
       return json({ error: 'Failed to create comment' }, { status: 500 });
     }
 
@@ -149,6 +154,7 @@ export async function POST({ request, params, locals }: RequestEvent) {
 
     if (updateNovelError) {
       console.error('Error updating novel timestamp:', updateNovelError);
+      await logError(updateNovelError, { request }, `${WEBSITE_NAME} - 更新小说时间戳失败`);
     }
 
     // Format the response
@@ -166,6 +172,7 @@ export async function POST({ request, params, locals }: RequestEvent) {
     return json({ comment: formattedComment }, { status: 201 });
   } catch (err) {
     console.error('POST /api/novels/[novelId]/chapters/[chapterId]/comments:', err);
+    await logError(err, { request }, `${WEBSITE_NAME} - 创建评论失败`);
     return json({ error: 'Internal server error' }, { status: 500 });
   }
 }

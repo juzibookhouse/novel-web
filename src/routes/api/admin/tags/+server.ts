@@ -1,5 +1,7 @@
 import { getAuthUser } from "$lib/server/auth";
 import { supabase } from "$lib/supabaseClient";
+import { logError } from "$lib/errorLogger";
+import { WEBSITE_NAME } from "$lib/constants";
 import { json, type RequestHandler } from "@sveltejs/kit";
 
 export const GET: RequestHandler = async (event) => {
@@ -32,6 +34,7 @@ export const GET: RequestHandler = async (event) => {
     return json({tags})
   } catch (error) {
     console.error('GET /api/admin/tags:', error);
+    await logError(error, { request: event.request }, `${WEBSITE_NAME} - 获取标签列表失败`);
     return json({error: ""},{status:500})
   }
 };
@@ -59,6 +62,7 @@ export const POST: RequestHandler = async ({request}) => {
     return json({ tag: data }, { status: 201 });
   } catch (error) {
     console.error('POST /api/admin/tags:', error);
+    await logError(error, { request }, `${WEBSITE_NAME} - 创建标签失败`);
     return json({ error: "" }, { status: 500 });
   }
 };

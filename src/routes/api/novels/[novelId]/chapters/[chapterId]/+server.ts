@@ -1,6 +1,8 @@
 import { getAuthUser } from '$lib/server/auth.js';
 import { supabase } from '$lib/supabaseClient.js';
 import { json } from '@sveltejs/kit';
+import { logError } from '$lib/errorLogger';
+import { WEBSITE_NAME } from '$lib/constants';
 
 export async function GET({ params, request }: { params: { novelId: string; chapterId: string }; request: Request }) {
   try {
@@ -32,6 +34,7 @@ export async function GET({ params, request }: { params: { novelId: string; chap
 
     if (chapterError) {
       console.error(chapterError);
+      await logError(chapterError, { request }, `${WEBSITE_NAME} - 获取章节失败`);
       return json({ error: 'Chapter not found' }, { status: 404 });
     }
 
@@ -42,6 +45,7 @@ export async function GET({ params, request }: { params: { novelId: string; chap
     return json({ chapter });
   } catch (error) {
     console.error('GET /api/novels/[novelId]/chapters/[chapterId]:', error);
+    await logError(error, { request }, `${WEBSITE_NAME} - 获取章节失败`);
     return json({ error: 'Failed to fetch chapter' }, { status: 500 });
   }
 }
