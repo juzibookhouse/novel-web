@@ -22,7 +22,6 @@ export async function GET({ params, request }: RequestEvent) {
 
     if (chapterGiftError) {
       console.error('Error getting chapter gift:', chapterGiftError);
-      await logError(chapterGiftError, { request }, `${WEBSITE_NAME} - 获取章节礼物失败`);
       return json({ error: 'Internal server error' }, { status: 500 });
     }
 
