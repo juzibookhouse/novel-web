@@ -152,7 +152,7 @@ export const GET: RequestHandler = async ({ request }) => {
       },
     });
   } catch (error: any) {
-    console.error("Cron job error:", error);
+    console.error("GET /api/cron/update-word-count:", error);
     return json(
       {
         success: false,

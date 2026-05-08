@@ -31,7 +31,7 @@ export const GET: RequestHandler = async (event) => {
 
     return json({tags})
   } catch (error) {
-    console.error(error);
+    console.error('GET /api/admin/tags:', error);
     return json({error: ""},{status:500})
   }
 };
@@ -58,7 +58,7 @@ export const POST: RequestHandler = async ({request}) => {
 
     return json({ tag: data }, { status: 201 });
   } catch (error) {
-    console.error(error);
+    console.error('POST /api/admin/tags:', error);
     return json({ error: "" }, { status: 500 });
   }
 };

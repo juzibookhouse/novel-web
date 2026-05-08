@@ -17,8 +17,10 @@ export async function logError(
   try {
     const subject = customSubject || `${WEBSITE_NAME} - 错误日志通知`;
 
+    let requestUrl = 'N/A';
     let requestData = 'N/A';
     if (context.request) {
+      requestUrl = context.request.url;
       try {
         requestData = String(await context.request.json());
       } catch (e) {
@@ -38,6 +40,8 @@ export async function logError(
             ${context.planId ? `<p><strong>计划ID：</strong>${context.planId}</p>` : ''}
 
             <h3 style="margin: 20px 0 10px 0; color: #991b1b;">请求数据：</h3>
+            <p><strong>请求URL：</strong>${requestUrl}</p>
+            <p><strong>请求体：</strong></p>
             <pre style="background-color: #f9fafb; padding: 10px; overflow-x: auto; font-size: 12px; max-height: 200px;">${requestData}</pre>
 
             <h3 style="margin: 20px 0 10px 0; color: #991b1b;">错误信息：</h3>

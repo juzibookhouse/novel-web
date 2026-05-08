@@ -41,7 +41,7 @@ export async function GET({ params, request }: { params: { novelId: string; chap
 
     return json({ chapter });
   } catch (error) {
-    console.error(error);
+    console.error('GET /api/novels/[novelId]/chapters/[chapterId]:', error);
     return json({ error: 'Failed to fetch chapter' }, { status: 500 });
   }
 }

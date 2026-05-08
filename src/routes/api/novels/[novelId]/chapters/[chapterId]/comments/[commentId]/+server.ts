@@ -34,7 +34,7 @@ export async function DELETE({ params, request }) {
 
     return json({ msg: 'Comment deleted successfully' });
   } catch (err) {
-    console.error('Comments API error:', err);
+    console.error('DELETE /api/novels/[novelId]/chapters/[chapterId]/comments/[commentId]:', err);
     return json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -67,6 +67,7 @@ export async function GET({ request }: { request: Request }) {
 
     return json({ novels, categories: categoriesData || [], tags: tagsData || [], totalCount: count || 0, page, per_page });
   } catch (error) {
+    console.error('GET /api/novels:', error);
     await logError(error, { request }, `${WEBSITE_NAME} - 获取小说列表失败`);
     return json({ error: 'Failed to fetch novels' }, { status: 500 });
   }

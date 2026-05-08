@@ -57,7 +57,7 @@ export async function GET({ params }: RequestEvent) {
 
     return json({ chapterGifts, gifts });
   } catch (err) {
-    console.error('Comments API error:', err);
+    console.error('GET /api/novels/[novelId]/chapters/[chapterId]/gifts:', err);
     return json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -155,7 +155,7 @@ export async function POST({ request, params, locals }: RequestEvent) {
 
     return json({ msg: 'Send Gift successfully'}, { status: 201 });
   } catch (err) {
-    console.error('Comments API error:', err);
+    console.error('POST /api/novels/[novelId]/chapters/[chapterId]/gifts:', err);
     return json({ error: 'Internal server error' }, { status: 500 });
   }
 }

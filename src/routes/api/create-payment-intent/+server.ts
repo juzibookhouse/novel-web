@@ -107,7 +107,7 @@ export async function POST({ request }:{request:Request}) {
 
     return json({ clientSecret: paymentIntent.client_secret });
   } catch (error) {
-    console.error('Error creating payment intent:', error);
+    console.error('POST /api/create-payment-intent:', error);
     await logError(error, { request }, `${WEBSITE_NAME} - 支付意图创建失败`);
     return json({ error: 'Failed to create payment intent' }, { status: 500 });
   }

@@ -9,7 +9,7 @@ export async function POST({ request }) {
 
     return json({ success: true });
   } catch (err) {
-    console.error('Admin email API error:', err);
+    console.error('POST /api/admin-email:', err);
     const status = (err as any)?.status || 500;
     return json({ error: (err as any)?.message || 'Internal server error' }, { status });
   }

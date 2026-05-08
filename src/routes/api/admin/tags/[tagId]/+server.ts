@@ -24,7 +24,7 @@ export async function DELETE({ params, request }) {
 
     return json({ msg: 'Tag deleted successfully' });
   } catch (err) {
-    console.error('Delete Tag API error:', err);
+    console.error('DELETE /api/admin/tags/[tagId]:', err);
     return json({ error: 'Internal server error' }, { status: 500 });
   }
 }

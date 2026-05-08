@@ -24,6 +24,7 @@ export async function GET({ request }) {
     
     return json({ gifts });
   } catch (error) {
+    console.error('GET /api/gifts:', error);
     return json({ error: 'Failed to fetch novels' }, { status: 500 });
   }
 }

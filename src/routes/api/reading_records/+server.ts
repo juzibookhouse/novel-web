@@ -78,6 +78,7 @@ export const GET: RequestHandler = async ({ url, request }) => {
 
     return json(result);
   } catch (e: any) {
+    console.error('GET /api/reading_records:', e);
     return json({ error: e.message }, { status: 500 });
   }
 };

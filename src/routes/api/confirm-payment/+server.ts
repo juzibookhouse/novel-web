@@ -90,7 +90,7 @@ export async function POST({ request }:{request:Request}) {
 
     return json({ success: true, plan_name: userMembership.membership_plans.name });
   } catch (error) {
-    console.error('Error confirming payment:', error);
+    console.error('POST /api/confirm-payment:', error);
     await logError(error, { request }, `${WEBSITE_NAME} - 确认支付错误`);
     return json({ error: 'Failed to confirm payment' }, { status: 500 });
   }

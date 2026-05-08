@@ -31,7 +31,7 @@ export async function GET({ params, request }: RequestEvent) {
 
     return json({ gift, stripe_client_secret: chapterGift.stripe_client_secret, payment_method: chapterGift.payment_method});
   } catch (err) {
-    console.error('Comments API error:', err);
+    console.error('GET /api/novels/[novelId]/chapters/[chapterId]/gift:', err);
     return json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -99,7 +99,7 @@ export async function POST({ request, params, locals }: RequestEvent) {
 
     return json({ msg: 'Send Gift successfully'}, { status: 201 });
   } catch (err) {
-    console.error('Comments API error:', err);
+    console.error('POST /api/novels/[novelId]/chapters/[chapterId]/gift:', err);
     return json({ error: 'Internal server error' }, { status: 500 });
   }
 }
