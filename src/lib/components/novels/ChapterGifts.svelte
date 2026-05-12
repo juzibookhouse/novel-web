@@ -2,6 +2,7 @@
   import { sendRequest } from "$lib/api";
   import { user } from "$lib/stores/authStore";
   import type { Gift } from "$lib/types/gift";
+  import { browser } from '$app/environment';
   import { onMount } from "svelte";
   import type { Stripe, StripeElements } from '@stripe/stripe-js';
   import GiftSelectors from "$lib/components/gifts/GiftSelectors.svelte";
@@ -30,7 +31,8 @@
   let processing = false;
 
   const fetchChapterGifts = async () => {
-    const { data, error } = await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gifts`);
+    const baseUrl = browser ? window.location.origin : '';
+    const { data, error } = await sendRequest(`${baseUrl}/api/novels/${novelId}/chapters/${chapterId}/gifts`);
     if (error) {
       message = error.toString();
     }
@@ -40,7 +42,7 @@
     stripe = await initializeStripe();
 
     // check if there's an in-progress gift payment
-    const res = await sendRequest(`/api/novels/${novelId}/chapters/${chapterId}/gift`);
+    const res = await sendRequest(`${baseUrl}/api/novels/${novelId}/chapters/${chapterId}/gift`);
     const payload = res?.data || {};
     if (payload.gift) {
       selectedGift = payload.gift;
@@ -78,7 +80,7 @@
   });
 
   $: {
-    if (chapterId) {
+    if (browser && chapterId) {
       clientSecret = ''
       paymentMethod = 'card';
       showPaymentForm = false;
