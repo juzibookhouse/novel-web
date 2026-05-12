@@ -18,11 +18,17 @@ export async function GET({ params, request }: RequestEvent) {
     .select('*')
     .eq('chapter_id', chapterId)
     .eq('payment_status','pending')
-    .eq('user_id',user_id).limit(1).single();
+    .eq('user_id',user_id)
+    .limit(1)
+    .maybeSingle();
 
     if (chapterGiftError) {
       console.error('Error getting chapter gift:', chapterGiftError);
       return json({ error: 'Internal server error' }, { status: 500 });
+    }
+
+    if (!chapterGift) {
+      return json({ gift: null, stripe_client_secret: null, payment_method: null });
     }
 
     const {data:gift} = await supabase
