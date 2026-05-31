@@ -53,7 +53,19 @@ export async function POST({ request }) {
       const paymentIntentId = stripeClientSecret.split('_secret_')[0];
       const existingIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
+      // Only allow updating intents that are in a status Stripe permits for amount updates.
+      // According to Stripe, only the following statuses may be updated:
+      // 'requires_payment_method', 'requires_confirmation', 'requires_action'
+      const updatableStatuses = new Set([
+        'requires_payment_method',
+        'requires_confirmation',
+        'requires_action'
+      ]);
+
+      const canUpdateStatus = updatableStatuses.has(existingIntent.status);
+
       const shouldCreateNewIntent =
+        !canUpdateStatus ||
         existingIntent.status === 'canceled' ||
         existingIntent.currency !== currency ||
         (existingIntent.payment_method === null && !existingIntent.payment_method_types?.includes(payment_method));
