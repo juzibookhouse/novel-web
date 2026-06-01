@@ -4,7 +4,7 @@ import { checkPaymentIntentFromClientSecret } from "./stripe";
 export async function getAuthUser(request:Request) {
   let authorization = request.headers.get('Authorization')?.replace('Bearer ', '');
   let userProfile = {id:'',user_id:'',isAdmin:false,email:''};
-  if (!authorization) return userProfile;
+  if (!authorization || authorization === 'null') return userProfile;
   try {
     const {access_token,user} = JSON.parse(authorization);
     if (user?.id) {
