@@ -14,7 +14,7 @@
     {#each methods as method}
       <button
         on:click={() => onChangeMethod(method.value)}
-        class="flex-1 py-2 px-3 rounded-lg border text-sm font-medium transition-colors {selectedMethod === method.value ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}"
+        class="flex-1 py-2 px-3 rounded border text-sm font-medium transition-colors {selectedMethod === method.value ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}"
       >
         {method.label}
       </button>
