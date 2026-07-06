@@ -23,13 +23,13 @@ export async function getAuthUser(request:Request) {
         .single();
 
       if (profile) {
-        const check = await checkPaymentIntentFromClientSecret(membership?.stripe_client_secret || '');
+        // const check = await checkPaymentIntentFromClientSecret(membership?.stripe_client_secret || '');
         userProfile = {
           ...profile,
           id: profile.user_id,
           isAdmin: profile?.role === 'admin',
           membership: membership || undefined,
-          isMembership: check.paid && membership?.status == "active" && membership?.end_date > new Date().toISOString()
+          isMembership: membership?.status == "active" && membership?.end_date > new Date().toISOString()
         }
       }
     }
