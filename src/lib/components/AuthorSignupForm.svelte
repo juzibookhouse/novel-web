@@ -4,7 +4,8 @@
   import { goto } from '$app/navigation';
   import Btn from './common/Btn.svelte';
   import InputField from './common/InputField.svelte';
-  import { getUserIp } from '$lib/helpers';
+  import { onMount } from 'svelte';
+  import { sendRequest } from '$lib/api';
   import ErrorMessage from './common/ErrorMessage.svelte';
   import { adminEmail } from '$lib/api/adminEmail';
   
@@ -14,7 +15,7 @@
   let password = '';
   let username = '';
   let loading = false;
-  let error: null = null;
+  let error: Error | null = null;
   
   // 作者特有字段
   let publishedWebsite = '';
@@ -22,11 +23,63 @@
   let publishedWorkTitle = '';
   let plannedWorkDescription = '';
   let workDraftFile: File | null = null;
+  let intentReady = false;
+  let mounted = false;
+  let intentRequested = false;
+  let intentGeneration = 0;
   
+  // Metadata is form input only, never authority. Keep it until submission succeeds.
+  onMount(() => {
+    mounted = true;
+    return () => { mounted = false; intentGeneration++; };
+  });
+
+  // A parent can discover the session after this component has mounted.
+  $: syncLoginState(mounted, isLoggedIn);
+
+  function syncLoginState(isMounted: boolean, loggedIn: boolean) {
+    if (!isMounted) return;
+    if (!loggedIn) {
+      intentReady = false;
+      intentRequested = false;
+      intentGeneration++;
+      return;
+    }
+    return restoreIntent();
+  }
+
+  async function restoreIntent() {
+    if (intentRequested) return;
+    intentRequested = true;
+    const generation = ++intentGeneration;
+    try {
+      const { data, error: authError } = await supabase.auth.getUser();
+      if (!mounted || !isLoggedIn || generation !== intentGeneration) return;
+      if (authError) throw authError;
+      const intent = data.user?.user_metadata?.author_application_intent;
+      if (!data.user) throw new Error('not_signed_in');
+      email = data.user.email || '';
+      username = typeof data.user.user_metadata?.user_name === 'string' ? data.user.user_metadata.user_name : '';
+      if (intent?.requested === true) {
+        if (!publishedWebsite && typeof intent.published_website === 'string') publishedWebsite = intent.published_website;
+        if (!publishedPenName && typeof intent.published_pen_name === 'string') publishedPenName = intent.published_pen_name;
+        if (!publishedWorkTitle && typeof intent.published_work_title === 'string') publishedWorkTitle = intent.published_work_title;
+        if (!plannedWorkDescription && typeof intent.planned_work_description === 'string') plannedWorkDescription = intent.planned_work_description;
+      }
+      intentReady = true;
+    } catch {
+      if (mounted && isLoggedIn && generation === intentGeneration) {
+        error = new Error('无法恢复注册时的申请信息，请刷新后重试；信息尚未提交');
+      }
+    }
+  }
+
   async function handleSignup() {
+    if (loading) return;
     try {
       loading = true;
       error = null;
+      if (isLoggedIn && !intentReady) throw new Error('申请信息尚未恢复，请刷新后重试');
       
       let userId;
       
@@ -35,123 +88,57 @@
         const { data, error: signupError } = await supabase.auth.signUp({
           email,
           password,
-        });
-
-        if (signupError) throw signupError;
-        userId = data?.user?.id;
-      } else {
-        // 已登录用户，获取当前用户ID
-        const { data: { user } } = await supabase.auth.getUser();
-        userId = user?.id;
-
-        if (!userId) {
-          throw new Error('无法获取当前用户信息');
-        }
-      }
-
-      if (userId) {
-        try {
-          // 获取用户IP地址
-          const userIp = await getUserIp();
-          
-          if (isLoggedIn) {
-            // 已登录用户，更新用户资料
-            const { error: updateError } = await supabase
-              .from('user_profiles')
-              .update({
-                role: 'author',
-                published_website: publishedWebsite,
-                published_pen_name: publishedPenName,
-                published_work_title: publishedWorkTitle,
-                planned_work_description: plannedWorkDescription
-              })
-              .eq('user_id', userId);
-              
-            if (updateError) throw updateError;
-          } else {
-            // 新用户，创建用户资料
-            const userProfileData = {
-              user_name: username,
-              email,
-              role: 'author',
-              user_id: userId,
-              ip: userIp,
+          // Untrusted pending intent only; never a role or approval assignment.
+          options: { data: {
+            user_name: username,
+            author_application_intent: {
+              requested: true,
               published_website: publishedWebsite,
               published_pen_name: publishedPenName,
               published_work_title: publishedWorkTitle,
               planned_work_description: plannedWorkDescription
-            };
-
-            const {data:userProfile, error:userProfileError} = await supabase
-            .from('user_profiles')
-            .insert(userProfileData);
-            
-            if (userProfileError) throw userProfileError;
-          }
-
-          // 如果有上传文件，保存到存储
-          if (workDraftFile) {
-            const filePath = `user_uploads/${userId}/draft_${Date.now()}.${workDraftFile.name.split('.').pop()}`;
-            const { error: uploadError } = await supabase
-              .storage
-              .from('user-documents')
-              .upload(filePath, workDraftFile);
-
-            if (!uploadError) {
-              // 获取文件的公共URL
-              const { data: publicUrlData } = supabase
-                .storage
-                .from('user-documents')
-                .getPublicUrl(filePath);
-              
-              // 保存完整的文件URL到draft_file_path
-              const fileUrl = publicUrlData?.publicUrl || '';
-              
-              await supabase
-                .from('user_profiles')
-                .update({ draft_file_path: fileUrl })
-                .eq('user_id', userId);
             }
-          }
-          try {
-            await adminEmail.newAuthor(username, email);
-          } catch (err) {
-            console.error("发送管理员通知失败:", err.message);
-          }
+          } },
+        });
 
-        } catch (ipError) {
-          console.error("获取IP地址失败:", ipError.message);
-          // 即使获取IP失败，也继续创建用户资料
-          const {data:userProfile, error:userProfileError} = await supabase
-          .from('user_profiles')
-          .insert({
-            user_name: username,
-            email,
-            role: 'author',
-            user_id: userId
-          });
-
-          if (userProfileError) throw userProfileError;
-
-          try {
-            await adminEmail.newAuthor(username, email);
-          } catch (err) {
-            console.error("发送管理员通知失败:", err.message);
-          }
-        }
-      }
-
-      // 根据用户是否已登录决定重定向到哪个页面
-      if (userId) {
-        if (isLoggedIn) {
-          // 已登录用户申请成为作家成功，重定向到申请等待页面
-          goto('/author/pending');
-        } else {
-          // 新用户注册并申请成为作家成功，重定向到邮箱确认页面
-          // 注册后需要先确认邮箱，所以仍然重定向到邮箱确认页面
+        if (signupError) throw signupError;
+        userId = data?.user?.id;
+        // Auth's database transaction initializes the reader profile without a Session.
+        // Do not anonymously insert profiles or upload attachments.
+        if (userId) {
+          try { await adminEmail.newUser(username, email, 'reader'); }
+          catch { console.error('注册通知发送失败'); }
           goto('/email-confirmation');
         }
+        return;
       }
+      const application: Record<string, string> = {
+        published_website: publishedWebsite, published_pen_name: publishedPenName,
+        published_work_title: publishedWorkTitle, planned_work_description: plannedWorkDescription
+      };
+      if (workDraftFile) {
+        const { data, error: authError } = await supabase.auth.getUser();
+        if (authError || !data.user) throw new Error('请重新登录后提交');
+        const extension = workDraftFile.name.split('.').pop() || '';
+        if (!/^[a-zA-Z0-9]+$/.test(extension)) throw new Error('文件扩展名无效');
+        const filePath = `user_uploads/${data.user.id}/draft_${Date.now()}.${extension}`;
+        const { error: uploadError } = await supabase.storage.from('user-documents').upload(filePath, workDraftFile);
+        if (uploadError) throw new Error('附件上传失败，申请尚未提交');
+        const { data: publicUrlData } = supabase.storage.from('user-documents').getPublicUrl(filePath);
+        if (!publicUrlData?.publicUrl) throw new Error('无法取得附件地址，申请尚未提交');
+        application.draft_file_path = publicUrlData.publicUrl;
+      }
+      const result = await sendRequest('/api/author-application', { method: 'POST', body: JSON.stringify(application) });
+      if (result.error) {
+        if (result.status === 401) throw new Error('登录已失效，请重新登录后提交');
+        if (result.status === 409) throw new Error('资料不存在、已申请或账号不符合申请条件；未覆盖现有资料，请刷新核对');
+        throw new Error('申请未能确认成功，请保留当前内容并稍后核对；不要重复提交');
+      }
+      if (result.data?.success !== true) throw new Error('申请结果异常，请保留当前内容并核对');
+      // Existing best-effort notice; its failure must not repeat the accepted application.
+      try { await adminEmail.newAuthor(username, email); }
+      catch { console.error('作者申请通知发送失败'); }
+      goto('/author/pending');
     } catch (e: any) {
       error = e;
     } finally {
@@ -179,6 +166,9 @@
       <div class="space-y-4">
         <div class="prose text-gray-700 mb-4">
           <h3 class="text-lg font-medium">欢迎加入我们</h3>
+          {#if !isLoggedIn}
+            <p class="text-sm">本步骤创建普通读者账号并记录作者申请意图，不授予作者权限；请先验证邮箱，后续再完成作者申请。</p>
+          {/if}
           <p class="text-sm">
             这里没有KPI，没有各类排行榜，没有全勤，也不需要水字数，更不需要"天下无敌，天上来敌；天上无敌，天外来敌"这种同质化的堆砌，需要的只是对于文字的尊重和喜爱。
           </p>
@@ -212,11 +202,13 @@
         </div>
 
         <!-- 文件上传 -->
+        {#if !isLoggedIn}<p class="text-sm">新账号此时不上传附件；请保留本地文件，邮箱验证并登录后再上传。</p>{/if}
         <div>
           <label class="block text-sm font-medium text-gray-700">上传作品文件（可选）</label>
           <input
             type="file"
-            on:change={(e) => workDraftFile = e.target.files?.[0] || null}
+            disabled={!isLoggedIn}
+            on:change={(e) => workDraftFile = (e.currentTarget as HTMLInputElement).files?.[0] || null}
             class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file: file:text-red-700 hover:file:bg-red-100"
           />
         </div>
@@ -225,10 +217,10 @@
       <div>
         <Btn 
           title={loading 
-            ? (isLoggedIn ? '更新中...' : '注册中...') 
-            : (isLoggedIn ? '更新资料' : '立即注册')
+            ? (isLoggedIn ? '提交中...' : '注册中...') 
+            : (isLoggedIn ? '提交申请' : '立即注册')
           } 
-          disabled={loading} 
+          disabled={loading || (isLoggedIn && !intentReady)} 
           type="submit" 
         />
       </div>

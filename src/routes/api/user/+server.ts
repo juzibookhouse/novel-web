@@ -1,4 +1,4 @@
-import { getAuthUser } from '$lib/server/auth';
+import { getAuthUser, authenticationErrorResponse } from '$lib/server/auth';
 import type { RequestEvent } from '@sveltejs/kit';
 import { json } from '@sveltejs/kit';
 import { logError } from '$lib/errorLogger';
@@ -11,12 +11,14 @@ export async function GET(event: RequestEvent) {
   try {
     const user = await getAuthUser(event.request);
 
-    if (!user) {
+    if (!user?.user_id) {
         return json({ error: 'User not authenticated' }, { status: 401 });
     }
 
     return json({currentUser: user});
   } catch (error) {
+    const authResponse = authenticationErrorResponse(error);
+    if (authResponse) return authResponse;
     console.error('GET /api/user:', error);
     await logError(error, { request: event.request }, `${WEBSITE_NAME} - 获取用户信息失败`);
     return json({ error: 'Internal server error' }, { status: 500 });

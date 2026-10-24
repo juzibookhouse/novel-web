@@ -9,6 +9,7 @@
   import { onMount } from "svelte";
 
   let users: any[] = [];
+  let listError = '';
   let currentPage = 1;
   const perPage = 20;
   let pagination: any = {
@@ -32,17 +33,28 @@
   });
 
   async function fetchUsers(page = currentPage) {
+    listError = '';
     try {
       // Load users from user_profiles
-      const {data, error} = await sendRequest(`/api/admin/users?page=${page}&per_page=${perPage}`, {
+      const {data, error, response, status: requestStatus} = await sendRequest(`/api/admin/users?page=${page}&per_page=${perPage}`, {
         method: "GET",
       });
-      if (data.users) {
-        users = data.users;
-        pagination = data.pagination;
-        currentPage = page;
+      if (error || response?.ok === false || (requestStatus != null && requestStatus >= 400)) {
+        throw new Error(requestStatus === 401 ? '登录已失效，请重新登录' :
+          requestStatus === 403 ? '没有读取用户列表的管理员权限' : '读取用户列表失败，请稍后重试');
       }
+      const pageInfo = data?.pagination;
+      if (!Array.isArray(data?.users) || !pageInfo ||
+          !Number.isInteger(pageInfo.page) || !Number.isInteger(pageInfo.per_page) ||
+          !Number.isInteger(pageInfo.total) || !Number.isInteger(pageInfo.totalPages) ||
+          typeof pageInfo.hasNextPage !== 'boolean' || typeof pageInfo.hasPreviousPage !== 'boolean') {
+        throw new Error('用户列表响应异常，请稍后重试');
+      }
+      users = data.users;
+      pagination = pageInfo;
+      currentPage = page;
     } catch (error) {
+      listError = error instanceof Error ? error.message : '读取用户列表失败，请稍后重试';
       console.error('Error fetching users:', error);
     }
   }
@@ -108,6 +120,9 @@
 </script>
 
 <div class="p-6">
+  {#if listError}
+    <p role="alert" class="mb-4 rounded bg-red-100 p-3 text-red-700">{listError}</p>
+  {/if}
   <div class="flex justify-between items-center mb-4">
     <h3 class="text-2xl font-bold">用户总数: {pagination.total}</h3>
     <div class="flex items-center gap-3">

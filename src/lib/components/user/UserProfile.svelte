@@ -1,13 +1,18 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
   import MembershipPlans from "$lib/components/MembershipPlans.svelte";
   import { supabase } from "$lib/supabaseClient";
-  import { user, setUser } from "$lib/stores/authStore";
+  import { user } from "$lib/stores/authStore";
   import { onMount } from "svelte";
   import { getPlanPrice } from "$lib/membership";
   import Btn from "../common/Btn.svelte";
 
   let userName = $user?.user_name || '';
-  let userEmail = $user?.email || '';
+  let userEmail = '';
+  let authEmail = '';
+  let authEmailReady = false;
+  let authEmailAccount: string | undefined;
+  let authEmailRequest = 0;
   let userPassword = "";
   let membershipPlan: any;
   let loading = false;
@@ -17,11 +22,34 @@
   let showPasswordModal = false;
   let applyingAuthor = false;
 
+  async function loadAuthEmail(accountId?: string) {
+    authEmailAccount = accountId;
+    const request = ++authEmailRequest;
+    authEmailReady = false;
+    authEmail = '';
+    userEmail = '';
+    if (!accountId) return;
+    try {
+      const { data, error } = await supabase.auth.getUser();
+      if (request !== authEmailRequest) return;
+      if (error || data.user?.id !== accountId || !data.user.email) throw new Error('auth_email_unavailable');
+      authEmail = data.user.email;
+      userEmail = authEmail;
+      authEmailReady = true;
+    } catch {
+      if (request === authEmailRequest) {
+        message = '无法确认当前登录邮箱，请刷新后重试';
+        messageType = 'error';
+      }
+    }
+  }
+
   function formatDate(dateString: string) {
     return new Date(dateString).toLocaleDateString("zh-CN");
   }
 
   function updateProfile() {
+    if (!authEmailReady) return;
     // 重置消息和密码
     message = "";
     userPassword = "";
@@ -30,17 +58,23 @@
   }
 
   async function verifyAndUpdate() {
+    if (loading) return;
     try {
       loading = true;
-      if (!$user) throw new Error("未登录");
+      if (!$user || !authEmailReady) throw new Error("无法确认登录身份，请刷新后重试");
+      const accountId = $user.id;
+      const { data: authData, error: authError } = await supabase.auth.getUser();
+      if (authError || authData.user?.id !== accountId || !authData.user.email) throw new Error('无法确认登录身份，请重新登录');
+      if (authData.user.email !== authEmail) throw new Error('登录邮箱已变化，请刷新核对后再修改');
 
       // 先验证密码
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: $user.email!,
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+        email: authData.user.email,
         password: userPassword
       });
 
       if (signInError) throw new Error("密码验证失败");
+      if (signInData.user?.id !== accountId || $user?.id !== accountId) throw new Error('登录账号已变化，请重新打开个人中心');
 
       // 更新用户名
       const { error: profileError } = await supabase
@@ -48,12 +82,12 @@
         .update({
           user_name: userName,
         })
-        .eq("user_id", $user.id);
+        .eq("user_id", accountId);
 
       if (profileError) throw profileError;
 
       // 如果邮箱有变化，更新邮箱
-      if (userEmail !== $user.email) {
+      if (userEmail !== authData.user.email) {
         const { error: emailError } = await supabase.auth.updateUser({
           email: userEmail,
         });
@@ -79,44 +113,23 @@
   }
 
   async function applyForAuthor() {
-    try {
-      applyingAuthor = true;
-      const { error } = await supabase
-        .from("user_profiles")
-        .update({
-          role: "author",
-          is_approved: false
-        })
-        .eq("user_id", $user?.id);
-
-      if (error) throw error;
-      
-      // Refresh user data
-      if ($user) {
-        await setUser($user);
-      }
-      
-      message = "作家申请已提交，请等待管理员审核";
-    } catch (error) {
-      message = "申请失败，请重试";
-    } finally {
-      applyingAuthor = false;
-    }
+    // Review registration intent before submitting through the trusted endpoint.
+    if (applyingAuthor) return;
+    applyingAuthor = true;
+    try { await goto('/author/signup'); }
+    finally { applyingAuthor = false; }
   }
 
-  onMount(async () => {
-    if ($user) {
-      // Fetch membership plan details if user has active membership
-      if ($user.membership?.plan_id) {
-        const { data: plan } = await supabase
-          .from("membership_plans")
-          .select("*")
-          .eq("id", $user.membership.plan_id)
-          .single();
-
-        membershipPlan = plan;
-      }
-    }
+  onMount(() => {
+    const unsubscribe = user.subscribe((currentUser) => {
+      if (currentUser?.id !== authEmailAccount) void loadAuthEmail(currentUser?.id);
+    });
+    void (async () => { if ($user?.membership?.plan_id) {
+      const { data: plan } = await supabase.from('membership_plans').select('*')
+        .eq('id', $user.membership.plan_id).single();
+      membershipPlan = plan;
+    } })();
+    return () => { authEmailRequest++; unsubscribe(); };
   });
 </script>
 
@@ -242,6 +255,7 @@
           type="email"
           id="email"
           bind:value={userEmail}
+          disabled={!authEmailReady || loading}
           class="mt-1 block w-full rounded-md border-2 border-red-200 px-3 py-2 text-gray-900 placeholder:text-gray-400 focus:border-red-500 focus:ring-red-500"
         />
       </div>
@@ -257,25 +271,15 @@
         />
       </div>
 
-      <Btn title={loading ? "更新中..." : "更新资料"} disabled={loading} handleClick={updateProfile} />
+      <Btn title={loading ? "更新中..." : "更新资料"} disabled={loading || !authEmailReady} handleClick={updateProfile} />
 
-      <!-- {#if $user?.profile?.role !== 'admin'}
-      <div>
-        <label class="block text-sm font-medium text-gray-700">作家状态</label>
-        {#if $user?.profile?.role === 'author'}
-          {#if $user?.profile?.is_approved}
-            <p class="mt-1 text-green-600">已是认证作家</p>
-          {:else}
-            <p class="mt-1 text-yellow-600">作家申请审核中</p>
-          {/if}
-        {:else}
-          <p class="mt-1 text-red-600">您还不是作家</p>
+      {#if $user?.role === 'reader'}
+        <div>
           <Btn title={applyingAuthor ? '申请中...' : '申请成为作家'} handleClick={applyForAuthor} disabled={applyingAuthor}/>
-        {/if}
-      </div>
-      {:else}
-      <div>你是管理员</div>
-      {/if} -->
+        </div>
+      {:else if $user?.role === 'author' && !$user?.is_approved}
+        <p class="mt-1 text-yellow-600">作家申请审核中</p>
+      {/if}
 
 
     </div>

@@ -1,7 +1,6 @@
 <script lang="ts">
   import { AUTHOR_DASHBOARD_URL, WEBSITE_NAME } from '$lib/constants';
-  import { supabase, getUserProfile, updateUserProfile } from '$lib/supabaseClient';
-  import { getUserIp } from '$lib/helpers';
+  import { supabase } from '$lib/supabaseClient';
   import { goto } from '$app/navigation';
   import MembershipPlans from '$lib/components/MembershipPlans.svelte';
   import { user } from '$lib/stores/authStore';
@@ -27,43 +26,14 @@
       loading = true;
       error = null;
       
-      const { data, error: loginError } = await supabase.auth.signInWithPassword({
+      const { error: loginError } = await supabase.auth.signInWithPassword({
         email,
         password
       });
 
       if (loginError) throw loginError;
 
-      // 获取用户资料并更新email和ip
-      if (data.user) {
-        const { data: profileData, error: profileError } = await getUserProfile(data.user.id);
-        
-        if (profileError) {
-          console.error("获取用户资料失败:", profileError);
-        } else if (profileData) {
-          try {
-            // 获取用户IP地址
-            const userIp = await getUserIp();
-
-            // 准备更新数据
-            const updates: { email?: string; ip?: string } = { ip: userIp };
-            if (!profileData.email) {
-              updates.email = email;
-            }
-
-            // 更新用户资料
-            const { error: updateError } = await updateUserProfile(data.user.id, updates);
-          
-            if (updateError) {
-              console.error("更新用户资料失败:", updateError);
-            } else {
-              console.log("用户资料已更新");
-            }
-          } catch (error:any) {
-            console.error("获取IP地址失败:", error.message);
-          }
-        }
-      }
+      // Auth owns login identity and email; login does not write public profiles.
 
       const urlParams = new URLSearchParams(window.location.search);
       const redirectUrl = urlParams.get('redirect');

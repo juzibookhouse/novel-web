@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { getNovelChapterGifts, supabase } from '$lib/supabaseClient';
-import { getAuthUser } from '$lib/server/auth.js';
+import { getAuthUser, authenticationErrorResponse } from '$lib/server/auth.js';
 import Stripe from 'stripe';
 import { STRIPE_SECRET_KEY } from '$env/static/private';
 import { logError } from '$lib/errorLogger';
@@ -61,6 +61,8 @@ export async function GET({ params }: RequestEvent) {
 
     return json({ chapterGifts, gifts });
   } catch (err) {
+    const authResponse = authenticationErrorResponse(err);
+    if (authResponse) return authResponse;
     console.error('GET /api/novels/[novelId]/chapters/[chapterId]/gifts:', err);
     await logError(err, {}, `${WEBSITE_NAME} - 获取章节礼物列表失败`);
     return json({ error: 'Internal server error' }, { status: 500 });
@@ -163,6 +165,8 @@ export async function POST({ request, params, locals }: RequestEvent) {
 
     return json({ msg: 'Send Gift successfully'}, { status: 201 });
   } catch (err) {
+    const authResponse = authenticationErrorResponse(err);
+    if (authResponse) return authResponse;
     console.error('POST /api/novels/[novelId]/chapters/[chapterId]/gifts:', err);
     await logError(err, { request }, `${WEBSITE_NAME} - 发送章节礼物失败`);
     return json({ error: 'Internal server error' }, { status: 500 });

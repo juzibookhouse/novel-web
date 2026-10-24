@@ -1,16 +1,15 @@
 import { json } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
-import { getAuthUser } from '$lib/server/auth.js';
+import { verifyRequestIdentity, IdentityVerificationError } from '$lib/server/verifiedIdentity';
+import { assertServerAdmin, AdminAuthorizationError } from '$lib/server/adminAuthorization';
 import { logError } from '$lib/errorLogger';
 import { WEBSITE_NAME } from '$lib/constants';
 
 export async function DELETE({ params, request }) {
   try {
     const { tagId } = params;
-    const {isAdmin} =  await getAuthUser(request);
-    if (!isAdmin) {
-      return json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const user = await verifyRequestIdentity(request);
+    assertServerAdmin(user.id);
 
     const {error: novelTagError} = await supabase.from('novel_tags').delete().eq('tag_id', tagId);
     if (novelTagError) {
@@ -28,6 +27,9 @@ export async function DELETE({ params, request }) {
 
     return json({ msg: 'Tag deleted successfully' });
   } catch (err) {
+    if (err instanceof IdentityVerificationError || err instanceof AdminAuthorizationError) {
+      return json({ error: err.code, code: err.code }, { status: err.status });
+    }
     console.error('DELETE /api/admin/tags/[tagId]:', err);
     await logError(err, { request }, `${WEBSITE_NAME} - 删除标签失败`);
     return json({ error: 'Internal server error' }, { status: 500 });

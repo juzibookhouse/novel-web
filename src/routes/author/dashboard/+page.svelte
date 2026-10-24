@@ -77,20 +77,34 @@
   async function fetchNovels(page: number = 1) {
     try {
       loading = true;
-      currentPage = page;
-      const {data:{novels: novelsData, categories: categoriesData, tags: tagsData, totalCount: totalCountData, per_page: perPageData, error: fetchError}} = await sendRequest(`/api/novels?page=${page}`);
-      if (fetchError) {
-        console.error('Error fetching novels:', fetchError);
+      error = null;
+      const result = await sendRequest(`/api/novels?page=${page}`);
+      if (!result || result.error || result.response?.ok === false ||
+          (result.status != null && result.status >= 400) || result.data?.error) {
+        error = result?.status === 401 ? '登录已失效，请重新登录后加载小说列表' :
+          result?.status === 403 ? '没有读取小说列表的权限，请核对账号' : '小说列表加载失败，请稍后重试';
         return;
       }
+      const data = result.data;
+      if (!data || !Array.isArray(data.novels) ||
+          (data.categories != null && !Array.isArray(data.categories)) ||
+          (data.tags != null && !Array.isArray(data.tags)) ||
+          (data.totalCount != null && (!Number.isInteger(data.totalCount) || data.totalCount < 0)) ||
+          (data.per_page != null && (!Number.isInteger(data.per_page) || data.per_page <= 0))) {
+        error = '小说列表返回数据异常，请稍后重试';
+        return;
+      }
+      const {novels: novelsData, categories: categoriesData, tags: tagsData,
+        totalCount: totalCountData, per_page: perPageData} = data;
+      currentPage = page;
       novels = novelsData;
       categories = categoriesData || [];
       tags = tagsData || [];
       totalCount = totalCountData || 0;
       perPage = perPageData || perPage;
       totalPages = Math.max(1, Math.ceil(totalCount / perPage));
-    } catch (e: any) {
-      error = e.message;
+    } catch {
+      error = '小说列表加载失败，请检查网络后重试';
     } finally {
       loading = false;
     }
@@ -160,6 +174,8 @@
 
   {#if loading}
     <LoadingIndicator />
+  {:else if error}
+    <!-- The existing ErrorDisplay above shows the failure and retry action. -->
   {:else if novels.length === 0}
     <EmptyState 
       message="暂无作品" 

@@ -1,16 +1,35 @@
-import { getAuthUser } from "$lib/server/auth";
-import { supabase } from "$lib/supabaseClient";
+import { verifyRequestIdentity, IdentityVerificationError } from "$lib/server/verifiedIdentity";
+import { assertServerAdmin, AdminAuthorizationError } from "$lib/server/adminAuthorization";
+import { createClient } from '@supabase/supabase-js';
+import { env } from '$env/dynamic/private';
 import { logError } from "$lib/errorLogger";
 import { json, type RequestHandler } from "@sveltejs/kit";
 import { WEBSITE_NAME } from "$lib/constants";
 
+class AdminListConfigurationError extends Error {
+  constructor() { super('admin_database_unavailable'); }
+}
+
+// GET and PATCH: construct this private client only after administrator authorization.
+function privateListClient() {
+  const url = env.SUPABASE_URL;
+  const key = env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url?.trim() || !key?.trim()) throw new AdminListConfigurationError();
+  let parsed: URL;
+  try { parsed = new URL(url); }
+  catch { throw new AdminListConfigurationError(); }
+  if (parsed.protocol !== 'https:' || parsed.username || parsed.password || parsed.search || parsed.hash) {
+    throw new AdminListConfigurationError();
+  }
+  return createClient(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
+  });
+}
+
 export const GET: RequestHandler = async (event) => {
   try {
-    const user = await getAuthUser(event.request);
-
-    if (!user?.isAdmin) {
-      return json({ error: 'User not authenticated' }, { status: 401 });
-    }
+    const identity = await verifyRequestIdentity(event.request);
+    assertServerAdmin(identity.id);
 
     const url = new URL(event.request.url);
     const page = Math.max(1, parseInt(url.searchParams.get('page') || '1', 10));
@@ -18,7 +37,7 @@ export const GET: RequestHandler = async (event) => {
     const from = (page - 1) * per_page;
     const to = from + per_page - 1;
 
-    const { data: usersData, error: usersError, count } = await supabase
+    const { data: usersData, error: usersError, count } = await privateListClient()
       .from("user_profiles")
       .select(
         `
@@ -57,6 +76,12 @@ export const GET: RequestHandler = async (event) => {
       }
     })
   } catch (error) {
+    if (error instanceof IdentityVerificationError || error instanceof AdminAuthorizationError) {
+      return json({ code: error.code }, { status: error.status });
+    }
+    if (error instanceof AdminListConfigurationError) {
+      return json({ error: error.message, code: error.message }, { status: 503 });
+    }
     console.error('GET /api/admin/users:', error);
     await logError(error, { request: event.request }, `${WEBSITE_NAME} - 获取用户列表失败`);
     return json({error: "Failed to fetch users"},{status:500})
@@ -65,11 +90,8 @@ export const GET: RequestHandler = async (event) => {
 
 export const PATCH: RequestHandler = async (event) => {
   try {
-    const user = await getAuthUser(event.request);
-
-    if (!user?.isAdmin) {
-      return json({ error: 'User not authenticated' }, { status: 401 });
-    }
+    const identity = await verifyRequestIdentity(event.request);
+    assertServerAdmin(identity.id);
 
     const body = await event.request.json();
     const { membershipId, status, endDate } = body;
@@ -86,7 +108,7 @@ export const PATCH: RequestHandler = async (event) => {
       updateData.end_date = endDate;
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await privateListClient()
       .from('user_memberships')
       .update(updateData)
       .eq('id', membershipId)
@@ -97,6 +119,12 @@ export const PATCH: RequestHandler = async (event) => {
 
     return json({ success: true, data });
   } catch (error) {
+    if (error instanceof IdentityVerificationError || error instanceof AdminAuthorizationError) {
+      return json({ code: error.code }, { status: error.status });
+    }
+    if (error instanceof AdminListConfigurationError) {
+      return json({ error: error.message, code: error.message }, { status: 503 });
+    }
     console.error('PATCH /api/admin/users:', error);
     await logError(error, { request: event.request }, `${WEBSITE_NAME} - 更新用户会员失败`);
     return json({ error: 'Failed to update membership' }, { status: 500 });

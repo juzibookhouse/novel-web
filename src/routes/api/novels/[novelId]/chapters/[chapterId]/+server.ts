@@ -1,4 +1,4 @@
-import { getAuthUser } from '$lib/server/auth.js';
+import { getAuthUser, authenticationErrorResponse } from '$lib/server/auth.js';
 import { supabase } from '$lib/supabaseClient.js';
 import { json } from '@sveltejs/kit';
 import { logError } from '$lib/errorLogger';
@@ -44,6 +44,8 @@ export async function GET({ params, request }: { params: { novelId: string; chap
 
     return json({ chapter });
   } catch (error) {
+    const authResponse = authenticationErrorResponse(error);
+    if (authResponse) return authResponse;
     console.error('GET /api/novels/[novelId]/chapters/[chapterId]:', error);
     await logError(error, { request }, `${WEBSITE_NAME} - 获取章节失败`);
     return json({ error: 'Failed to fetch chapter' }, { status: 500 });

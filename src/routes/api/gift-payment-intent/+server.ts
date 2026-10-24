@@ -2,7 +2,7 @@ import { json } from '@sveltejs/kit';
 import Stripe from 'stripe';
 import { supabase } from '$lib/supabaseClient';
 import { STRIPE_SECRET_KEY } from '$env/static/private';
-import { getAuthUser } from '$lib/server/auth.js';
+import { getAuthUser, authenticationErrorResponse } from '$lib/server/auth.js';
 import { CURRENCY_CN, CURRENCY_US } from '$lib/constants';
 import { WEBSITE_NAME } from '$lib/constants';
 import { logError } from '$lib/errorLogger';
@@ -86,6 +86,8 @@ export async function POST({ request }) {
 
     return json({ clientSecret: paymentIntent.client_secret });
   } catch (error) {
+    const authResponse = authenticationErrorResponse(error);
+    if (authResponse) return authResponse;
     console.error('POST /api/gift-payment-intent:', error);
     await logError(error, { request }, `${WEBSITE_NAME} - 礼物支付意图创建失败`);
     return json({ error: 'Failed to create payment intent' }, { status: 500 });

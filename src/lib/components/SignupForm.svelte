@@ -4,7 +4,6 @@
   import { goto } from '$app/navigation';
   import Btn from './common/Btn.svelte';
   import InputField from './common/InputField.svelte';
-  import { getUserIp } from '$lib/helpers';
   import ErrorMessage from './common/ErrorMessage.svelte';
   import AuthorSignupForm from './AuthorSignupForm.svelte';
   import { adminEmail } from '$lib/api/adminEmail';
@@ -34,47 +33,17 @@
       const { data, error: signupError } = await supabase.auth.signUp({
         email,
         password,
+        // Display data only; the database fixes identity, role and approval.
+        options: { data: { user_name: username } },
       });
 
       if (signupError) throw signupError;
       const userId = data?.user?.id;
 
       if (userId) {
-        try {
-          // 获取用户IP地址
-          const userIp = await getUserIp();
-
-          const userProfileData = {
-            user_name: username,
-            email,
-            role,
-            user_id: userId,
-            ip: userIp
-          };
-
-          const {data:userProfile, error:userProfileError} = await supabase
-          .from('user_profiles')
-          .insert(userProfileData);
-
-          if (userProfileError) throw userProfileError;
-        } catch (ipError) {
-          console.error("获取IP地址失败:", ipError.message);
-          // 即使获取IP失败，也继续创建用户资料
-          const {data:userProfile, error:userProfileError} = await supabase
-          .from('user_profiles')
-          .insert({
-            user_name: username,
-            email,
-            role,
-            user_id: userId
-          });
-
-          if (userProfileError) throw userProfileError;
-        }
-
         // 发送管理员通知邮件
         try {
-          await adminEmail.newUser(username, email, role);
+          await adminEmail.newUser(username, email, 'reader');
         } catch (emailError) {
           console.error("发送管理员通知失败:", emailError);
           // 即使邮件发送失败，也继续注册流程

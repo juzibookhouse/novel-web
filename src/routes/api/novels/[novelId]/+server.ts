@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
-import { getAuthUser } from '$lib/server/auth.js';
+import { getAuthUser, authenticationErrorResponse } from '$lib/server/auth.js';
 import { logError } from '$lib/errorLogger';
 import { WEBSITE_NAME } from '$lib/constants';
 import type { RequestHandler } from '@sveltejs/kit';
@@ -39,6 +39,8 @@ export const DELETE: RequestHandler = async ({ params, request }) => {
 
     return json({ msg: 'Comment deleted successfully' });
   } catch (err) {
+    const authResponse = authenticationErrorResponse(err);
+    if (authResponse) return authResponse;
     console.error('DELETE /api/novels/[novelId]:', err);
     await logError(err, { request }, `${WEBSITE_NAME} - 删除小说失败`);
     return json({ error: 'Internal server error' }, { status: 500 });

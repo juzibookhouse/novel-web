@@ -1,9 +1,28 @@
 import { PUBLIC_SUPABASE_URL } from "$env/static/public"
 
+export class RequestError extends Error {
+  status: number | null;
+  code: string;
+  constructor(status: number | null, code: string) {
+    super(code);
+    this.status = status;
+    this.code = code;
+    this.name = 'RequestError';
+  }
+}
+
 export function getAuthToken() {
   const authorizationKey = PUBLIC_SUPABASE_URL.split('https://')[1].split('.')[0];
   if (typeof localStorage === 'undefined') return null;
-  return localStorage.getItem(`sb-${authorizationKey}-auth-token`);
+  try {
+    const storedSession = localStorage.getItem(`sb-${authorizationKey}-auth-token`);
+    if (!storedSession) return null;
+    const session = JSON.parse(storedSession);
+    return typeof session.access_token === 'string' && session.access_token.trim()
+      ? JSON.stringify({ access_token: session.access_token, ...(session.user?.id ? { user: { id: session.user.id } } : {}) }) : null;
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -15,29 +34,29 @@ export function getAuthToken() {
 export async function sendRequest(url: string, options?: RequestInit) {
   // 从 localStorage 获取 Supabase 密钥
 
-  const defaultOptions: RequestInit = {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${getAuthToken()}`
-    },
-  };
-
+  const headers = new Headers(options?.headers);
+  if (!headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
+  if (!headers.has('Authorization')) {
+    const token = getAuthToken();
+    if (token) headers.set('Authorization', `Bearer ${token}`);
+  }
   const mergedOptions = {
-    ...defaultOptions,
     ...options,
+    headers,
   };
 
   try {
     const response = await fetch(url, mergedOptions);
 
     if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
+      const body = await response.json().catch(() => null);
+      const code = typeof body?.code === 'string' ? body.code : 'request_failed';
+      return { response, status: response.status, error: new RequestError(response.status, code) };
     }
     const data = await response.json();
 
-    return {response,data};
-  } catch (error) {
-    console.error('Request error:', error);
-    return {error};
+    return { response, data, status: response.status };
+  } catch {
+    return { status: null, error: new RequestError(null, 'network_or_response_error') };
   }
 }

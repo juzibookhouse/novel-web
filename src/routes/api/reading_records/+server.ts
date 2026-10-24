@@ -1,9 +1,26 @@
-import { supabase } from "$lib/supabaseClient";
+import { createClient } from '@supabase/supabase-js';
+import { env } from '$env/dynamic/private';
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
-import { getAuthUser } from "$lib/server/auth";
+import { verifyRequestIdentity, IdentityVerificationError } from "$lib/server/verifiedIdentity";
+import { assertServerAdmin, AdminAuthorizationError } from "$lib/server/adminAuthorization";
 import { logError } from "$lib/errorLogger";
 import { WEBSITE_NAME } from "$lib/constants";
+
+// Same server-private configuration and client options as admin/authors.
+// Construct only after verified identity and private allowlist authorization.
+function privateClient() {
+  const url = env.SUPABASE_URL;
+  const key = env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url?.trim() || !key?.trim()) throw new Error('database_unavailable');
+  const parsed = new URL(url);
+  if (parsed.protocol !== 'https:' || parsed.username || parsed.password || parsed.search || parsed.hash) {
+    throw new Error('database_unavailable');
+  }
+  return createClient(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
+  });
+}
 
 export const GET: RequestHandler = async ({ url, request }) => {
   const month = url.searchParams.get("month");
@@ -13,16 +30,13 @@ export const GET: RequestHandler = async ({ url, request }) => {
     return json({ error: "Missing required parameters: month and filter" }, { status: 400 });
   }
 
-  const {isAdmin} = await getAuthUser(request);
-  if (!isAdmin) {
-    return json({ error: 'User not authenticated' }, { status: 401 });
-  }
-
   try {
+    const user = await verifyRequestIdentity(request);
+    assertServerAdmin(user.id);
     const startDate = new Date(month + "-01");
     const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
 
-    let query = supabase
+    let query = privateClient()
       .from('reading_records')
       .select(`
         id,
@@ -80,6 +94,9 @@ export const GET: RequestHandler = async ({ url, request }) => {
 
     return json(result);
   } catch (e: any) {
+    if (e instanceof IdentityVerificationError || e instanceof AdminAuthorizationError) {
+      return json({ error: e.code, code: e.code }, { status: e.status });
+    }
     console.error('GET /api/reading_records:', e);
     await logError(e, { request }, `${WEBSITE_NAME} - 获取阅读记录失败`);
     return json({ error: e.message }, { status: 500 });

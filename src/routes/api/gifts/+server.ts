@@ -1,5 +1,5 @@
 import { getSortedChapters } from '$lib/novel.js';
-import { getAuthUser } from '$lib/server/auth.js';
+import { getAuthUser, authenticationErrorResponse } from '$lib/server/auth.js';
 import { supabase } from '$lib/supabaseClient';
 import { json } from '@sveltejs/kit';
 import { logError } from '$lib/errorLogger';
@@ -27,6 +27,8 @@ export async function GET({ request }) {
     
     return json({ gifts });
   } catch (error) {
+    const authResponse = authenticationErrorResponse(error);
+    if (authResponse) return authResponse;
     console.error('GET /api/gifts:', error);
     await logError(error, { request }, `${WEBSITE_NAME} - 获取礼物列表失败`);
     return json({ error: 'Failed to fetch novels' }, { status: 500 });

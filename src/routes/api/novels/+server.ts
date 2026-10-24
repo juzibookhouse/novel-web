@@ -1,5 +1,6 @@
 import { getSortedChapters } from '$lib/novel.js';
-import { getAuthUser } from '$lib/server/auth.js';
+import { verifyRequestIdentity, IdentityVerificationError } from '$lib/server/verifiedIdentity';
+import { assertServerAdmin, AdminAuthorizationError } from '$lib/server/adminAuthorization';
 import { getCategories, getTags, supabase } from '$lib/supabaseClient';
 import { json } from '@sveltejs/kit';
 import { WEBSITE_NAME } from '$lib/constants';
@@ -7,9 +8,15 @@ import { logError } from '$lib/errorLogger';
 
 export async function GET({ request }: { request: Request }) {
   try {
-    const {user_id, isAdmin} = await getAuthUser(request);
-    if (!user_id) {
-      return json({ error: 'User not authenticated' }, { status: 401 });
+    const { id: user_id } = await verifyRequestIdentity(request);
+    let isAdmin = false;
+    try {
+      assertServerAdmin(user_id);
+      isAdmin = true;
+    } catch (error) {
+      // No administrator privilege is not a reason to block the existing
+      // ordinary/author branch: it remains restricted to the verified account.
+      if (!(error instanceof AdminAuthorizationError)) throw error;
     }
     const url = new URL(request.url);
     const page = Math.max(1, parseInt(url.searchParams.get('page') || '1', 10));
@@ -70,6 +77,9 @@ export async function GET({ request }: { request: Request }) {
 
     return json({ novels, categories: categoriesData || [], tags: tagsData || [], totalCount: count || 0, page, per_page });
   } catch (error) {
+    if (error instanceof IdentityVerificationError || error instanceof AdminAuthorizationError) {
+      return json({ error: error.code, code: error.code }, { status: error.status });
+    }
     console.error('GET /api/novels:', error);
     await logError(error, { request }, `${WEBSITE_NAME} - 获取小说列表失败`);
     return json({ error: 'Failed to fetch novels' }, { status: 500 });

@@ -1,38 +1,57 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { fetchAdminAuthors, supabase } from '$lib/supabaseClient';
+  import { sendRequest } from '$lib/api';
   import { getUserDateFormat } from "$lib/user";
-    import { formatDuration } from '$lib/novel';
+  import { formatDuration } from '$lib/novel';
 
-  let authors:any[] = [];
+  let authors: any[] = [];
+  let errorMessage = '';
+  let loading = false;
+  let saving = false;
+  let needsRefresh = false;
 
-  onMount(()=> {
-    fetchAuthors();
-  });
-
- async function fetchAuthors() {
-  try {
-    const {data,error:authorsError} = await fetchAdminAuthors();
-    if (authorsError) throw authorsError;
-    authors = data;
-  } catch (error) {
-    
+  function requestMessage(status: number | null | undefined) {
+    if (status === 401) return '登录已失效，请重新登录';
+    if (status === 403) return '当前账号没有管理员审核权限';
+    if (status === 404) return '目标作者不存在，请刷新列表';
+    if (status === 409) return '审核状态或角色已变化，请刷新后核对再操作';
+    return '请求未能确认成功，请刷新核对后再操作';
   }
- }
 
+  onMount(() => { fetchAuthors(); });
 
- async function toggleApproval(userId: string, currentStatus: boolean) {
+  async function fetchAuthors() {
+    if (loading) return;
+    loading = true;
+    errorMessage = '';
     try {
-      const { error: updateError } = await supabase
-        .from('user_profiles')
-        .update({ is_approved: !currentStatus })
-        .eq('id', userId);
+      const result = await sendRequest('/api/admin/authors');
+      if (result.error || !Array.isArray(result.data?.authors)) {
+        authors = [];
+        needsRefresh = true;
+        errorMessage = requestMessage(result.status);
+        return;
+      }
+      authors = result.data.authors;
+      needsRefresh = false;
+    } finally { loading = false; }
+  }
 
-      if (updateError) throw updateError;
-      fetchAuthors();
-    } catch (e: any) {
-        // error = e.message;
-    }
+  async function toggleApproval(profileId: string, currentStatus: boolean) {
+    if (saving || loading || needsRefresh) return;
+    saving = true;
+    errorMessage = '';
+    try {
+      const result = await sendRequest('/api/admin/authors', {
+        method: 'PATCH', body: JSON.stringify({ profileId, is_approved: !currentStatus, expected_is_approved: currentStatus })
+      });
+      if (result.error || result.data?.success !== true) {
+        needsRefresh = true;
+        errorMessage = requestMessage(result.status);
+        return;
+      }
+      await fetchAuthors();
+    } finally { saving = false; }
   }
 
   const TITLES = ['作家名','电子邮箱','注册时间','状态','作品阅读时间','操作'];
@@ -40,6 +59,9 @@
 
 </script>
 <div class="p-6">
+  {#if errorMessage}<p role="alert" class="mb-4 text-red-700">{errorMessage}</p>{/if}
+  {#if loading}<p>正在加载作者列表...</p>{/if}
+  {#if needsRefresh}<button disabled={saving || loading} on:click={fetchAuthors} class="mb-4 text-red-700">刷新列表</button>{/if}
   {#if selectedAuthor}
     <div class="mb-6 p-4 bg-white rounded-lg shadow">
       <h3 class="text-lg font-medium mb-4">作家详情</h3>
@@ -144,6 +166,7 @@
           >
             <button
               on:click={() => toggleApproval(author.id, author.is_approved)}
+              disabled={saving || loading || needsRefresh}
               class="text-red-600 hover:text-primary cursor-pointer"
             >
               {author.is_approved ? "取消审核" : "通过审核"}

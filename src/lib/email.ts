@@ -1,13 +1,21 @@
 import { Resend } from 'resend';
-import { RESEND_API_KEY, EMAIL_FROM, ADMIN_EMAIL, HOST_URL } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { WEBSITE_NAME } from './constants';
 
-const resend = new Resend(RESEND_API_KEY);
+// Fail closed: only the exact private value "true" permits application email.
+// Do not construct the provider client while disabled (no key is required).
+const sendingEnabled = () => env.EMAIL_SENDING_ENABLED === 'true';
+const skippedEmail = () => ({ skipped: true as const, reason: 'email_sending_disabled' as const });
 
 export async function sendEmail(to: string, subject: string, html: string) {
+  if (!sendingEnabled()) return skippedEmail();
   try {
+    const apiKey = env.RESEND_API_KEY;
+    const from = env.EMAIL_FROM;
+    if (!apiKey || !from) throw new Error('Email configuration missing');
+    const resend = new Resend(apiKey);
     const { data, error } = await resend.emails.send({
-      from: EMAIL_FROM,
+      from,
       to,
       subject,
       html
@@ -26,6 +34,7 @@ export async function sendEmail(to: string, subject: string, html: string) {
 }
 
 export async function sendPaymentConfirmationEmail(user: any, plan: any, amount: number|string) {
+  if (!sendingEnabled()) return skippedEmail();
   const html = `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
       <h1 style="color: #B91C1C; text-align: center;">${WEBSITE_NAME}</h1>
@@ -41,7 +50,7 @@ export async function sendPaymentConfirmationEmail(user: any, plan: any, amount:
         <p>您现在可以畅享所有会员专属内容。</p>
         <p>如有任何问题，请随时联系我们。</p>
         <div style="text-align: center; margin-top: 30px;">
-          <a href="${HOST_URL}"
+          <a href="${env.HOST_URL}"
              style="background-color: #B91C1C; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">
             开始阅读
           </a>
@@ -67,7 +76,8 @@ export interface EmailData {
 }
 
 export async function sendAdminEmail(type: EmailType, data: EmailData = {}) {
-  if (!ADMIN_EMAIL) {
+  if (!sendingEnabled()) return skippedEmail();
+  if (!env.ADMIN_EMAIL) {
     const err = new Error('Admin email not configured');
     (err as any).status = 500;
     throw err;
@@ -153,5 +163,5 @@ export async function sendAdminEmail(type: EmailType, data: EmailData = {}) {
     }
   }
 
-  return sendEmail(ADMIN_EMAIL, subject, html);
+  return sendEmail(env.ADMIN_EMAIL, subject, html);
 }

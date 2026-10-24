@@ -1,6 +1,6 @@
 import { json, type RequestEvent } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
-import { getAuthUser } from '$lib/server/auth.js';
+import { getAuthUser, authenticationErrorResponse } from '$lib/server/auth.js';
 import { logError } from '$lib/errorLogger';
 import { WEBSITE_NAME } from '$lib/constants';
 import type { Comment } from '$lib/types/comment.js';
@@ -68,6 +68,8 @@ export async function GET({ params }: RequestEvent) {
 
     return json({ comments: rootComments });
   } catch (err) {
+    const authResponse = authenticationErrorResponse(err);
+    if (authResponse) return authResponse;
     console.error('GET /api/novels/[novelId]/chapters/[chapterId]/comments:', err);
     await logError(err, {}, `${WEBSITE_NAME} - 获取评论失败`);
     return json({ error: 'Internal server error' }, { status: 500 });
@@ -171,6 +173,8 @@ export async function POST({ request, params, locals }: RequestEvent) {
 
     return json({ comment: formattedComment }, { status: 201 });
   } catch (err) {
+    const authResponse = authenticationErrorResponse(err);
+    if (authResponse) return authResponse;
     console.error('POST /api/novels/[novelId]/chapters/[chapterId]/comments:', err);
     await logError(err, { request }, `${WEBSITE_NAME} - 创建评论失败`);
     return json({ error: 'Internal server error' }, { status: 500 });
